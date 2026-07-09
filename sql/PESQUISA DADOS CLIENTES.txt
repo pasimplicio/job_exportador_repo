@@ -1,0 +1,336 @@
+--202107: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
+--2,3,4,5,6,7,8,9,10,11,12,13,14,15: Deve ser substituida pelo id da unidade de onde se quer obter os dados
+
+SELECT 
+	imo.imov_id AS "MATRICULA",
+	imo.imov_nncoordenadax AS "LATITUDE",
+	imo.imov_nncoordenaday AS "LONGITUDE",
+	cli.clie_nmcliente AS "NOME",
+	cli.clie_nncpf AS "CPF",
+	cli.clie_nncnpj AS "CNPJ",
+	(CASE cli.clie_iccpfcnpjvalidado
+	WHEN 0 THEN 'NAO'
+	WHEN 1 THEN 'SIM'
+	ELSE 'NAO'
+	END) AS "DOC VALIDADO",
+	(
+		SELECT
+			STRING_AGG('('||cfn.cfon_cdddd||')'||cfn.cfon_nnfone,' | ')
+		FROM
+			cadastro.cliente_fone cfn
+			INNER JOIN cadastro.cliente cli2 ON cli2.clie_id = cfn.clie_id
+			INNER JOIN cadastro.cliente_imovel cim2 ON cim2.clie_id = cli2.clie_id AND cim2.clim_dtrelacaofim IS NULL AND cim2.imov_id = imo.imov_id
+	) AS "TELEFONES",
+	(
+		SELECT
+			'('||cfn.cfon_cdddd||')'||cfn.cfon_nnfone
+		FROM
+			cadastro.cliente_fone cfn
+		WHERE 
+			cfn.cfon_icfonepadrao = 1 AND cfn.clie_id = cli.clie_id
+		LIMIT 1
+	) AS "TELEFONE PADRAO TITULAR",
+	(
+		SELECT
+			'('||cfn.cfon_cdddd||')'||cfn.cfon_nnfone
+		FROM
+			cadastro.cliente_fone cfn
+		WHERE 
+			cfn.clie_id = cli.clie_id AND cfn.cfon_id = (SELECT MAX(cfn2.cfon_id) FROM cadastro.cliente_fone cfn2 WHERE cfn2.clie_id = cli.clie_id)
+		LIMIT 1
+	) AS "TELEFONE MAIS RECENTE TITULAR",
+	(
+		SELECT
+			'('||cfn.cfon_cdddd||')'||cfn.cfon_nnfone
+		FROM
+			cadastro.cliente_fone cfn
+		WHERE 
+			cfn.clie_id = cli.clie_id 
+			AND LEFT(cfn.cfon_nnfone,1) = '9'
+			AND cfn.cfon_id = (SELECT MAX(cfn2.cfon_id) FROM cadastro.cliente_fone cfn2 WHERE cfn2.clie_id = cli.clie_id AND LEFT(cfn2.cfon_nnfone,1) = '9')
+		LIMIT 1
+	) AS "CELULAR MAIS RECENTE TITULAR",
+	(
+		SELECT
+			'('||cfn.cfon_cdddd||')'||cfn.cfon_nnfone
+		FROM
+			cadastro.cliente_fone cfn
+		WHERE 
+			cfn.clie_id = cli.clie_id 
+			AND LEFT(cfn.cfon_nnfone,1) = '9'
+			AND cfn.cfon_cdddd IN ('98','99')
+			AND cfn.cfon_id = (SELECT MAX(cfn2.cfon_id) FROM cadastro.cliente_fone cfn2 WHERE cfn2.clie_id = cli.clie_id AND LEFT(cfn2.cfon_nnfone,1) = '9' AND cfn2.cfon_cdddd IN ('98','99'))
+		LIMIT 1
+	) AS "CELULAR MAIS RECENTE DDD MA",
+	cli.clie_dsemail AS "EMAIL",
+	TO_CHAR(cli.clie_dtnascimento,'DD/MM/YYYY') AS "DT NASCIMENTO",
+	cli.clie_nnmae AS "NOME DA MAE",
+	sex.psex_dspessoasexo AS "SEXO",
+	cim.clim_dtrelacaoinicio AS "INICIO DA RELACAO",
+	cli2.clie_id AS "COD RESP",
+	cli2.clie_nmcliente AS "NOME RESP",
+	cli2.clie_nncpf AS "CPF RESP",
+	cli2.clie_nncnpj AS "CNPJ RESP",
+	lgt.lgtp_dslogradourotipo AS "TIPO LOGRADOURO",
+	logr.logr_nmlogradouro AS "NOME LOGRADOURO",
+	cep.cep_cdcep AS "CEP",
+	imo.imov_dscomplementoendereco AS "COMPLEMENTO",
+	bai.bair_nmbairro AS "BAIRRO",
+	imo.imov_nnimovel AS "NR",
+	mun.muni_nmmunicipio AS "MUNICIPIO"
+FROM 
+	cadastro.imovel imo
+	INNER JOIN cadastro.cliente_imovel cim ON cim.imov_id = imo.imov_id AND cim.clim_dtrelacaofim IS NULL AND cim.clim_icnomeconta = 1
+	INNER JOIN cadastro.cliente cli ON cli.clie_id = cim.clie_id
+	INNER JOIN cadastro.logradouro_bairro lgb ON lgb.lgbr_id = imo.lgbr_id
+	INNER JOIN cadastro.logradouro logr ON lgb.logr_id = logr.logr_id
+	INNER JOIN cadastro.bairro bai ON bai.bair_id = lgb.bair_id
+	INNER JOIN cadastro.municipio mun ON mun.muni_id = bai.muni_id
+	LEFT JOIN cadastro.pessoa_sexo sex ON sex.psex_id = cli.psex_id
+	LEFT JOIN cadastro.cliente_imovel cim2 ON cim2.imov_id = imo.imov_id AND cim2.clim_dtrelacaofim IS NULL AND cim2.crtp_id  = 3
+	LEFT JOIN cadastro.cliente cli2 ON cli2.clie_id = cim2.clie_id
+	LEFT JOIN cadastro.logradouro_cep lgc ON lgc.lgcp_id = imo.lgcp_id
+	LEFT JOIN cadastro.cep cep ON cep.cep_id = lgc.cep_id
+	LEFT JOIN cadastro.logradouro_tipo lgt ON lgt.lgtp_id = logr.lgtp_id
+WHERE
+	imo.imov_icexclusao = 2
+	AND 
+	(cli.clie_nmcliente SIMILAR TO 'MASSAKO%KISHI%|
+MARIA%DO%AMPARO%|
+MARIA%ANGELICA%%|
+GRACILEIDE%RODR%|
+RITA%MARIA%DE%S%|
+USSUANDRA%SILVA%|
+IRIS%MARIA%LIMA%|
+FRANCISCA%IZEMI%|
+MARIA%DAS%GRACA%|
+MARIA%DE%JESUS%%|
+SEBASTIANA%DE%J%|
+MARIA%LIMA%ALVE%|
+IVANILDE%SILVA%%|
+PATRICIA%LOPES%%|
+MARIA%RITA%DA%C%|
+ANA%ALICE%MENEZ%|
+JOANA%GARCIA%DE%|
+MARIA%DO%SOCORR%|
+KATIA%CIRLENE%D%|
+MARIA%EDILEUSA%%|
+CINARA%SOUSA%DA%|
+MARLENE%MACEDO%%|
+SILVINHA%DA%SOL%|
+VALDENICE%COSTA%|
+GEONICE%DA%SILV%|
+MARIA%DO%SOCORR%|
+OLINDA%SOUSA%CO%|
+ANNA%TERESA%SIM%|
+ROSANGELA%CARVA%|
+MARIA%JOSE%BERN%|
+FRANCISCA%DAS%C%|
+JOSEFA%FERREIRA%|
+JOSEFA%TEIXEIRA%|
+MARIA%SENHORINH%|
+HELIANE%COSTA%L%|
+SANTANA%SANTOS%%|
+ANNA%MARIA%ESPI%|
+ROSILDA%SILVA%A%|
+JOSENIRA%FERREI%|
+TEREZINHA%CAMPO%|
+MARIA%PEREIRA%D%|
+NANCI%BEZERRA%D%|
+CLEMENCIA%DA%SI%|
+MARIA%JOSE%DA%S%|
+JUSCYLENE%CAVAL%|
+MARIA%ANTONIA%D%|
+FRANCISCA%COSTA%|
+FRANCISCA%TEIXE%|
+INES%PEREIRA%DE%|
+MYRNA%DOS%REIS%%|
+MARIA%RAIMUNDA%%|
+MARIA%EDILEUZA%%|
+MARIA%MADELON%D%|
+MARTA%DA%COSTA%|
+MARIA%PERPETUO%%|
+SUSANA%MARIA%TE%|
+MARIA%DE%FATIMA%|
+MARIA%DO%CARMO%%|
+MARIA%EDILEUSA%%|
+ADELAIDE%VASCON%|
+DELMA%TEREZA%DO%|
+MARIA%DALVILENE%|
+MARIA%DE%LOURDE%|
+FRANCISCA%DE%AS%|
+MARTA%DA%COSTA%|
+MARIA%EDILEUSA%%|
+ARLETE%VIEIRA%S%|
+ANA%RUBIA%SANTO%|
+JAINETE%GODINHO%|
+LUSIA%MARIA%FER%|
+EUSILENE%NUNES%%|
+ELSINETE%LIMA%D%|
+ZILANY%OLIVEIRA%|
+HAYDEE%DO%SOCOR%|
+MARIA%APARECIDA%|
+SONIA%MARIA%RIB%|
+ROSILDA%SILVA%A%|
+MARIA%OLIVEIRA%%|
+JOANA%ALVES%DE%%|
+RITA%MORAES%BRI%|
+FRANCISCA%PEREI%|
+MARIA%EDILEUSA%%|
+ROSILENE%MARIA%%|
+ANA%VIEIRA%DE%S%|
+MARENY%SILVA%LI%|
+MARIA%DA%LUZ%DE%|
+FRANCISCA%ELEUZ%|
+MARIA%SILVA%DIN%|
+MARIA%DOS%REMED%|
+MARIA%DALVILENE%|
+RAIMUNDA%DA%CRU%|
+ANA%ELISABETH%B%|
+MARIA%DO%PERPET%|
+MARIA%DO%CARMO%%|
+LOUZANGELES%SAN%|
+ANA%VIEIRA%DE%S%|
+ANA%VIEIRA%DE%S%|
+LUCILENE%SILVA%%|
+MARENICE%SILVA%%|
+MARIA%ELIA%GONC%|
+MARIA%FRANCISCA%|
+ALICE%MARIA%CAR%|
+DALVALICE%MILHO%|
+ROSA%COELHO%DA%%|
+MARIA%DA%SILVA%%|
+MARIA%DE%LOURDE%|
+ZULEIDE%AGUIAR%%|
+MARCELINA%ANDRA%|
+MEIRE%DA%SILVA%%|
+MARIA%APARECIDA%|
+CHRYSTYANNE%ALV%|
+VITALINA%PEREIR%|
+EUNICE%DE%SOUSA%|
+MARIA%TEMISTO%D%|
+LAVINA%PEREIRA%%|
+LUCELIA%MENDES%%|
+DORACI%LEITE%GU%|
+FRANCISCA%DAS%C%|
+IRAILDE%XAVIER%%' OR cli2.clie_nmcliente SIMILAR TO 'MASSAKO%KISHI%|
+MARIA%DO%AMPARO%|
+MARIA%ANGELICA%%|
+GRACILEIDE%RODR%|
+RITA%MARIA%DE%S%|
+USSUANDRA%SILVA%|
+IRIS%MARIA%LIMA%|
+FRANCISCA%IZEMI%|
+MARIA%DAS%GRACA%|
+MARIA%DE%JESUS%%|
+SEBASTIANA%DE%J%|
+MARIA%LIMA%ALVE%|
+IVANILDE%SILVA%%|
+PATRICIA%LOPES%%|
+MARIA%RITA%DA%C%|
+ANA%ALICE%MENEZ%|
+JOANA%GARCIA%DE%|
+MARIA%DO%SOCORR%|
+KATIA%CIRLENE%D%|
+MARIA%EDILEUSA%%|
+CINARA%SOUSA%DA%|
+MARLENE%MACEDO%%|
+SILVINHA%DA%SOL%|
+VALDENICE%COSTA%|
+GEONICE%DA%SILV%|
+MARIA%DO%SOCORR%|
+OLINDA%SOUSA%CO%|
+ANNA%TERESA%SIM%|
+ROSANGELA%CARVA%|
+MARIA%JOSE%BERN%|
+FRANCISCA%DAS%C%|
+JOSEFA%FERREIRA%|
+JOSEFA%TEIXEIRA%|
+MARIA%SENHORINH%|
+HELIANE%COSTA%L%|
+SANTANA%SANTOS%%|
+ANNA%MARIA%ESPI%|
+ROSILDA%SILVA%A%|
+JOSENIRA%FERREI%|
+TEREZINHA%CAMPO%|
+MARIA%PEREIRA%D%|
+NANCI%BEZERRA%D%|
+CLEMENCIA%DA%SI%|
+MARIA%JOSE%DA%S%|
+JUSCYLENE%CAVAL%|
+MARIA%ANTONIA%D%|
+FRANCISCA%COSTA%|
+FRANCISCA%TEIXE%|
+INES%PEREIRA%DE%|
+MYRNA%DOS%REIS%%|
+MARIA%RAIMUNDA%%|
+MARIA%EDILEUZA%%|
+MARIA%MADELON%D%|
+MARTA%DA%COSTA%|
+MARIA%PERPETUO%%|
+SUSANA%MARIA%TE%|
+MARIA%DE%FATIMA%|
+MARIA%DO%CARMO%%|
+MARIA%EDILEUSA%%|
+ADELAIDE%VASCON%|
+DELMA%TEREZA%DO%|
+MARIA%DALVILENE%|
+MARIA%DE%LOURDE%|
+FRANCISCA%DE%AS%|
+MARTA%DA%COSTA%|
+MARIA%EDILEUSA%%|
+ARLETE%VIEIRA%S%|
+ANA%RUBIA%SANTO%|
+JAINETE%GODINHO%|
+LUSIA%MARIA%FER%|
+EUSILENE%NUNES%%|
+ELSINETE%LIMA%D%|
+ZILANY%OLIVEIRA%|
+HAYDEE%DO%SOCOR%|
+MARIA%APARECIDA%|
+SONIA%MARIA%RIB%|
+ROSILDA%SILVA%A%|
+MARIA%OLIVEIRA%%|
+JOANA%ALVES%DE%%|
+RITA%MORAES%BRI%|
+FRANCISCA%PEREI%|
+MARIA%EDILEUSA%%|
+ROSILENE%MARIA%%|
+ANA%VIEIRA%DE%S%|
+MARENY%SILVA%LI%|
+MARIA%DA%LUZ%DE%|
+FRANCISCA%ELEUZ%|
+MARIA%SILVA%DIN%|
+MARIA%DOS%REMED%|
+MARIA%DALVILENE%|
+RAIMUNDA%DA%CRU%|
+ANA%ELISABETH%B%|
+MARIA%DO%PERPET%|
+MARIA%DO%CARMO%%|
+LOUZANGELES%SAN%|
+ANA%VIEIRA%DE%S%|
+ANA%VIEIRA%DE%S%|
+LUCILENE%SILVA%%|
+MARENICE%SILVA%%|
+MARIA%ELIA%GONC%|
+MARIA%FRANCISCA%|
+ALICE%MARIA%CAR%|
+DALVALICE%MILHO%|
+ROSA%COELHO%DA%%|
+MARIA%DA%SILVA%%|
+MARIA%DE%LOURDE%|
+ZULEIDE%AGUIAR%%|
+MARCELINA%ANDRA%|
+MEIRE%DA%SILVA%%|
+MARIA%APARECIDA%|
+CHRYSTYANNE%ALV%|
+VITALINA%PEREIR%|
+EUNICE%DE%SOUSA%|
+MARIA%TEMISTO%D%|
+LAVINA%PEREIRA%%|
+LUCELIA%MENDES%%|
+DORACI%LEITE%GU%|
+FRANCISCA%DAS%C%|
+IRAILDE%XAVIER%%'
+)
+ORDER BY 1

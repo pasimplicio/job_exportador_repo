@@ -1,0 +1,714 @@
+	SELECT
+		con.imov_id AS "MATRICULA",
+		'REFATURAMENTO' AS "TIPO",
+		con.cnta_dtretificacao AS "DATA RETIFICACAO",
+		cmr.cmrt_dsmotivoretificacaoconta AS "MOTIVO REFATURAMENTO",
+		con_orig.rgat_id AS "R.A.",
+		TO_CHAR(ra.rgat_tmregistroatendimento, 'dd/MM/yyyy') AS "DATA ABERTURA R.A.",
+		(CASE ra.rgat_cdsituacao
+			WHEN 1 THEN 'PENDENTE'
+			WHEN 2 THEN 'ENCERRADA'
+			ELSE 'INDETERMINADO'
+		END) AS "SITUACAO R.A.",
+		ra.rgat_dsobservacao AS "OBS R.A.",
+		ra.rgat_dsparecerencerramento AS "PARECER R.A.",
+		ame.amen_dsmotivoencerramento AS "MOTIVO ENCERRAMENTO R.A.",
+		con.cnta_dsobservacao AS "OBSERVAÇÃO REFATURAMENTO",
+		usu.usur_nmlogin AS "LOGIN",
+		usu.usur_nmusuario AS "NOME USUARIO",
+		(imo.loca_id::TEXT || '-' || sec.stcm_cdsetorcomercial::TEXT || '-' || rot.rota_cdrota::TEXT) AS "LOCALIZACAO",
+		imo.imov_id AS "MATRICULA",
+		cli.clie_nmcliente AS "NOME", 
+		hid.hidr_nnhidrometro AS "NR HID.",
+		TO_CHAR(his.hidi_dtinstalacaohidrometro, 'dd/MM/yyyy') AS "DT INSTAL. HD",
+		cli.clie_nncpf AS "CPF",
+		cli.clie_nncnpj AS "CNPJ",
+		(CASE cli.clie_iccpfcnpjvalidado
+		WHEN 0 THEN 'NAO'
+		WHEN 1 THEN 'SIM'
+		ELSE 'NAO'
+		END) AS "DOC VALIDADO",
+		(
+			SELECT
+				STRING_AGG('('||cfn.cfon_cdddd||')'||cfn.cfon_nnfone,' | ')
+			FROM
+				cadastro.cliente_fone cfn
+				INNER JOIN cadastro.cliente cli2 ON cli2.clie_id = cfn.clie_id
+				INNER JOIN cadastro.cliente_imovel cim2 ON cim2.clie_id = cli2.clie_id AND cim2.clim_dtrelacaofim IS NULL AND cim2.imov_id = imo.imov_id
+		) AS telefones,
+		cli.clie_dsemail AS "EMAIL",
+		imo.iper_id AS "PERFIL",
+		(CASE imo.imov_idcategoriaprincipal 
+		WHEN 1 THEN '1 - RESIDENCIAL'
+		WHEN 2 THEN '2 - COMERCIAL'
+		WHEN 3 THEN '3 - INDUSTRIAL'
+		WHEN 4 THEN '4 - PUBLICO'
+		ELSE 'NAO DEFINIDO'
+		END) AS "CATEGORIA PRINCIPAL",
+		(CASE imo.imov_idsubcategoriaprincipal 
+		WHEN 1 THEN '1 - RESIDENCIAL'
+		WHEN 2 THEN '2 - COMERCIAL'
+		WHEN 3 THEN '3 - INDUSTRIAL'
+		WHEN 4 THEN '4 - MUNICIPAL'
+		WHEN 5 THEN '5 - ESTADUAL'
+		WHEN 6 THEN '6 - FEDERAL'
+		WHEN 7 THEN '7 - RES. POPULAR'
+		WHEN 8 THEN '8 - PEQ. NEGOCIOS'
+		WHEN 9 THEN '9 - ENT. FILANTROPICAS'
+		WHEN 10 THEN '10 - SIST. OPERADO POR PREFEITURA'
+		ELSE 'NAO DEFINIDO'
+		END) AS "SUBCATEGORIA PRINCIPAL",
+		imo.imov_qteconomia AS "ECONOMIAS",
+		loc.uneg_id AS "GERENCIA",
+		une.uneg_nmunidadenegocio AS "NOME UNIDADE",
+		imo.loca_id AS "LOCALIDADE",
+		loc.loca_nmlocalidade AS "NOME LOCALIDADE",
+		sec.stcm_cdsetorcomercial AS "SETOR COMERCIAL",
+		qdr.qdra_nnquadra AS "QUADRA",
+		imo.imov_nnsequencialrota AS "SEQUENCIA",
+		imo.imov_nnsublote AS "SUB LOTE",
+		rot.rota_cdrota AS "ROTA",
+		ftg.ftgr_dsfaturamentogrupo AS "GRUPO FATURAMENTO",
+		lgt.lgtp_dslogradourotipo AS "TIPO LOGRADOURO",
+		logr.logr_nmlogradouro AS "NOME LOGRADOURO",
+		cep.cep_cdcep AS "CEP",
+		imo.imov_dscomplementoendereco AS "COMPLEMENTO",
+		bai.bair_nmbairro AS "BAIRRO",
+		imo.imov_nnimovel AS "NR",
+		mun.muni_nmmunicipio AS "MUNICIPIO",
+		SUM(con_orig.cnta_vlagua+con_orig.cnta_vlesgoto+con_orig.cnta_vldebitos-con_orig.cnta_vlcreditos-con_orig.cnta_vlimpostos) AS "VALOR ORIGINAL",
+		SUM(con.cnta_vlagua+con.cnta_vlesgoto+con.cnta_vldebitos-con.cnta_vlcreditos-con.cnta_vlimpostos) AS "VALOR FINAL",
+		SUM((con_orig.cnta_vlagua+con_orig.cnta_vlesgoto+con_orig.cnta_vldebitos-con_orig.cnta_vlcreditos-con_orig.cnta_vlimpostos)-(con.cnta_vlagua+con.cnta_vlesgoto+con.cnta_vldebitos-con.cnta_vlcreditos-con.cnta_vlimpostos)) AS "DIFERENCA",
+		STRING_AGG(con.cnta_amreferenciaconta,', ') AS "REFERENCIAS"
+	FROM
+		faturamento.conta con
+		INNER JOIN faturamento.conta con_orig ON con_orig.cnta_amreferenciaconta = con.cnta_amreferenciaconta AND con_orig.imov_id = con.imov_id AND con_orig.cnta_id <> con.cnta_id AND con_orig.dcst_idatual = 4
+		INNER JOIN cadastro.imovel imo ON imo.imov_id = con.imov_id
+		INNER JOIN cadastro.cliente_imovel cim ON cim.imov_id = imo.imov_id AND cim.clim_dtrelacaofim IS NULL AND cim.clim_icnomeconta = 1
+		INNER JOIN cadastro.cliente cli ON cli.clie_id = cim.clie_id
+		INNER JOIN cadastro.localidade loc ON imo.loca_id = loc.loca_id
+		INNER JOIN cadastro.unidade_negocio une ON une.uneg_id = loc.uneg_id
+		INNER JOIN cadastro.setor_comercial sec ON imo.stcm_id = sec.stcm_id
+		INNER JOIN cadastro.quadra qdr ON qdr.qdra_id = imo.qdra_id
+		INNER JOIN micromedicao.rota rot ON rot.rota_id = qdr.rota_id
+		INNER JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
+		INNER JOIN cadastro.logradouro_bairro lgb ON lgb.lgbr_id = imo.lgbr_id
+		INNER JOIN cadastro.logradouro logr ON lgb.logr_id = logr.logr_id
+		INNER JOIN cadastro.bairro bai ON bai.bair_id = lgb.bair_id
+		INNER JOIN cadastro.municipio mun ON mun.muni_id = bai.muni_id
+		INNER JOIN cadastro.fonte_abastecimento ftb ON ftb.ftab_id = imo.ftab_id
+		INNER JOIN atendimentopublico.ligacao_agua_situacao las ON las.last_id = imo.last_id
+		INNER JOIN atendimentopublico.ligacao_esgoto_situacao les ON les.lest_id = imo.lest_id
+		LEFT JOIN atendimentopublico.registro_atendimento ra ON ra.rgat_id = con_orig.rgat_id
+		LEFT JOIN atendimentopublico.atend_motivo_encmt ame ON ame.amen_id = ra.amen_id
+		LEFT JOIN operacional.distrito_operacional dis ON dis.diop_id = qdr.diop_id
+		LEFT JOIN cadastro.logradouro_cep lgc ON lgc.lgcp_id = imo.lgcp_id
+		LEFT JOIN cadastro.cep cep ON cep.cep_id = lgc.cep_id
+		LEFT JOIN cadastro.logradouro_tipo lgt ON lgt.lgtp_id = logr.lgtp_id
+		LEFT JOIN faturamento.conta_motivo_retificacao cmr ON cmr.cmrt_id = con.cmrt_id
+		LEFT JOIN seguranca.usuario usu ON usu.usur_id = con.usur_id
+		LEFT JOIN atendimentopublico.ligacao_agua lagu ON lagu.lagu_id = imo.imov_id
+		LEFT JOIN micromedicao.hidrometro_inst_hist his ON lagu.hidi_id = his.hidi_id AND his.hidi_dtretiradahidrometro IS NULL
+		LEFT JOIN micromedicao.hidrometro hid ON his.hidr_id = hid.hidr_id
+	WHERE
+		con.dcst_idatual IN (1,5) AND
+		--con.cnta_amreferenciaconta = 201912 AND
+		con.cnta_dtretificacao >= '2020-01-01'
+		--AND con.imov_id = 899712
+	GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44
+UNION
+	SELECT
+		con.imov_id AS "MATRICULA",
+		'REFATURAMENTO' AS "TIPO",
+		con.cnhi_dtretificacao AS "DATA RETIFICACAO",
+		cmr.cmrt_dsmotivoretificacaoconta AS "MOTIVO REFATURAMENTO",
+		con_orig.rgat_id AS "R.A.",
+		TO_CHAR(ra.rgat_tmregistroatendimento, 'dd/MM/yyyy') AS "DATA ABERTURA R.A.",
+		(CASE ra.rgat_cdsituacao
+			WHEN 1 THEN 'PENDENTE'
+			WHEN 2 THEN 'ENCERRADA'
+			ELSE 'INDETERMINADO'
+		END) AS "SITUACAO R.A.",
+		ra.rgat_dsobservacao AS "OBS R.A.",
+		ra.rgat_dsparecerencerramento AS "PARECER R.A.",
+		ame.amen_dsmotivoencerramento AS "MOTIVO ENCERRAMENTO R.A.",
+		con.cnhi_dsobservacao AS "OBSERVAÇÃO REFATURAMENTO",
+		usu.usur_nmlogin AS "LOGIN",
+		usu.usur_nmusuario AS "NOME USUARIO",
+		(imo.loca_id::TEXT || '-' || sec.stcm_cdsetorcomercial::TEXT || '-' || rot.rota_cdrota::TEXT) AS "LOCALIZACAO",
+		imo.imov_id AS "MATRICULA",
+		cli.clie_nmcliente AS "NOME",
+		hid.hidr_nnhidrometro AS "NR HID.",
+		TO_CHAR(his.hidi_dtinstalacaohidrometro, 'dd/MM/yyyy') AS "DT INSTAL. HD",
+		cli.clie_nncpf AS "CPF",
+		cli.clie_nncnpj AS "CNPJ",
+		(CASE cli.clie_iccpfcnpjvalidado
+		WHEN 0 THEN 'NAO'
+		WHEN 1 THEN 'SIM'
+		ELSE 'NAO'
+		END) AS "DOC VALIDADO",
+		(
+			SELECT
+				STRING_AGG('('||cfn.cfon_cdddd||')'||cfn.cfon_nnfone,' | ')
+			FROM
+				cadastro.cliente_fone cfn
+				INNER JOIN cadastro.cliente cli2 ON cli2.clie_id = cfn.clie_id
+				INNER JOIN cadastro.cliente_imovel cim2 ON cim2.clie_id = cli2.clie_id AND cim2.clim_dtrelacaofim IS NULL AND cim2.imov_id = imo.imov_id
+		) AS telefones,
+		cli.clie_dsemail AS "EMAIL",
+		imo.iper_id AS "PERFIL",
+		(CASE imo.imov_idcategoriaprincipal 
+		WHEN 1 THEN '1 - RESIDENCIAL'
+		WHEN 2 THEN '2 - COMERCIAL'
+		WHEN 3 THEN '3 - INDUSTRIAL'
+		WHEN 4 THEN '4 - PUBLICO'
+		ELSE 'NAO DEFINIDO'
+		END) AS "CATEGORIA PRINCIPAL",
+		(CASE imo.imov_idsubcategoriaprincipal 
+		WHEN 1 THEN '1 - RESIDENCIAL'
+		WHEN 2 THEN '2 - COMERCIAL'
+		WHEN 3 THEN '3 - INDUSTRIAL'
+		WHEN 4 THEN '4 - MUNICIPAL'
+		WHEN 5 THEN '5 - ESTADUAL'
+		WHEN 6 THEN '6 - FEDERAL'
+		WHEN 7 THEN '7 - RES. POPULAR'
+		WHEN 8 THEN '8 - PEQ. NEGOCIOS'
+		WHEN 9 THEN '9 - ENT. FILANTROPICAS'
+		WHEN 10 THEN '10 - SIST. OPERADO POR PREFEITURA'
+		ELSE 'NAO DEFINIDO'
+		END) AS "SUBCATEGORIA PRINCIPAL",
+		imo.imov_qteconomia AS "ECONOMIAS",
+		loc.uneg_id AS "GERENCIA",
+		une.uneg_nmunidadenegocio AS "NOME UNIDADE",
+		imo.loca_id AS "LOCALIDADE",
+		loc.loca_nmlocalidade AS "NOME LOCALIDADE",
+		sec.stcm_cdsetorcomercial AS "SETOR COMERCIAL",
+		qdr.qdra_nnquadra AS "QUADRA",
+		imo.imov_nnsequencialrota AS "SEQUENCIA",
+		imo.imov_nnsublote AS "SUB LOTE",
+		rot.rota_cdrota AS "ROTA",
+		ftg.ftgr_dsfaturamentogrupo AS "GRUPO FATURAMENTO",
+		lgt.lgtp_dslogradourotipo AS "TIPO LOGRADOURO",
+		logr.logr_nmlogradouro AS "NOME LOGRADOURO",
+		cep.cep_cdcep AS "CEP",
+		imo.imov_dscomplementoendereco AS "COMPLEMENTO",
+		bai.bair_nmbairro AS "BAIRRO",
+		imo.imov_nnimovel AS "NR",
+		mun.muni_nmmunicipio AS "MUNICIPIO",
+		SUM(con_orig.cnhi_vlagua+con_orig.cnhi_vlesgoto+con_orig.cnhi_vldebitos-con_orig.cnhi_vlcreditos-con_orig.cnhi_vlimpostos) AS "VALOR ORIGINAL",
+		SUM(con.cnhi_vlagua+con.cnhi_vlesgoto+con.cnhi_vldebitos-con.cnhi_vlcreditos-con.cnhi_vlimpostos) AS "VALOR FINAL",
+		SUM((con_orig.cnhi_vlagua+con_orig.cnhi_vlesgoto+con_orig.cnhi_vldebitos-con_orig.cnhi_vlcreditos-con_orig.cnhi_vlimpostos)-(con.cnhi_vlagua+con.cnhi_vlesgoto+con.cnhi_vldebitos-con.cnhi_vlcreditos-con.cnhi_vlimpostos)) AS "DIFERENCA",
+		STRING_AGG(con.cnhi_amreferenciaconta,', ') AS "REFERENCIAS"
+	FROM
+		faturamento.conta_historico con
+		INNER JOIN faturamento.conta_historico con_orig ON con_orig.cnhi_amreferenciaconta = con.cnhi_amreferenciaconta AND con_orig.imov_id = con.imov_id AND con_orig.cnta_id <> con.cnta_id AND con_orig.dcst_idatual = 4
+		INNER JOIN cadastro.imovel imo ON imo.imov_id = con.imov_id
+		INNER JOIN cadastro.cliente_imovel cim ON cim.imov_id = imo.imov_id AND cim.clim_dtrelacaofim IS NULL AND cim.clim_icnomeconta = 1
+		INNER JOIN cadastro.cliente cli ON cli.clie_id = cim.clie_id
+		INNER JOIN cadastro.localidade loc ON imo.loca_id = loc.loca_id
+		INNER JOIN cadastro.unidade_negocio une ON une.uneg_id = loc.uneg_id
+		INNER JOIN cadastro.setor_comercial sec ON imo.stcm_id = sec.stcm_id
+		INNER JOIN cadastro.quadra qdr ON qdr.qdra_id = imo.qdra_id
+		INNER JOIN micromedicao.rota rot ON rot.rota_id = qdr.rota_id
+		INNER JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
+		INNER JOIN cadastro.logradouro_bairro lgb ON lgb.lgbr_id = imo.lgbr_id
+		INNER JOIN cadastro.logradouro logr ON lgb.logr_id = logr.logr_id
+		INNER JOIN cadastro.bairro bai ON bai.bair_id = lgb.bair_id
+		INNER JOIN cadastro.municipio mun ON mun.muni_id = bai.muni_id
+		INNER JOIN cadastro.fonte_abastecimento ftb ON ftb.ftab_id = imo.ftab_id
+		INNER JOIN atendimentopublico.ligacao_agua_situacao las ON las.last_id = imo.last_id
+		INNER JOIN atendimentopublico.ligacao_esgoto_situacao les ON les.lest_id = imo.lest_id
+		LEFT JOIN atendimentopublico.registro_atendimento ra ON ra.rgat_id = con_orig.rgat_id
+		LEFT JOIN atendimentopublico.atend_motivo_encmt ame ON ame.amen_id = ra.amen_id
+		LEFT JOIN operacional.distrito_operacional dis ON dis.diop_id = qdr.diop_id
+		LEFT JOIN cadastro.logradouro_cep lgc ON lgc.lgcp_id = imo.lgcp_id
+		LEFT JOIN cadastro.cep cep ON cep.cep_id = lgc.cep_id
+		LEFT JOIN cadastro.logradouro_tipo lgt ON lgt.lgtp_id = logr.lgtp_id
+		LEFT JOIN faturamento.conta_motivo_retificacao cmr ON cmr.cmrt_id = con.cmrt_id
+		LEFT JOIN seguranca.usuario usu ON usu.usur_id = con.usur_id
+		LEFT JOIN atendimentopublico.ligacao_agua lagu ON lagu.lagu_id = imo.imov_id
+		LEFT JOIN micromedicao.hidrometro_inst_hist his ON lagu.hidi_id = his.hidi_id AND his.hidi_dtretiradahidrometro IS NULL
+		LEFT JOIN micromedicao.hidrometro hid ON his.hidr_id = hid.hidr_id
+	WHERE
+		con.dcst_idatual IN (1,5) AND
+		--con.cnta_amreferenciaconta = 201912 AND
+		con.cnhi_dtretificacao >= '2020-01-01'
+		--AND con.imov_id = 899712
+	GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44
+UNION 
+	SELECT
+		con.imov_id AS "MATRICULA",
+		'REFATURAMENTO' AS "TIPO",
+		con.cnta_dtretificacao AS "DATA RETIFICACAO",
+		cmr.cmrt_dsmotivoretificacaoconta AS "MOTIVO REFATURAMENTO",
+		con_orig.rgat_id AS "R.A.",
+		TO_CHAR(ra.rgat_tmregistroatendimento, 'dd/MM/yyyy') AS "DATA ABERTURA R.A.",
+		(CASE ra.rgat_cdsituacao
+			WHEN 1 THEN 'PENDENTE'
+			WHEN 2 THEN 'ENCERRADA'
+			ELSE 'INDETERMINADO'
+		END) AS "SITUACAO R.A.",
+		ra.rgat_dsobservacao AS "OBS R.A.",
+		ra.rgat_dsparecerencerramento AS "PARECER R.A.",
+		ame.amen_dsmotivoencerramento AS "MOTIVO ENCERRAMENTO R.A.",
+		con.cnta_dsobservacao AS "OBSERVAÇÃO REFATURAMENTO",
+		usu.usur_nmlogin AS "LOGIN",
+		usu.usur_nmusuario AS "NOME USUARIO",
+		(imo.loca_id::TEXT || '-' || sec.stcm_cdsetorcomercial::TEXT || '-' || rot.rota_cdrota::TEXT) AS "LOCALIZACAO",
+		imo.imov_id AS "MATRICULA",
+		cli.clie_nmcliente AS "NOME", 
+		hid.hidr_nnhidrometro AS "NR HID.",
+		TO_CHAR(his.hidi_dtinstalacaohidrometro, 'dd/MM/yyyy') AS "DT INSTAL. HD",
+		cli.clie_nncpf AS "CPF",
+		cli.clie_nncnpj AS "CNPJ",
+		(CASE cli.clie_iccpfcnpjvalidado
+		WHEN 0 THEN 'NAO'
+		WHEN 1 THEN 'SIM'
+		ELSE 'NAO'
+		END) AS "DOC VALIDADO",
+		(
+			SELECT
+				STRING_AGG('('||cfn.cfon_cdddd||')'||cfn.cfon_nnfone,' | ')
+			FROM
+				cadastro.cliente_fone cfn
+				INNER JOIN cadastro.cliente cli2 ON cli2.clie_id = cfn.clie_id
+				INNER JOIN cadastro.cliente_imovel cim2 ON cim2.clie_id = cli2.clie_id AND cim2.clim_dtrelacaofim IS NULL AND cim2.imov_id = imo.imov_id
+		) AS telefones,
+		cli.clie_dsemail AS "EMAIL",
+		imo.iper_id AS "PERFIL",
+		(CASE imo.imov_idcategoriaprincipal 
+		WHEN 1 THEN '1 - RESIDENCIAL'
+		WHEN 2 THEN '2 - COMERCIAL'
+		WHEN 3 THEN '3 - INDUSTRIAL'
+		WHEN 4 THEN '4 - PUBLICO'
+		ELSE 'NAO DEFINIDO'
+		END) AS "CATEGORIA PRINCIPAL",
+		(CASE imo.imov_idsubcategoriaprincipal 
+		WHEN 1 THEN '1 - RESIDENCIAL'
+		WHEN 2 THEN '2 - COMERCIAL'
+		WHEN 3 THEN '3 - INDUSTRIAL'
+		WHEN 4 THEN '4 - MUNICIPAL'
+		WHEN 5 THEN '5 - ESTADUAL'
+		WHEN 6 THEN '6 - FEDERAL'
+		WHEN 7 THEN '7 - RES. POPULAR'
+		WHEN 8 THEN '8 - PEQ. NEGOCIOS'
+		WHEN 9 THEN '9 - ENT. FILANTROPICAS'
+		WHEN 10 THEN '10 - SIST. OPERADO POR PREFEITURA'
+		ELSE 'NAO DEFINIDO'
+		END) AS "SUBCATEGORIA PRINCIPAL",
+		imo.imov_qteconomia AS "ECONOMIAS",
+		loc.uneg_id AS "GERENCIA",
+		une.uneg_nmunidadenegocio AS "NOME UNIDADE",
+		imo.loca_id AS "LOCALIDADE",
+		loc.loca_nmlocalidade AS "NOME LOCALIDADE",
+		sec.stcm_cdsetorcomercial AS "SETOR COMERCIAL",
+		qdr.qdra_nnquadra AS "QUADRA",
+		imo.imov_nnsequencialrota AS "SEQUENCIA",
+		imo.imov_nnsublote AS "SUB LOTE",
+		rot.rota_cdrota AS "ROTA",
+		ftg.ftgr_dsfaturamentogrupo AS "GRUPO FATURAMENTO",
+		lgt.lgtp_dslogradourotipo AS "TIPO LOGRADOURO",
+		logr.logr_nmlogradouro AS "NOME LOGRADOURO",
+		cep.cep_cdcep AS "CEP",
+		imo.imov_dscomplementoendereco AS "COMPLEMENTO",
+		bai.bair_nmbairro AS "BAIRRO",
+		imo.imov_nnimovel AS "NR",
+		mun.muni_nmmunicipio AS "MUNICIPIO",
+		SUM(con_orig.cnhi_vlagua+con_orig.cnhi_vlesgoto+con_orig.cnhi_vldebitos-con_orig.cnhi_vlcreditos-con_orig.cnhi_vlimpostos) AS "VALOR ORIGINAL",
+		SUM(con.cnta_vlagua+con.cnta_vlesgoto+con.cnta_vldebitos-con.cnta_vlcreditos-con.cnta_vlimpostos) AS "VALOR FINAL",
+		SUM((con_orig.cnhi_vlagua+con_orig.cnhi_vlesgoto+con_orig.cnhi_vldebitos-con_orig.cnhi_vlcreditos-con_orig.cnhi_vlimpostos)-(con.cnta_vlagua+con.cnta_vlesgoto+con.cnta_vldebitos-con.cnta_vlcreditos-con.cnta_vlimpostos)) AS "DIFERENCA",
+		STRING_AGG(con.cnta_amreferenciaconta,', ') AS "REFERENCIAS"
+	FROM
+		faturamento.conta con
+		INNER JOIN faturamento.conta_historico con_orig ON con_orig.cnhi_amreferenciaconta = con.cnta_amreferenciaconta AND con_orig.imov_id = con.imov_id AND con_orig.cnta_id <> con.cnta_id AND con_orig.dcst_idatual = 4
+		INNER JOIN cadastro.imovel imo ON imo.imov_id = con.imov_id
+		INNER JOIN cadastro.cliente_imovel cim ON cim.imov_id = imo.imov_id AND cim.clim_dtrelacaofim IS NULL AND cim.clim_icnomeconta = 1
+		INNER JOIN cadastro.cliente cli ON cli.clie_id = cim.clie_id
+		INNER JOIN cadastro.localidade loc ON imo.loca_id = loc.loca_id
+		INNER JOIN cadastro.unidade_negocio une ON une.uneg_id = loc.uneg_id
+		INNER JOIN cadastro.setor_comercial sec ON imo.stcm_id = sec.stcm_id
+		INNER JOIN cadastro.quadra qdr ON qdr.qdra_id = imo.qdra_id
+		INNER JOIN micromedicao.rota rot ON rot.rota_id = qdr.rota_id
+		INNER JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
+		INNER JOIN cadastro.logradouro_bairro lgb ON lgb.lgbr_id = imo.lgbr_id
+		INNER JOIN cadastro.logradouro logr ON lgb.logr_id = logr.logr_id
+		INNER JOIN cadastro.bairro bai ON bai.bair_id = lgb.bair_id
+		INNER JOIN cadastro.municipio mun ON mun.muni_id = bai.muni_id
+		INNER JOIN cadastro.fonte_abastecimento ftb ON ftb.ftab_id = imo.ftab_id
+		INNER JOIN atendimentopublico.ligacao_agua_situacao las ON las.last_id = imo.last_id
+		INNER JOIN atendimentopublico.ligacao_esgoto_situacao les ON les.lest_id = imo.lest_id
+		LEFT JOIN atendimentopublico.registro_atendimento ra ON ra.rgat_id = con_orig.rgat_id
+		LEFT JOIN atendimentopublico.atend_motivo_encmt ame ON ame.amen_id = ra.amen_id
+		LEFT JOIN operacional.distrito_operacional dis ON dis.diop_id = qdr.diop_id
+		LEFT JOIN cadastro.logradouro_cep lgc ON lgc.lgcp_id = imo.lgcp_id
+		LEFT JOIN cadastro.cep cep ON cep.cep_id = lgc.cep_id
+		LEFT JOIN cadastro.logradouro_tipo lgt ON lgt.lgtp_id = logr.lgtp_id
+		LEFT JOIN faturamento.conta_motivo_retificacao cmr ON cmr.cmrt_id = con.cmrt_id
+		LEFT JOIN seguranca.usuario usu ON usu.usur_id = con.usur_id
+		LEFT JOIN atendimentopublico.ligacao_agua lagu ON lagu.lagu_id = imo.imov_id
+		LEFT JOIN micromedicao.hidrometro_inst_hist his ON lagu.hidi_id = his.hidi_id AND his.hidi_dtretiradahidrometro IS NULL
+		LEFT JOIN micromedicao.hidrometro hid ON his.hidr_id = hid.hidr_id
+	WHERE
+		con.dcst_idatual IN (1,5) AND
+		--con.cnta_amreferenciaconta = 201912 AND
+		con.cnta_dtretificacao >= '2020-01-01'
+		--AND con.imov_id = 899712
+	GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44
+UNION
+	SELECT
+		con.imov_id AS "MATRICULA",
+		'REFATURAMENTO' AS "TIPO",
+		con.cnhi_dtretificacao AS "DATA RETIFICACAO",
+		cmr.cmrt_dsmotivoretificacaoconta AS "MOTIVO REFATURAMENTO",
+		con_orig.rgat_id AS "R.A.",
+		TO_CHAR(ra.rgat_tmregistroatendimento, 'dd/MM/yyyy') AS "DATA ABERTURA R.A.",
+		(CASE ra.rgat_cdsituacao
+			WHEN 1 THEN 'PENDENTE'
+			WHEN 2 THEN 'ENCERRADA'
+			ELSE 'INDETERMINADO'
+		END) AS "SITUACAO R.A.",
+		ra.rgat_dsobservacao AS "OBS R.A.",
+		ra.rgat_dsparecerencerramento AS "PARECER R.A.",
+		ame.amen_dsmotivoencerramento AS "MOTIVO ENCERRAMENTO R.A.",
+		con.cnhi_dsobservacao AS "OBSERVAÇÃO REFATURAMENTO",
+		usu.usur_nmlogin AS "LOGIN",
+		usu.usur_nmusuario AS "NOME USUARIO",
+		(imo.loca_id::TEXT || '-' || sec.stcm_cdsetorcomercial::TEXT || '-' || rot.rota_cdrota::TEXT) AS "LOCALIZACAO",
+		imo.imov_id AS "MATRICULA",
+		cli.clie_nmcliente AS "NOME", 
+		hid.hidr_nnhidrometro AS "NR HID.",
+		TO_CHAR(his.hidi_dtinstalacaohidrometro, 'dd/MM/yyyy') AS "DT INSTAL. HD",
+		cli.clie_nncpf AS "CPF",
+		cli.clie_nncnpj AS "CNPJ",
+		(CASE cli.clie_iccpfcnpjvalidado
+		WHEN 0 THEN 'NAO'
+		WHEN 1 THEN 'SIM'
+		ELSE 'NAO'
+		END) AS "DOC VALIDADO",
+		(
+			SELECT
+				STRING_AGG('('||cfn.cfon_cdddd||')'||cfn.cfon_nnfone,' | ')
+			FROM
+				cadastro.cliente_fone cfn
+				INNER JOIN cadastro.cliente cli2 ON cli2.clie_id = cfn.clie_id
+				INNER JOIN cadastro.cliente_imovel cim2 ON cim2.clie_id = cli2.clie_id AND cim2.clim_dtrelacaofim IS NULL AND cim2.imov_id = imo.imov_id
+		) AS telefones,
+		cli.clie_dsemail AS "EMAIL",
+		imo.iper_id AS "PERFIL",
+		(CASE imo.imov_idcategoriaprincipal 
+		WHEN 1 THEN '1 - RESIDENCIAL'
+		WHEN 2 THEN '2 - COMERCIAL'
+		WHEN 3 THEN '3 - INDUSTRIAL'
+		WHEN 4 THEN '4 - PUBLICO'
+		ELSE 'NAO DEFINIDO'
+		END) AS "CATEGORIA PRINCIPAL",
+		(CASE imo.imov_idsubcategoriaprincipal 
+		WHEN 1 THEN '1 - RESIDENCIAL'
+		WHEN 2 THEN '2 - COMERCIAL'
+		WHEN 3 THEN '3 - INDUSTRIAL'
+		WHEN 4 THEN '4 - MUNICIPAL'
+		WHEN 5 THEN '5 - ESTADUAL'
+		WHEN 6 THEN '6 - FEDERAL'
+		WHEN 7 THEN '7 - RES. POPULAR'
+		WHEN 8 THEN '8 - PEQ. NEGOCIOS'
+		WHEN 9 THEN '9 - ENT. FILANTROPICAS'
+		WHEN 10 THEN '10 - SIST. OPERADO POR PREFEITURA'
+		ELSE 'NAO DEFINIDO'
+		END) AS "SUBCATEGORIA PRINCIPAL",
+		imo.imov_qteconomia AS "ECONOMIAS",
+		loc.uneg_id AS "GERENCIA",
+		une.uneg_nmunidadenegocio AS "NOME UNIDADE",
+		imo.loca_id AS "LOCALIDADE",
+		loc.loca_nmlocalidade AS "NOME LOCALIDADE",
+		sec.stcm_cdsetorcomercial AS "SETOR COMERCIAL",
+		qdr.qdra_nnquadra AS "QUADRA",
+		imo.imov_nnsequencialrota AS "SEQUENCIA",
+		imo.imov_nnsublote AS "SUB LOTE",
+		rot.rota_cdrota AS "ROTA",
+		ftg.ftgr_dsfaturamentogrupo AS "GRUPO FATURAMENTO",
+		lgt.lgtp_dslogradourotipo AS "TIPO LOGRADOURO",
+		logr.logr_nmlogradouro AS "NOME LOGRADOURO",
+		cep.cep_cdcep AS "CEP",
+		imo.imov_dscomplementoendereco AS "COMPLEMENTO",
+		bai.bair_nmbairro AS "BAIRRO",
+		imo.imov_nnimovel AS "NR",
+		mun.muni_nmmunicipio AS "MUNICIPIO",
+		SUM(con_orig.cnta_vlagua+con_orig.cnta_vlesgoto+con_orig.cnta_vldebitos-con_orig.cnta_vlcreditos-con_orig.cnta_vlimpostos) AS "VALOR ORIGINAL",
+		SUM(con.cnhi_vlagua+con.cnhi_vlesgoto+con.cnhi_vldebitos-con.cnhi_vlcreditos-con.cnhi_vlimpostos) AS "VALOR FINAL",
+		SUM((con_orig.cnta_vlagua+con_orig.cnta_vlesgoto+con_orig.cnta_vldebitos-con_orig.cnta_vlcreditos-con_orig.cnta_vlimpostos)-(con.cnhi_vlagua+con.cnhi_vlesgoto+con.cnhi_vldebitos-con.cnhi_vlcreditos-con.cnhi_vlimpostos)) AS "DIFERENCA",
+		STRING_AGG(con.cnhi_amreferenciaconta,', ') AS "REFERENCIAS"
+	FROM
+		faturamento.conta_historico con
+		INNER JOIN faturamento.conta con_orig ON con_orig.cnta_amreferenciaconta = con.cnhi_amreferenciaconta AND con_orig.imov_id = con.imov_id AND con_orig.cnta_id <> con.cnta_id AND con_orig.dcst_idatual = 4
+		INNER JOIN cadastro.imovel imo ON imo.imov_id = con.imov_id
+		INNER JOIN cadastro.cliente_imovel cim ON cim.imov_id = imo.imov_id AND cim.clim_dtrelacaofim IS NULL AND cim.clim_icnomeconta = 1
+		INNER JOIN cadastro.cliente cli ON cli.clie_id = cim.clie_id
+		INNER JOIN cadastro.localidade loc ON imo.loca_id = loc.loca_id
+		INNER JOIN cadastro.unidade_negocio une ON une.uneg_id = loc.uneg_id
+		INNER JOIN cadastro.setor_comercial sec ON imo.stcm_id = sec.stcm_id
+		INNER JOIN cadastro.quadra qdr ON qdr.qdra_id = imo.qdra_id
+		INNER JOIN micromedicao.rota rot ON rot.rota_id = qdr.rota_id
+		INNER JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
+		INNER JOIN cadastro.logradouro_bairro lgb ON lgb.lgbr_id = imo.lgbr_id
+		INNER JOIN cadastro.logradouro logr ON lgb.logr_id = logr.logr_id
+		INNER JOIN cadastro.bairro bai ON bai.bair_id = lgb.bair_id
+		INNER JOIN cadastro.municipio mun ON mun.muni_id = bai.muni_id
+		INNER JOIN cadastro.fonte_abastecimento ftb ON ftb.ftab_id = imo.ftab_id
+		INNER JOIN atendimentopublico.ligacao_agua_situacao las ON las.last_id = imo.last_id
+		INNER JOIN atendimentopublico.ligacao_esgoto_situacao les ON les.lest_id = imo.lest_id
+		LEFT JOIN atendimentopublico.registro_atendimento ra ON ra.rgat_id = con_orig.rgat_id
+		LEFT JOIN atendimentopublico.atend_motivo_encmt ame ON ame.amen_id = ra.amen_id
+		LEFT JOIN operacional.distrito_operacional dis ON dis.diop_id = qdr.diop_id
+		LEFT JOIN cadastro.logradouro_cep lgc ON lgc.lgcp_id = imo.lgcp_id
+		LEFT JOIN cadastro.cep cep ON cep.cep_id = lgc.cep_id
+		LEFT JOIN cadastro.logradouro_tipo lgt ON lgt.lgtp_id = logr.lgtp_id
+		LEFT JOIN faturamento.conta_motivo_retificacao cmr ON cmr.cmrt_id = con.cmrt_id
+		LEFT JOIN seguranca.usuario usu ON usu.usur_id = con.usur_id
+		LEFT JOIN atendimentopublico.ligacao_agua lagu ON lagu.lagu_id = imo.imov_id
+		LEFT JOIN micromedicao.hidrometro_inst_hist his ON lagu.hidi_id = his.hidi_id AND his.hidi_dtretiradahidrometro IS NULL
+		LEFT JOIN micromedicao.hidrometro hid ON his.hidr_id = hid.hidr_id
+	WHERE
+		con.dcst_idatual IN (1,5) AND
+		--con.cnta_amreferenciaconta = 201912 AND
+		con.cnhi_dtretificacao >= '2020-01-01'
+		--AND con.imov_id = 899712
+	GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44
+UNION
+	SELECT
+		con.imov_id AS "MATRICULA",
+		'CANCELAMENTO' AS "TIPO",
+		con.cnhi_dtcancelamento AS "DATA RETIFICAO",
+		cmc.cmcn_dsmotivocancelamentoconta AS "MOTIVO REFATURAMENTO",
+		con.rgat_id AS "R.A.",
+		TO_CHAR(ra.rgat_tmregistroatendimento, 'dd/MM/yyyy') AS "DATA ABERTURA R.A.",
+		(CASE ra.rgat_cdsituacao
+			WHEN 1 THEN 'PENDENTE'
+			WHEN 2 THEN 'ENCERRADA'
+			ELSE 'INDETERMINADO'
+		END) AS "SITUACAO R.A.",
+		ra.rgat_dsobservacao AS "OBS R.A.",
+		ra.rgat_dsparecerencerramento AS "PARECER R.A.",
+		ame.amen_dsmotivoencerramento AS "MOTIVO ENCERRAMENTO R.A.",
+		con.cnhi_dsobservacao AS "OBSERVAÇÃO REFATURAMENTO",
+		usu.usur_nmlogin AS "LOGIN",
+		usu.usur_nmusuario AS "NOME USUARIO",
+		(imo.loca_id::TEXT || '-' || sec.stcm_cdsetorcomercial::TEXT || '-' || rot.rota_cdrota::TEXT) AS "LOCALIZACAO",
+		imo.imov_id AS "MATRICULA",
+		cli.clie_nmcliente AS "NOME", 
+		hid.hidr_nnhidrometro AS "NR HID.",
+		TO_CHAR(his.hidi_dtinstalacaohidrometro, 'dd/MM/yyyy') AS "DT INSTAL. HD",
+		cli.clie_nncpf AS "CPF",
+		cli.clie_nncnpj AS "CNPJ",
+		(CASE cli.clie_iccpfcnpjvalidado
+		WHEN 0 THEN 'NAO'
+		WHEN 1 THEN 'SIM'
+		ELSE 'NAO'
+		END) AS "DOC VALIDADO",
+		(
+			SELECT
+				STRING_AGG('('||cfn.cfon_cdddd||')'||cfn.cfon_nnfone,' | ')
+			FROM
+				cadastro.cliente_fone cfn
+				INNER JOIN cadastro.cliente cli2 ON cli2.clie_id = cfn.clie_id
+				INNER JOIN cadastro.cliente_imovel cim2 ON cim2.clie_id = cli2.clie_id AND cim2.clim_dtrelacaofim IS NULL AND cim2.imov_id = imo.imov_id
+		) AS telefones,
+		cli.clie_dsemail AS "EMAIL",
+		imo.iper_id AS "PERFIL",
+		(CASE imo.imov_idcategoriaprincipal 
+		WHEN 1 THEN '1 - RESIDENCIAL'
+		WHEN 2 THEN '2 - COMERCIAL'
+		WHEN 3 THEN '3 - INDUSTRIAL'
+		WHEN 4 THEN '4 - PUBLICO'
+		ELSE 'NAO DEFINIDO'
+		END) AS "CATEGORIA PRINCIPAL",
+		(CASE imo.imov_idsubcategoriaprincipal 
+		WHEN 1 THEN '1 - RESIDENCIAL'
+		WHEN 2 THEN '2 - COMERCIAL'
+		WHEN 3 THEN '3 - INDUSTRIAL'
+		WHEN 4 THEN '4 - MUNICIPAL'
+		WHEN 5 THEN '5 - ESTADUAL'
+		WHEN 6 THEN '6 - FEDERAL'
+		WHEN 7 THEN '7 - RES. POPULAR'
+		WHEN 8 THEN '8 - PEQ. NEGOCIOS'
+		WHEN 9 THEN '9 - ENT. FILANTROPICAS'
+		WHEN 10 THEN '10 - SIST. OPERADO POR PREFEITURA'
+		ELSE 'NAO DEFINIDO'
+		END) AS "SUBCATEGORIA PRINCIPAL",
+		imo.imov_qteconomia AS "ECONOMIAS",
+		loc.uneg_id AS "GERENCIA",
+		une.uneg_nmunidadenegocio AS "NOME UNIDADE",
+		imo.loca_id AS "LOCALIDADE",
+		loc.loca_nmlocalidade AS "NOME LOCALIDADE",
+		sec.stcm_cdsetorcomercial AS "SETOR COMERCIAL",
+		qdr.qdra_nnquadra AS "QUADRA",
+		imo.imov_nnsequencialrota AS "SEQUENCIA",
+		imo.imov_nnsublote AS "SUB LOTE",
+		rot.rota_cdrota AS "ROTA",
+		ftg.ftgr_dsfaturamentogrupo AS "GRUPO FATURAMENTO",
+		lgt.lgtp_dslogradourotipo AS "TIPO LOGRADOURO",
+		logr.logr_nmlogradouro AS "NOME LOGRADOURO",
+		cep.cep_cdcep AS "CEP",
+		imo.imov_dscomplementoendereco AS "COMPLEMENTO",
+		bai.bair_nmbairro AS "BAIRRO",
+		imo.imov_nnimovel AS "NR",
+		mun.muni_nmmunicipio AS "MUNICIPIO",
+		SUM(con.cnhi_vlagua+con.cnhi_vlesgoto+con.cnhi_vldebitos-con.cnhi_vlcreditos-con.cnhi_vlimpostos) AS "VALOR ORIGINAL",
+		sum(0) AS "VALOR FINAL",
+		SUM(con.cnhi_vlagua+con.cnhi_vlesgoto+con.cnhi_vldebitos-con.cnhi_vlcreditos-con.cnhi_vlimpostos) AS "DIFERENCA",
+		STRING_AGG(con.cnhi_amreferenciaconta,', ') AS "REFERENCIAS"
+	FROM
+		faturamento.conta_historico con
+		INNER JOIN cadastro.imovel imo ON imo.imov_id = con.imov_id
+		INNER JOIN cadastro.cliente_imovel cim ON cim.imov_id = imo.imov_id AND cim.clim_dtrelacaofim IS NULL AND cim.clim_icnomeconta = 1
+		INNER JOIN cadastro.cliente cli ON cli.clie_id = cim.clie_id
+		INNER JOIN cadastro.localidade loc ON imo.loca_id = loc.loca_id
+		INNER JOIN cadastro.unidade_negocio une ON une.uneg_id = loc.uneg_id
+		INNER JOIN cadastro.setor_comercial sec ON imo.stcm_id = sec.stcm_id
+		INNER JOIN cadastro.quadra qdr ON qdr.qdra_id = imo.qdra_id
+		INNER JOIN micromedicao.rota rot ON rot.rota_id = qdr.rota_id
+		INNER JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
+		INNER JOIN cadastro.logradouro_bairro lgb ON lgb.lgbr_id = imo.lgbr_id
+		INNER JOIN cadastro.logradouro logr ON lgb.logr_id = logr.logr_id
+		INNER JOIN cadastro.bairro bai ON bai.bair_id = lgb.bair_id
+		INNER JOIN cadastro.municipio mun ON mun.muni_id = bai.muni_id
+		INNER JOIN cadastro.fonte_abastecimento ftb ON ftb.ftab_id = imo.ftab_id
+		INNER JOIN atendimentopublico.ligacao_agua_situacao las ON las.last_id = imo.last_id
+		INNER JOIN atendimentopublico.ligacao_esgoto_situacao les ON les.lest_id = imo.lest_id
+		LEFT JOIN atendimentopublico.registro_atendimento ra ON ra.rgat_id = con.rgat_id
+		LEFT JOIN atendimentopublico.atend_motivo_encmt ame ON ame.amen_id = ra.amen_id
+		LEFT JOIN operacional.distrito_operacional dis ON dis.diop_id = qdr.diop_id
+		LEFT JOIN cadastro.logradouro_cep lgc ON lgc.lgcp_id = imo.lgcp_id
+		LEFT JOIN cadastro.cep cep ON cep.cep_id = lgc.cep_id
+		LEFT JOIN cadastro.logradouro_tipo lgt ON lgt.lgtp_id = logr.lgtp_id
+		LEFT JOIN faturamento.conta_mot_cancelamento cmc ON cmc.cmcn_id = con.cmcn_id
+		LEFT JOIN seguranca.usuario usu ON usu.usur_id = con.usur_id
+		LEFT JOIN atendimentopublico.ligacao_agua lagu ON lagu.lagu_id = imo.imov_id
+		LEFT JOIN micromedicao.hidrometro_inst_hist his ON lagu.hidi_id = his.hidi_id AND his.hidi_dtretiradahidrometro IS NULL
+		LEFT JOIN micromedicao.hidrometro hid ON his.hidr_id = hid.hidr_id
+	WHERE
+		--con.dcst_idatual IN (1,5) AND
+		--con.cnta_amreferenciaconta = 201912 AND
+		con.cnhi_dtcancelamento >= '2020-01-01' AND
+		con.dcst_idatual = 3
+		--AND con.imov_id = 899712
+	GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44
+UNION
+	SELECT
+		con.imov_id AS "MATRICULA",
+		'CANCELAMENTO' AS "TIPO",
+		con.cnta_dtcancelamento AS "DATA RETIFICAO",
+		cmc.cmcn_dsmotivocancelamentoconta AS "MOTIVO REFATURAMENTO",
+		con.rgat_id AS "R.A.",
+		TO_CHAR(ra.rgat_tmregistroatendimento, 'dd/MM/yyyy') AS "DATA ABERTURA R.A.",
+		(CASE ra.rgat_cdsituacao
+			WHEN 1 THEN 'PENDENTE'
+			WHEN 2 THEN 'ENCERRADA'
+			ELSE 'INDETERMINADO'
+		END) AS "SITUACAO R.A.",
+		ra.rgat_dsobservacao AS "OBS R.A.",
+		ra.rgat_dsparecerencerramento AS "PARECER R.A.",
+		ame.amen_dsmotivoencerramento AS "MOTIVO ENCERRAMENTO R.A.",
+		con.cnta_dsobservacao AS "OBSERVAÇÃO REFATURAMENTO",
+		usu.usur_nmlogin AS "LOGIN",
+		usu.usur_nmusuario AS "NOME USUARIO",
+		(imo.loca_id::TEXT || '-' || sec.stcm_cdsetorcomercial::TEXT || '-' || rot.rota_cdrota::TEXT) AS "LOCALIZACAO",
+		imo.imov_id AS "MATRICULA",
+		cli.clie_nmcliente AS "NOME", 
+		hid.hidr_nnhidrometro AS "NR HID.",
+		TO_CHAR(his.hidi_dtinstalacaohidrometro, 'dd/MM/yyyy') AS "DT INSTAL. HD",
+		cli.clie_nncpf AS "CPF",
+		cli.clie_nncnpj AS "CNPJ",
+		(CASE cli.clie_iccpfcnpjvalidado
+		WHEN 0 THEN 'NAO'
+		WHEN 1 THEN 'SIM'
+		ELSE 'NAO'
+		END) AS "DOC VALIDADO",
+		(
+			SELECT
+				STRING_AGG('('||cfn.cfon_cdddd||')'||cfn.cfon_nnfone,' | ')
+			FROM
+				cadastro.cliente_fone cfn
+				INNER JOIN cadastro.cliente cli2 ON cli2.clie_id = cfn.clie_id
+				INNER JOIN cadastro.cliente_imovel cim2 ON cim2.clie_id = cli2.clie_id AND cim2.clim_dtrelacaofim IS NULL AND cim2.imov_id = imo.imov_id
+		) AS telefones,
+		cli.clie_dsemail AS "EMAIL",
+		imo.iper_id AS "PERFIL",
+		(CASE imo.imov_idcategoriaprincipal 
+		WHEN 1 THEN '1 - RESIDENCIAL'
+		WHEN 2 THEN '2 - COMERCIAL'
+		WHEN 3 THEN '3 - INDUSTRIAL'
+		WHEN 4 THEN '4 - PUBLICO'
+		ELSE 'NAO DEFINIDO'
+		END) AS "CATEGORIA PRINCIPAL",
+		(CASE imo.imov_idsubcategoriaprincipal 
+		WHEN 1 THEN '1 - RESIDENCIAL'
+		WHEN 2 THEN '2 - COMERCIAL'
+		WHEN 3 THEN '3 - INDUSTRIAL'
+		WHEN 4 THEN '4 - MUNICIPAL'
+		WHEN 5 THEN '5 - ESTADUAL'
+		WHEN 6 THEN '6 - FEDERAL'
+		WHEN 7 THEN '7 - RES. POPULAR'
+		WHEN 8 THEN '8 - PEQ. NEGOCIOS'
+		WHEN 9 THEN '9 - ENT. FILANTROPICAS'
+		WHEN 10 THEN '10 - SIST. OPERADO POR PREFEITURA'
+		ELSE 'NAO DEFINIDO'
+		END) AS "SUBCATEGORIA PRINCIPAL",
+		imo.imov_qteconomia AS "ECONOMIAS",
+		loc.uneg_id AS "GERENCIA",
+		une.uneg_nmunidadenegocio AS "NOME UNIDADE",
+		imo.loca_id AS "LOCALIDADE",
+		loc.loca_nmlocalidade AS "NOME LOCALIDADE",
+		sec.stcm_cdsetorcomercial AS "SETOR COMERCIAL",
+		qdr.qdra_nnquadra AS "QUADRA",
+		imo.imov_nnsequencialrota AS "SEQUENCIA",
+		imo.imov_nnsublote AS "SUB LOTE",
+		rot.rota_cdrota AS "ROTA",
+		ftg.ftgr_dsfaturamentogrupo AS "GRUPO FATURAMENTO",
+		lgt.lgtp_dslogradourotipo AS "TIPO LOGRADOURO",
+		logr.logr_nmlogradouro AS "NOME LOGRADOURO",
+		cep.cep_cdcep AS "CEP",
+		imo.imov_dscomplementoendereco AS "COMPLEMENTO",
+		bai.bair_nmbairro AS "BAIRRO",
+		imo.imov_nnimovel AS "NR",
+		mun.muni_nmmunicipio AS "MUNICIPIO",
+		SUM(con.cnta_vlagua+con.cnta_vlesgoto+con.cnta_vldebitos-con.cnta_vlcreditos-con.cnta_vlimpostos) AS "VALOR ORIGINAL",
+		sum(0) AS "VALOR FINAL",
+		SUM(con.cnta_vlagua+con.cnta_vlesgoto+con.cnta_vldebitos-con.cnta_vlcreditos-con.cnta_vlimpostos) AS "DIFERENCA",
+		STRING_AGG(con.cnta_amreferenciaconta,', ') AS "REFERENCIAS"
+	FROM
+		faturamento.conta con
+		INNER JOIN cadastro.imovel imo ON imo.imov_id = con.imov_id
+		INNER JOIN cadastro.cliente_imovel cim ON cim.imov_id = imo.imov_id AND cim.clim_dtrelacaofim IS NULL AND cim.clim_icnomeconta = 1
+		INNER JOIN cadastro.cliente cli ON cli.clie_id = cim.clie_id
+		INNER JOIN cadastro.localidade loc ON imo.loca_id = loc.loca_id
+		INNER JOIN cadastro.unidade_negocio une ON une.uneg_id = loc.uneg_id
+		INNER JOIN cadastro.setor_comercial sec ON imo.stcm_id = sec.stcm_id
+		INNER JOIN cadastro.quadra qdr ON qdr.qdra_id = imo.qdra_id
+		INNER JOIN micromedicao.rota rot ON rot.rota_id = qdr.rota_id
+		INNER JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
+		INNER JOIN cadastro.logradouro_bairro lgb ON lgb.lgbr_id = imo.lgbr_id
+		INNER JOIN cadastro.logradouro logr ON lgb.logr_id = logr.logr_id
+		INNER JOIN cadastro.bairro bai ON bai.bair_id = lgb.bair_id
+		INNER JOIN cadastro.municipio mun ON mun.muni_id = bai.muni_id
+		INNER JOIN cadastro.fonte_abastecimento ftb ON ftb.ftab_id = imo.ftab_id
+		INNER JOIN atendimentopublico.ligacao_agua_situacao las ON las.last_id = imo.last_id
+		INNER JOIN atendimentopublico.ligacao_esgoto_situacao les ON les.lest_id = imo.lest_id
+		LEFT JOIN atendimentopublico.registro_atendimento ra ON ra.rgat_id = con.rgat_id
+		LEFT JOIN atendimentopublico.atend_motivo_encmt ame ON ame.amen_id = ra.amen_id
+		LEFT JOIN operacional.distrito_operacional dis ON dis.diop_id = qdr.diop_id
+		LEFT JOIN cadastro.logradouro_cep lgc ON lgc.lgcp_id = imo.lgcp_id
+		LEFT JOIN cadastro.cep cep ON cep.cep_id = lgc.cep_id
+		LEFT JOIN cadastro.logradouro_tipo lgt ON lgt.lgtp_id = logr.lgtp_id
+		LEFT JOIN faturamento.conta_mot_cancelamento cmc ON cmc.cmcn_id = con.cmcn_id
+		LEFT JOIN seguranca.usuario usu ON usu.usur_id = con.usur_id
+		LEFT JOIN atendimentopublico.ligacao_agua lagu ON lagu.lagu_id = imo.imov_id
+		LEFT JOIN micromedicao.hidrometro_inst_hist his ON lagu.hidi_id = his.hidi_id AND his.hidi_dtretiradahidrometro IS NULL
+		LEFT JOIN micromedicao.hidrometro hid ON his.hidr_id = hid.hidr_id
+	WHERE
+		--con.dcst_idatual IN (1,5) AND
+		--con.cnta_amreferenciaconta = 201912 AND
+		con.cnta_dtcancelamento >= '2020-01-01' AND
+		con.dcst_idatual = 3
+		--AND con.imov_id = 899712
+	GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44
+ORDER BY 2 DESC	

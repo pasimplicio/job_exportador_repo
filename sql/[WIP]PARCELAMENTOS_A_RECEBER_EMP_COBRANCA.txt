@@ -1,0 +1,110 @@
+SELECT 
+	dac.imov_id AS "MATRICULA",
+	dbt.dbtp_dsdebitotipo AS "TIPO DEBITO",
+	contas_emp.emp AS "EMPRESA",
+	dac.dbac_nnprestacaodebito AS "PARCELAS",
+	dac.dbac_nnprestacaocobradas AS "PARCELAS COBRADAS",
+	par.parc_id AS "ID PARCELAMENTO",
+	rdr.rdir_nnresolucaodiretoria AS "RD",
+	usu.usur_nmlogin AS "LOGIN",
+	usu.usur_nmusuario AS "NOME ATENDENTENDE",
+	cli.clie_nmcliente AS "NOME",
+	cli.clie_nncpf AS "CPF",
+	cli.clie_nncnpj AS "CNPJ",
+	(CASE cli.clie_iccpfcnpjvalidado
+	WHEN 0 THEN 'NAO'
+	WHEN 1 THEN 'SIM'
+	ELSE 'NAO'
+	END) AS "DOC VALIDADO",
+	(
+		SELECT
+			STRING_AGG('('||cfn.cfon_cdddd||')'||cfn.cfon_nnfone,' | ')
+		FROM
+			cadastro.cliente_fone cfn
+		WHERE
+			cfn.clie_id = cli.clie_id
+	) AS telefones,
+	cli.clie_dsemail AS "EMAIL",
+	TO_CHAR(par.parc_tmparcelamento,'dd/MM/yyyy') AS "DATA PARCELAMENTO",
+	TO_CHAR(par.parc_tmparcelamento,'HH24:mm:ss') AS "HORA PARCELAMENTO",
+	par.parc_vlentrada AS "ENTRADA",
+	par.parc_vldebitoatualizado AS "VALOR TOTAL NEGOCIADO",
+	par.parc_vlconta AS "VALOR CONTAS",
+	par.parc_vlguiapapagamento AS "VL GUIAS",
+	par.parc_vlcreditoarealizar AS "VL CREDITOS",
+	par.parc_vlservicosacobrar AS "VALOR SERVICOS",
+	par.parc_vlparcelamentosacobrar AS "VALOR PARC A COB",
+	par.parc_vlcreditoarealizar AS "VALOR CREDITO",
+	par.parc_nnprestacoes AS "QTD PARCELAS",
+	par.parc_vlprestacao AS "VALOR PARCELA",
+	total_contas.qtd AS "QTD CNTS TOTAL",
+	contas_emp.qtd AS "QTD CNTS EMPRESA",
+	contas_emp.valor_contas AS "VALOR CNTS EMPRESA",
+	SUM(contas_emp.qtd) AS "QTD CNTS COBRANCA",
+	SUM(contas_emp.valor_contas) AS "VALOR CONTAS COBRANCA"
+FROM
+	faturamento.debito_a_cobrar dac
+	INNER JOIN cobranca.parcelamento par ON par.parc_id = dac.parc_id
+	INNER JOIN faturamento.debito_tipo dbt ON dbt.dbtp_id = dac.dbtp_id
+	INNER JOIN cobranca.resolucao_diretoria rdr ON rdr.rdir_id = par.rdir_id
+	INNER JOIN seguranca.usuario usu ON usu.usur_id = par.usur_id
+	INNER JOIN cadastro.cliente cli ON cli.clie_id = par.clie_id
+	INNER JOIN(
+			SELECT
+				par.parc_id as parc_id,
+				COUNT(pci.cnta_id) as qtd
+			FROM
+				cobranca.parcelamento par
+				INNER JOIN cobranca.parcelamento_item pci ON pci.parc_id = par.parc_id
+			WHERE
+				NOT cnta_id IS NULL AND
+				par.parc_tmparcelamento >= '2019-04-20'
+			GROUP BY 1) AS total_contas ON par.parc_id = total_contas.parc_id
+	INNER JOIN(
+			SELECT
+				parc_id,
+				emp,
+				dtenvio,
+				dtretirada,
+				COUNT(refer) as qtd,
+				SUM(valor_contas) as valor_contas
+			FROM
+			(	SELECT
+					pci.parc_id as parc_id,
+					emp.empr_nmempresa as emp,
+					ecc.ecco_dtenvioconta as dtenvio,
+					ecc.ecco_dtretiradaconta as dtretirada,
+					con.cnta_amreferenciaconta as refer,
+					con.cnta_vlagua+con.cnta_vlesgoto+con.cnta_vldebitos-con.cnta_vlcreditos-con.cnta_vlimpostos as valor_contas
+				FROM
+					cobranca.parcelamento par
+					INNER JOIN cobranca.parcelamento_item pci ON par.parc_id = pci.parc_id
+					INNER JOIN cobranca.empresa_cobranca_conta ecc ON ecc.cnta_id = pci.cnta_id
+					INNER JOIN faturamento.conta con ON con.cnta_id = pci.cnta_id
+					INNER JOIN cadastro.empresa emp ON emp.empr_id = ecc.empr_id
+				WHERE
+					par.parc_tmparcelamento >= '2019-04-20'
+					AND emp.empr_id >=29 AND emp.empr_id <= 42
+			UNION
+				SELECT
+					pci.parc_id as parc_id,
+					emp.empr_nmempresa as emp,
+					ecc.ecco_dtenvioconta as dtenvio,
+					ecc.ecco_dtretiradaconta as dtretirada,
+					con.cnhi_amreferenciaconta as refer,
+					con.cnhi_vlagua+con.cnhi_vlesgoto+con.cnhi_vldebitos-con.cnhi_vlcreditos-con.cnhi_vlimpostos as valor_contas
+				FROM
+					cobranca.parcelamento par
+					INNER JOIN cobranca.parcelamento_item pci ON par.parc_id = pci.parc_id
+					INNER JOIN cobranca.empresa_cobranca_conta ecc ON ecc.cnta_id = pci.cnta_id
+					INNER JOIN faturamento.conta_historico con ON con.cnta_id = pci.cnta_id
+					INNER JOIN cadastro.empresa emp ON emp.empr_id = ecc.empr_id
+				WHERE
+					par.parc_tmparcelamento >= '2019-04-20'
+					AND emp.empr_id >=29 AND emp.empr_id <= 42
+					) AS cnts
+			GROUP BY 1,2,3,4) AS contas_emp ON contas_emp.parc_id = par.parc_id AND (contas_emp.dtretirada IS NULL OR (par.parc_tmparcelamento>=contas_emp.dtenvio AND par.parc_tmparcelamento <= contas_emp.dtretirada))
+WHERE
+	dbt.dbtp_id = 40
+GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,27,28,29,30
+ORDER BY 1

@@ -1,0 +1,3 @@
+COMANDO;OUTPUT_FOLDER;EXPORT_CSV;CREATE_DATE_SUBFOLDER;VARS;ALIAS
+Faturamento_2026.sql;FATURAMENTO;True;false;;fFaturamento_2026
+fPagamentos_2026.sql;FATURAMENTO;True;false;;fPagamento_2026

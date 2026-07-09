@@ -1,0 +1,136 @@
+SELECT
+	cli.clie_id AS "ID CLIENTE",
+	imo.imov_id AS "MATRICULA",
+	imo.imov_nncoordenadax AS "LATITUDE",
+	imo.imov_nncoordenaday AS "LONGITUDE",
+	cli.clie_nmcliente AS "NOME",
+	cli.clie_nncpf AS "CPF",
+	cli.clie_nncnpj AS "CNPJ",
+	(CASE cli.clie_iccpfcnpjvalidado
+	WHEN 0 THEN 'NAO'
+	WHEN 1 THEN 'SIM'
+	ELSE 'NAO'
+	END) AS "DOC VALIDADO",
+	(
+		SELECT
+			'('||cfn.cfon_cdddd||')'||cfn.cfon_nnfone
+		FROM
+			cadastro.cliente_fone cfn
+		WHERE 
+			cfn.clie_id = cli.clie_id AND cfn.cfon_id = (SELECT MAX(cfn2.cfon_id) FROM cadastro.cliente_fone cfn2 WHERE cfn2.clie_id = cli.clie_id)
+		LIMIT 1
+	) AS "TELEFONE MAIS RECENTE TITULAR",
+	cli.clie_dsemail AS "EMAIL",
+	TO_CHAR(cli.clie_dtnascimento,'DD/MM/YYYY') AS "DT NASCIMENTO",
+	cli.clie_nnmae AS "NOME DA MAE",
+	imo.iper_id AS "PERFIL",
+	(CASE imo.imov_idcategoriaprincipal 
+	WHEN 1 THEN '1 - RESIDENCIAL'
+	WHEN 2 THEN '2 - COMERCIAL'
+	WHEN 3 THEN '3 - INDUSTRIAL'
+	WHEN 4 THEN '4 - PUBLICO'
+	ELSE 'NAO DEFINIDO'
+	END) AS "CATEGORIA PRINCIPAL",
+	(CASE imo.imov_idsubcategoriaprincipal 
+	WHEN 1 THEN '1 - RESIDENCIAL'
+	WHEN 2 THEN '2 - COMERCIAL'
+	WHEN 3 THEN '3 - INDUSTRIAL'
+	WHEN 4 THEN '4 - MUNICIPAL'
+	WHEN 5 THEN '5 - ESTADUAL'
+	WHEN 6 THEN '6 - FEDERAL'
+	WHEN 7 THEN '7 - RES. POPULAR'
+	WHEN 8 THEN '8 - PEQ. NEGOCIOS'
+	WHEN 9 THEN '9 - ENT. FILANTROPICAS'
+	WHEN 10 THEN '10 - SIST. OPERADO POR PREFEITURA'
+	ELSE 'NAO DEFINIDO'
+	END) AS "SUBCATEGORIA PRINCIPAL",
+	imo.imov_qteconomia AS "ECONOMIAS",
+	loc.uneg_id AS "GERENCIA",
+	une.uneg_nmunidadenegocio AS "NOME UNIDADE",
+	imo.loca_id AS "LOCALIDADE",
+	loc.loca_nmlocalidade AS "NOME LOCALIDADE",
+	sec.stcm_cdsetorcomercial AS "SETOR COMERCIAL",
+	qdr.qdra_nnquadra AS "QUADRA",
+	imo.imov_nnsequencialrota AS "SEQUENCIA",
+	imo.imov_nnsublote AS "SUB LOTE",
+	rot.rota_cdrota AS "ROTA",
+	ftg.ftgr_dsfaturamentogrupo AS "GRUPO FATURAMENTO",
+	lgt.lgtp_dslogradourotipo AS "TIPO LOGRADOURO",
+	logr.logr_nmlogradouro AS "NOME LOGRADOURO",
+	cep.cep_cdcep AS "CEP",
+	imo.imov_dscomplementoendereco AS "COMPLEMENTO",
+	bai.bair_nmbairro AS "BAIRRO",
+	imo.imov_nnimovel AS "NR",
+	mun.muni_nmmunicipio AS "MUNICIPIO",
+	STRING_AGG(uni.detail_conta,'') AS "CONTAS",
+	TO_CHAR(SUM(uni.qtd_contas),'999G999G990') AS "QTD DE CONTAS",
+	TO_CHAR(SUM(uni.valor_contas),'999G999G990D00') AS "VALOR DAS CONTAS",
+	STRING_AGG(uni.detail_guia,'') AS "GUIAS",
+	TO_CHAR(SUM(uni.qt_guias),'999G999G990') AS "QTD DE GUIAS",
+	TO_CHAR(SUM(uni.vl_guias),'999G999G990D00') AS "VALOR DAS GUIAS"
+
+FROM
+	(	(SELECT
+			cli.clie_id AS clie_id,
+			cra.imov_id AS imov_id,
+			STRING_AGG('REF: '||cra.crca_amdocumento::TEXT||'>VENC: '|| TO_CHAR(cra.crca_dtvencimento, 'dd/MM/yyyy'),' | ') AS detail_conta,
+			COUNT(DISTINCT(cra.cnta_id)) AS qtd_contas,
+			SUM(cra.crca_vlitemlancamento) AS valor_contas,
+			NULL AS detail_guia,
+			0 AS qt_guias,
+			0 AS vl_guias
+		FROM
+			financeiro.conta_rec_ctb_analitico cra
+			LEFT JOIN cadastro.cliente_conta clc ON clc.cnta_id = cra.cnta_id AND clc.clct_icnomeconta = 1
+			LEFT JOIN cadastro.cliente_conta_historico clh ON clh.cnta_id = cra.cnta_id AND clh.clch_icnomeconta = 1
+			LEFT JOIN cadastro.cliente_conta clc1 ON clc1.cnta_id = cra.cnta_id AND clc1.clct_id = (SELECT MIN(clc_1.clct_id) FROM cadastro.cliente_conta clc_1 WHERE clc_1.cnta_id = cra.cnta_id)
+			LEFT JOIN cadastro.cliente_conta_historico clh1 ON clh1.cnta_id = cra.cnta_id AND clh1.clch_id = (SELECT MIN(clh_1.clch_id) FROM cadastro.cliente_conta_historico clh_1 WHERE clh_1.cnta_id = cra.cnta_id)
+			LEFT JOIN cadastro.cliente cli ON cli.clie_id = COALESCE(clc.clie_id, clh.clie_id, clc1.clie_id, clh1.clie_id)
+			LEFT JOIN faturamento.conta con ON con.cnta_id = cra.cnta_id
+		WHERE
+			cra.crca_icvencido = 1
+			AND cra.crca_amreferencia = 202112
+			AND NOT cra.cnta_id IS NULL
+			--AND cra.imov_id = 1208276
+			AND cra.lctp_id = 85
+		GROUP BY 1,2)
+	UNION
+		(SELECT
+			cli.clie_id AS clie_id,
+			cra.imov_id AS imov_id,
+			NULL AS detail_conta,
+			0 AS qtd_contas,
+			0 AS valor_contas,	
+			STRING_AGG('NR: '||cra.gpag_id::TEXT||'>VENC: '|| TO_CHAR(cra.crca_dtvencimento, 'dd/MM/yyyy'),' | ') AS detail_guias,
+			COUNT(DISTINCT(cra.gpag_id)) AS qt_guias,
+			SUM(cra.crca_vlitemlancamento) AS vl_guias
+		FROM
+			financeiro.conta_rec_ctb_analitico cra
+			LEFT JOIN cadastro.imovel imo ON imo.imov_id = cra.imov_id
+			LEFT JOIN cadastro.cliente_imovel cim ON cim.imov_id = imo.imov_id AND cim.clim_dtrelacaofim IS NULL AND cim.clim_icnomeconta = 1
+			LEFT JOIN cadastro.cliente_imovel cim2 ON cim2.imov_id = imo.imov_id AND cim2.clim_dtrelacaofim IS NULL AND cim2.crtp_id = 2
+			LEFT JOIN cadastro.cliente_imovel cim3 ON cim3.imov_id = imo.imov_id AND cim3.clim_dtrelacaofim IS NULL AND cim3.crtp_id = 3
+			LEFT JOIN cadastro.cliente_imovel cim1 ON cim1.imov_id = imo.imov_id AND cim1.clim_dtrelacaofim IS NULL AND cim1.crtp_id = 1
+			LEFT JOIN cadastro.cliente cli ON cli.clie_id = COALESCE(cra.clie_id, cim.clie_id, cim2.clie_id, cim3.clie_id, cim1.clie_id)
+		WHERE
+			cra.crca_icvencido = 1
+			AND cra.crca_amreferencia = 202112
+			AND NOT cra.gpag_id IS NULL
+			AND cra.lctp_id = 85
+		GROUP BY 1,2)) AS uni
+	LEFT JOIN cadastro.cliente cli ON cli.clie_id = uni.clie_id
+	LEFT JOIN cadastro.imovel imo ON imo.imov_id = uni.imov_id
+	LEFT JOIN cadastro.localidade loc ON imo.loca_id = loc.loca_id
+	LEFT JOIN cadastro.unidade_negocio une ON une.uneg_id = loc.uneg_id
+	LEFT JOIN cadastro.setor_comercial sec ON imo.stcm_id = sec.stcm_id
+	LEFT JOIN cadastro.quadra qdr ON qdr.qdra_id = imo.qdra_id
+	LEFT JOIN micromedicao.rota rot ON rot.rota_id = qdr.rota_id
+	LEFT JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
+	LEFT JOIN cadastro.logradouro_bairro lgb ON lgb.lgbr_id = imo.lgbr_id
+	LEFT JOIN cadastro.logradouro logr ON lgb.logr_id = logr.logr_id
+	LEFT JOIN cadastro.bairro bai ON bai.bair_id = lgb.bair_id
+	LEFT JOIN cadastro.municipio mun ON mun.muni_id = bai.muni_id
+	LEFT JOIN cadastro.logradouro_cep lgc ON lgc.lgcp_id = imo.lgcp_id
+	LEFT JOIN cadastro.cep cep ON cep.cep_id = lgc.cep_id
+	LEFT JOIN cadastro.logradouro_tipo lgt ON lgt.lgtp_id = logr.lgtp_id
+GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33

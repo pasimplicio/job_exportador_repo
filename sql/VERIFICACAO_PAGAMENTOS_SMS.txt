@@ -1,0 +1,43 @@
+SELECT
+	imo.imov_id AS "MATRICULA",
+	TO_CHAR('VAR_CARGA'::DATE, 'dd/MM/yyyy') AS "DATA CARGA",
+	(CASE
+	 WHEN NOT pags_7_dias.imov_id IS NULL THEN 'NAO PAGO ATE 7 DIAS'
+	 ELSE 'PAGO ATE 7 DIAS'
+	 END) AS "FAIXA PAGAMENTOS",
+	pags_7_dias.qtd AS "QTD PAGAMENTOS",
+	pags_7_dias.valor AS "VALOR"
+FROM
+	cadastro.imovel imo
+	LEFT JOIN
+	(
+		SELECT
+			pags.imov_id AS imov_id,
+			SUM(pags.qtd) AS qtd,
+			SUM(pags.valor) AS valor
+		FROM		
+			(SELECT 
+					pag.imov_id AS imov_id,
+					COUNT(pag.pgmt_id) AS qtd,
+					SUM(pag.pgmt_vlpagamento) AS valor
+				FROM
+					arrecadacao.pagamento pag
+				WHERE
+					pag.pgst_idatual IN (0,1)
+					AND pag.pgmt_dtpagamento >= 'VAR_CARGA' AND pag.pgmt_dtpagamento <= ('VAR_CARGA'::DATE + INTERVAL '7d')
+				GROUP BY 1
+			UNION
+				SELECT 
+					pag.imov_id AS imov_id,
+					COUNT(pag.pghi_id) AS qtd,
+					SUM(pag.pghi_vlpagamento) AS valor
+				FROM
+					arrecadacao.pagamento_historico pag
+				WHERE
+					pag.pgst_idatual IN (0,1)
+					AND pag.pghi_dtpagamento >= 'VAR_CARGA' AND pag.pghi_dtpagamento <= ('VAR_CARGA'::DATE + INTERVAL '7d')
+				GROUP BY 1) pags
+		GROUP BY 1
+	) AS pags_7_dias ON pags_7_dias.imov_id = imo.imov_id
+WHERE
+	imo.imov_id IN (VAR_IMOVEIS)

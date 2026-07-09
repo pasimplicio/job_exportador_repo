@@ -1,0 +1,175 @@
+SELECT
+	par.parc_id AS "ID PARC",
+	usu.usur_nmlogin AS "LOGIN",
+	usu.usur_nmusuario AS "USUARIO",
+	uno.unid_dsunidade AS "LOTACAO",
+	par.imov_id AS "MATRICULA",
+	cli.clie_nmcliente AS "NOME RESP",
+	cli.clie_nncpf AS "CPF RESP",
+	cli.clie_nncnpj AS "CNPJ RESP",
+	(CASE cli.clie_iccpfcnpjvalidado
+	WHEN 0 THEN 'NAO'
+	WHEN 1 THEN 'SIM'
+	ELSE 'NAO'
+	END) AS "DOC VALIDADO RESP",
+	(
+		SELECT
+			STRING_AGG('('||cfn.cfon_cdddd||')'||cfn.cfon_nnfone,' | ')
+		FROM
+			cadastro.cliente_fone cfn 
+		WHERE
+			cfn.clie_id = cli.clie_id
+	) AS "TELEFONES RESP",
+	cli.clie_dsemail AS "EMAIL RESP",
+
+	cli_usu.clie_nmcliente AS "NOME IMOVEL",
+	cli_usu.clie_nncpf AS "CPF IMOVEL",
+	cli_usu.clie_nncnpj AS "CNPJ IMOVEL",
+	(CASE cli_usu.clie_iccpfcnpjvalidado
+	WHEN 0 THEN 'NAO'
+	WHEN 1 THEN 'SIM'
+	ELSE 'NAO'
+	END) AS "DOC VALIDADO IMOVEL",
+	(
+		SELECT
+			STRING_AGG('('||cfn.cfon_cdddd||')'||cfn.cfon_nnfone,' | ')
+		FROM
+			cadastro.cliente_fone cfn 
+		WHERE
+			cfn.clie_id = cli_usu.clie_id
+	) AS "TELEFONES IMOVEL",
+	cli_usu.clie_dsemail AS "EMAIL IMOVEL",
+	une.uneg_id AS "GERENCIA",
+	une.uneg_nmunidadenegocio AS "NOME UNIDADE",
+	loc.loca_id AS "LOCALIDADE",
+	loc.loca_nmlocalidade AS "NOME LOCALIDADE",
+	rdi.rdir_nnresolucaodiretoria AS "RESOLUCAO DIRETORIA",
+	ra.rgat_id AS "JUST ESPECIAL",
+	TO_CHAR(par.parc_amreferenciafaturamento,'999999') AS "REFERENCIA PARC",
+	pmd.pmdz_dsparcmtmotivodesfazer AS "MOTIVO DESF",
+	TO_CHAR(par.parc_tmparcelamento,'dd/MM/yyyy') AS "DIA PARC",
+	par.parc_vlconta AS "VL CONTA",
+	par.parc_vlservicosacobrar AS "VL OUTROS SERV",
+	par.parc_vlmulta AS "MULTA IMPONT",
+	par.parc_vljurosmora AS "VL JUROS IMPONT",
+	par.parc_vldebitoatualizado AS "VALOR DEBITO TOTAL",
+	par.parc_vldescontodebtotal AS "VALOR DESCONTOS DEBITO",
+	(par.parc_vlentrada+(par.parc_nnprestacoes*par.parc_vlprestacao)) AS "VALOR PARCELADO",
+	par.parc_vlentrada AS "VALOR ENTRADA",
+	par.parc_vljurosparcelamento AS "JUROS PARCELAMENTO",
+	par.parc_nnprestacoes AS "NR PRESTACOES",
+	par.parc_vlprestacao AS "VL PRESTACAO",	
+	0.00 AS "DEVOLUCAO",
+	((par.parc_vlentrada+(par.parc_nnprestacoes*par.parc_vlprestacao))) AS "VALOR TOTAL NEGOCIADO",
+	prt.qtd AS "QTD DOCS",
+	COALESCE(pagn.dt_pag, pagh.dt_pag) AS "DATA PAGAMENTO",
+	(COALESCE(pagn.valor,0) + COALESCE(pagh.valor,0)) AS "VALOR PAGO ENTRADA",
+	valor_pago_parcelas.valor_pago AS "VALOR PAGO PARCELAS"
+FROM 
+	cobranca.parcelamento par
+	LEFT JOIN cadastro.cliente cli ON cli.clie_id = par.clie_id
+	LEFT JOIN cadastro.cliente_imovel cim ON cim.imov_id = par.imov_id AND cim.clim_dtrelacaofim IS NULL AND cim.clim_icnomeconta = 1
+	LEFT JOIN cadastro.cliente cli_usu ON cli_usu.clie_id = cim.clie_id
+	LEFT JOIN cadastro.localidade loc ON loc.loca_id = par.loca_id
+	LEFT JOIN cadastro.unidade_negocio une ON une.uneg_id = loc.uneg_id
+	LEFT JOIN cobranca.resolucao_diretoria rdi ON rdi.rdir_id = par.rdir_id
+	LEFT JOIN cobranca.parcel_motivo_desfazer pmd ON pmd.pmdz_id = par.pmdz_id
+	LEFT JOIN faturamento.guia_pagamento gpg ON gpg.parc_id = par.parc_id
+	LEFT JOIN faturamento.guia_pagamento_historico gpgh ON gpgh.parc_id = par.parc_id
+	LEFT JOIN seguranca.usuario usu ON usu.usur_id = par.usur_id
+	LEFT JOIN cadastro.unidade_organizacional uno ON uno.unid_id = usu.unid_id
+	LEFT JOIN atendimentopublico.registro_atendimento ra ON ra.imov_id = par.imov_id AND ra.step_id = 942 AND TO_CHAR(ra.rgat_tmregistroatendimento, 'dd/MM/yyyy') = TO_CHAR(par.parc_tmparcelamento, 'dd/MM/yyyy')
+	LEFT JOIN 
+	(SELECT
+		pag.gpag_id AS id,
+		pag.pgmt_dtpagamento AS dt_pag,
+		SUM(pag.pgmt_vlpagamento) AS valor
+	 FROM 
+		arrecadacao.pagamento pag
+		INNER JOIN faturamento.guia_pagamento gpg ON gpg.gpag_id = pag.gpag_id AND NOT gpg.parc_id IS NULL
+	 WHERE
+		NOT pag.gpag_id IS NULL
+	 GROUP BY 1,2
+	) AS pagn ON pagn.id = gpg.gpag_id
+	LEFT JOIN 
+	(SELECT
+		pag.gpag_id AS id,
+		pag.pghi_dtpagamento AS dt_pag,
+		SUM(pag.pghi_vlpagamento) AS valor
+	 FROM 
+		arrecadacao.pagamento_historico pag
+		INNER JOIN faturamento.guia_pagamento_historico gpg ON gpg.gpag_id = pag.gpag_id AND NOT gpg.parc_id IS NULL
+	 WHERE
+		NOT pag.gpag_id IS NULL
+	 GROUP BY 1,2
+	) AS pagh ON pagh.id = gpgh.gpag_id
+	LEFT JOIN (
+			SELECT
+				pct.parc_id AS parc_id,
+				COUNT(pct.pcit_id) AS qtd
+			FROM
+				cobranca.parcelamento_item pct
+			GROUP BY 1) prt ON prt.parc_id = par.parc_id
+	LEFT JOIN (
+			SELECT
+				parc_id,
+				SUM(valor_pago) as valor_pago
+			FROM
+			(SELECT
+					dch.parc_id AS parc_id,
+					SUM(dco.dbhi_vlprestacao) AS valor_pago
+				FROM
+					faturamento.conta_historico con
+					INNER JOIN faturamento.debito_cobrado_historico dco ON dco.cnta_id = con.cnta_id
+					INNER JOIN faturamento.debito_a_cobrar_geral dcg ON dcg.dbac_id = dco.dbac_id AND dcg.dage_ichistorico = 1
+					INNER JOIN faturamento.deb_a_cobrar_hist dch ON dch.dbac_id = dcg.dbac_id
+					INNER JOIN arrecadacao.pagamento_historico pgh ON pgh.cnta_id = con.cnta_id AND pgh.pgst_idatual = 0
+					INNER JOIN cobranca.parcelamento par ON par.parc_id = dch.parc_id
+				WHERE
+					par.parc_tmparcelamento >= '2019-01-01'
+				GROUP BY 1
+			UNION
+				SELECT
+					dch.parc_id AS parc_id,
+					SUM(dco.dbhi_vlprestacao) AS valor_pago
+				FROM
+					faturamento.conta_historico con
+					INNER JOIN faturamento.debito_cobrado_historico dco ON dco.cnta_id = con.cnta_id
+					INNER JOIN faturamento.debito_a_cobrar_geral dcg ON dcg.dbac_id = dco.dbac_id AND dcg.dage_ichistorico = 2
+					INNER JOIN faturamento.debito_a_cobrar dch ON dch.dbac_id = dcg.dbac_id
+					INNER JOIN arrecadacao.pagamento_historico pgh ON pgh.cnta_id = con.cnta_id AND pgh.pgst_idatual = 0
+					INNER JOIN cobranca.parcelamento par ON par.parc_id = dch.parc_id
+				WHERE
+					par.parc_tmparcelamento >= '2019-01-01'
+				GROUP BY 1
+			UNION
+				SELECT
+					dch.parc_id AS parc_id,
+					SUM(dco.dbcb_vlprestacao) AS valor_pago
+				FROM
+					faturamento.conta con
+					INNER JOIN faturamento.debito_cobrado dco ON dco.cnta_id = con.cnta_id
+					INNER JOIN faturamento.debito_a_cobrar_geral dcg ON dcg.dbac_id = dco.dbac_id AND dcg.dage_ichistorico = 2
+					INNER JOIN faturamento.debito_a_cobrar dch ON dch.dbac_id = dcg.dbac_id
+					INNER JOIN arrecadacao.pagamento pgh ON pgh.cnta_id = con.cnta_id AND pgh.pgst_idatual = 0
+					INNER JOIN cobranca.parcelamento par ON par.parc_id = dch.parc_id
+				WHERE
+					par.parc_tmparcelamento >= '2019-01-01'
+				GROUP BY 1
+			UNION
+				SELECT
+					dch.parc_id AS parc_id,
+					SUM(dco.dbcb_vlprestacao) AS valor_pago
+				FROM
+					faturamento.conta con
+					INNER JOIN faturamento.debito_cobrado dco ON dco.cnta_id = con.cnta_id
+					INNER JOIN faturamento.debito_a_cobrar_geral dcg ON dcg.dbac_id = dco.dbac_id AND dcg.dage_ichistorico = 1
+					INNER JOIN faturamento.deb_a_cobrar_hist dch ON dch.dbac_id = dcg.dbac_id
+					INNER JOIN arrecadacao.pagamento pgh ON pgh.cnta_id = con.cnta_id AND pgh.pgst_idatual = 0
+					INNER JOIN cobranca.parcelamento par ON par.parc_id = dch.parc_id
+				WHERE
+					par.parc_tmparcelamento >= '2019-01-01'
+				GROUP BY 1) AS TMP
+				GROUP BY 1) AS valor_pago_parcelas ON valor_pago_parcelas.parc_id = par.parc_id
+WHERE
+	par.parc_tmparcelamento >= '2019-01-01' AND NOT par.pmdz_id IS NULL

@@ -1,0 +1,20 @@
+COMANDO;MAIL_TO;MAIL_CC;VARS;MAIL_TITLE;MAIL_BODY;EXPORT_CSV;EXPORT_EXCEL;MAIL_CSV;MAIL_EXCEL;ZIP_CSV;ZIP_EXCEL;MAIL_ZIP_CSV;MAIL_ZIP_XLSX;MAINTAIN_FILES_IN_STORE;SEND_FTP;INTERESSADO;ALIAS;CREATE_DATE_SUBFOLDER
+CAD_COM_DEBITO_INCREMENTADO.sql;;;VAR_REFERENCIA=THIS,VAR_UNIDADE=2,VAR_ARRECADACAO=THIS;;;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true
+CAD_COM_DEBITO_INCREMENTADO.sql;;;VAR_REFERENCIA=THIS,VAR_UNIDADE=3,VAR_ARRECADACAO=THIS;;;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true
+CAD_COM_DEBITO_INCREMENTADO.sql;;;VAR_REFERENCIA=THIS,VAR_UNIDADE=4,VAR_ARRECADACAO=THIS;;;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true
+CAD_COM_DEBITO_INCREMENTADO.sql;;;VAR_REFERENCIA=THIS,VAR_UNIDADE=5,VAR_ARRECADACAO=THIS;;;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true
+CAD_COM_DEBITO_INCREMENTADO.sql;;;VAR_REFERENCIA=THIS,VAR_UNIDADE=6,VAR_ARRECADACAO=THIS;;;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true
+CAD_COM_DEBITO_INCREMENTADO.sql;;;VAR_REFERENCIA=THIS,VAR_UNIDADE=7,VAR_ARRECADACAO=THIS;;;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true
+CAD_COM_DEBITO_INCREMENTADO.sql;;;VAR_REFERENCIA=THIS,VAR_UNIDADE=8,VAR_ARRECADACAO=THIS;;;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true
+CAD_COM_DEBITO_INCREMENTADO.sql;;;VAR_REFERENCIA=THIS,VAR_UNIDADE=9,VAR_ARRECADACAO=THIS;;;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true
+CAD_COM_DEBITO_INCREMENTADO.sql;;;VAR_REFERENCIA=THIS,VAR_UNIDADE=10,VAR_ARRECADACAO=THIS;;;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true
+CAD_COM_DEBITO_INCREMENTADO.sql;;;VAR_REFERENCIA=THIS,VAR_UNIDADE=11,VAR_ARRECADACAO=THIS;;;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true
+CAD_COM_DEBITO_INCREMENTADO.sql;;;VAR_REFERENCIA=THIS,VAR_UNIDADE=12,VAR_ARRECADACAO=THIS;;;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true
+CAD_COM_DEBITO_INCREMENTADO.sql;;;VAR_REFERENCIA=THIS,VAR_UNIDADE=13,VAR_ARRECADACAO=THIS;Planilha de Cadastro com Debito;Ola, /n envio em anexo cadastro com debito de sua gerencia atualizada com data de hoje.;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true
+CAD_COM_DEBITO_INCREMENTADO.sql;;;VAR_REFERENCIA=THIS,VAR_UNIDADE=14,VAR_ARRECADACAO=THIS;Planilha de Cadastro com Debito;Ola, /n envio em anexo cadastro com debito de sua gerencia atualizada com data de hoje.;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true
+CAD_COM_DEBITO_INCREMENTADO.sql;;;VAR_REFERENCIA=THIS,VAR_UNIDADE=15,VAR_ARRECADACAO=THIS;Planilha de Cadastro com Debito;Ola, /n envio em anexo cadastro com debito de sua gerencia atualizada com data de hoje.;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true
+CAD_COM_DEBITO_INCREMENTADO.sql;;;VAR_REFERENCIA=THIS,VAR_UNIDADE=20,VAR_ARRECADACAO=THIS;Planilha de Cadastro com Debito;Ola, /n envio em anexo cadastro com debito de sua gerencia atualizada com data de hoje.;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true
+CAD_COM_DEBITO_INCREMENTADO.sql;;;VAR_REFERENCIA=THIS,VAR_UNIDADE=21,VAR_ARRECADACAO=THIS;Planilha de Cadastro com Debito;Ola, /n envio em anexo cadastro com debito de sua gerencia atualizada com data de hoje.;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true
+CORTE_CAEMA.sql;;;VAR_REFERENCIA=AUTO,VAR_UNIDADE=2/,3/,4/,5/,6/,7/,8/,9/,10/,20/,21;;;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true
+CORTE_CAEMA.sql;;;VAR_REFERENCIA=AUTO,VAR_UNIDADE=11/,12/,13/,14/,15;;;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true
+LEITURAS_IMPRESSAO_SIMULTANEA.sql;;;VAR_REFERENCIA=THIS;;;true;false;false;false;true;false;false;false;.zip;.zip;CAEMA;AUTO;true

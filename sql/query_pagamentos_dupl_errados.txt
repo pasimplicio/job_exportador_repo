@@ -1,0 +1,35 @@
+SELECT
+	*
+FROM 
+	arrecadacao.pagamento pag
+	LEFT JOIN faturamento.conta con ON pag.cnta_id = con.cnta_id
+	LEFT JOIN faturamento.conta_historico cnh ON pag.cnta_id = cnh.cnta_id
+WHERE 
+	pag.pgst_idatual = 1 AND
+	NOT pag.cnta_id IS NULL AND
+	NOT EXISTS 
+	(
+		SELECT
+			pag2.pgmt_id AS "ID"
+		FROM 
+			arrecadacao.pagamento pag2
+			LEFT JOIN faturamento.conta con2 ON pag2.cnta_id = con2.cnta_id
+			LEFT JOIN faturamento.conta_historico cnh2 ON pag2.cnta_id = cnh2.cnta_id
+		WHERE 
+			NOT pag2.cnta_id IS NULL AND
+			pag2.pgmt_id <> pag.pgmt_id AND
+			pag2.imov_id = pag.imov_id AND
+			COALESCE(con2.cnta_amreferenciaconta, cnh2.cnhi_amreferenciaconta) =  COALESCE(con.cnta_amreferenciaconta, cnh.cnhi_amreferenciaconta)
+		UNION
+		SELECT
+			pag2.pghi_id AS "ID"
+		FROM 
+			arrecadacao.pagamento_historico pag2
+			LEFT JOIN faturamento.conta con2 ON pag2.cnta_id = con2.cnta_id
+			LEFT JOIN faturamento.conta_historico cnh2 ON pag2.cnta_id = cnh2.cnta_id
+		WHERE 
+			NOT pag2.cnta_id IS NULL AND
+			pag2.pghi_id <> pag.pgmt_id AND
+			pag2.imov_id = pag.imov_id AND
+			COALESCE(con2.cnta_amreferenciaconta, cnh2.cnhi_amreferenciaconta) =  COALESCE(con.cnta_amreferenciaconta, cnh.cnhi_amreferenciaconta)
+	)

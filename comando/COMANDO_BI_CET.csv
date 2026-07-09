@@ -1,0 +1,2 @@
+COMANDO;OUTPUT_FOLDER;EXPORT_CSV;CREATE_DATE_SUBFOLDER;VARS;ALIAS
+faturamento_cat_comercial.sql;estudos;True;false;VAR_REFERENCIA=ANT;faturamento_cat_comercial

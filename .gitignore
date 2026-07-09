@@ -1,0 +1,24 @@
+# ===== CREDENCIAIS (NUNCA VERSIONAR) =====
+engine/configs.properties
+engine/credenciais.bat
+
+# ===== DADOS GERADOS =====
+saida/
+log/
+
+# ===== ARTEFATOS DE BUILD =====
+engine/target/
+
+# ===== POWER BI / BINARIOS / DADOS BRUTOS =====
+*.pbix
+*.pbix.ant
+*.exe
+*.xlsx
+Arquivos BI/
+
+# ===== BACKUPS =====
+*.ant
+
+# ===== SISTEMA =====
+desktop.ini
+Thumbs.db

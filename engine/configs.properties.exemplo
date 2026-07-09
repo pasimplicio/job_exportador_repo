@@ -1,0 +1,29 @@
+# ===================================================================
+# MODELO DE CONFIGURACAO
+#
+# Copie para "configs.properties" e preencha com os valores reais.
+# O configs.properties e ignorado pelo Git (contem senhas).
+#
+#     copy engine\configs.properties.exemplo engine\configs.properties
+#
+# ATENCAO: hoje o engine NAO le este arquivo. As credenciais do banco
+# chegam por argumentos de linha de comando, vindas dos .bat.
+# A leitura deste arquivo (banco + FTP) esta prevista para a proxima
+# versao do engine.
+# ===================================================================
+
+# ----- BANCO DE DADOS -----
+DB_DRIVER_GSAN = org.postgresql.Driver
+DB_URL_GSAN    = jdbc:postgresql://SERVIDOR:5432/BANCO
+DB_USER_GSAN   = USUARIO
+DB_PASS_GSAN   = SENHA
+
+# ----- FTP -----
+FTP_SERVER   = SERVIDOR_FTP
+FTP_PORT     = 21
+FTP_USER     = USUARIO
+FTP_PASS     = SENHA
+
+# Raiz remota. Os arquivos sao enviados para:
+#   FTP_BASE_DIR / <aaaaMMdd> / <nome_do_comando> / arquivo.zip
+FTP_BASE_DIR = CAEMA

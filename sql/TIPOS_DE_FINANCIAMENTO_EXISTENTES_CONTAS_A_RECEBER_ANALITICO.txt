@@ -1,0 +1,37 @@
+SELECT
+	lct.lctp_id AS "ID DO TIPO DE LANCAMENTO",
+	lct.lctp_dstipolancamento "NOME DO TIPO DE LANCAMENTO",
+	lit.lcit_id AS "ID DO ITEM LANCAMENTO",
+	lit.lcit_dsitemlancamento AS "NOME DO ITEM LANCAMENTO",
+	lic.lict_id AS "ID LANCAMENTO ITEM CONTABIL",
+	lic.lict_dsitemlancamentocontabil AS "NOME LANCAMENTO ITEM CONTABIL",
+	CASE
+		WHEN cra.cnta_id IS NULL THEN 'CONTA NULA'
+		ELSE 'POSSUI CONTA'
+	END AS "ST CONTA",
+	CASE
+		WHEN cra.gpag_id IS NULL THEN 'GUIA NULA'
+		ELSE 'POSSUI GUIA'
+	END AS "ST GUIA",
+	CASE
+		WHEN cra.dbac_id IS NULL THEN 'DEB A COB NULA'
+		ELSE 'POSSUI DEB A COB'
+	END AS "ST DEB A COB",
+	CASE
+		WHEN cra.crar_id IS NULL THEN 'CRED A RLZ NULA'
+		ELSE 'POSSUI CRED A RLZ'
+	END AS "ST CRED A RLZ",
+	CASE
+		WHEN cra.pgmt_id IS NULL THEN 'PAG NULA'
+		ELSE 'POSSUI PAG'
+	END AS "ST PAG",
+	cra.crca_icvencido,
+	TO_CHAR(COUNT(cra.lctp_id),'999G999G990') AS "QTD DE REGISTROS"
+FROM
+	financeiro.conta_rec_ctb_analitico cra
+	LEFT JOIN financeiro.lancamento_tipo lct ON lct.lctp_id = cra.lctp_id
+	LEFT JOIN financeiro.lancamento_item_contabil lic ON lic.lict_id = cra.lict_id
+	LEFT JOIN financeiro.lancamento_item lit ON lit.lcit_id = cra.lcit_id
+WHERE
+	cra.crca_amreferencia = 202112
+GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
