@@ -7,11 +7,14 @@ set "ROOT_DIR=%~dp0"
 if "%ROOT_DIR:~-1%"=="\" set "ROOT_DIR=%ROOT_DIR:~0,-1%"
 set "ENGINE_JAR=%ROOT_DIR%\engine\target\exportador-csv-1.0.0-jar-with-dependencies.jar"
 
-set "COMANDO_FILE=%ROOT_DIR%\comando\COMANDO_BI_2026_OS.csv"
+set "COMANDO_FILE=%ROOT_DIR%\comando\COMANDO_MEIO_DIA.csv"
 
 REM === ACESSO BANCO ===
 REM Credenciais: veja engine/credenciais.bat (nao versionado).
 call "%ROOT_DIR%\engine\credenciais.bat"
+
+REM === FTP ===
+REM Servidor, usuario, senha e pasta raiz: engine\configs.properties (nao versionado).
 
 REM === JAVA ===
 REM Usa o JAVA_HOME quando existir; senao cai no java do PATH.
@@ -28,6 +31,20 @@ echo JDBC_URL.....: %JDBC_URL%
 echo JAVA_EXE.....: %JAVA_EXE%
 echo.
 
+REM === CHECAGENS ===
+"%JAVA_EXE%" -version >nul 2>&1
+if errorlevel 1 (
+    echo ERRO: Java nao encontrado. Instale o JDK 17+ ou defina JAVA_HOME.
+    pause
+    exit /b 1
+)
+if not exist "%ENGINE_JAR%" (
+    echo ERRO: jar da engine nao encontrado em %ENGINE_JAR%
+    echo Compile com: cd engine ^&^& mvn package
+    pause
+    exit /b 1
+)
+
 REM === EXECUCAO ===
 "%JAVA_EXE%" -jar "%ENGINE_JAR%" ^
  "%JDBC_URL%" ^
@@ -38,9 +55,10 @@ REM === EXECUCAO ===
 
 if errorlevel 1 (
     echo.
-    echo ERRO na execucao do projeto COMANDO_BI_2026_OS
+    echo ERRO na execucao do projeto COMANDO_MEIO_DIA
 ) else (
     echo.
-    echo Projeto COMANDO_BI_2026_OS gerado com sucesso.
+    echo Projeto COMANDO_MEIO_DIA gerado com sucesso.
 )
 endlocal
+@pause
