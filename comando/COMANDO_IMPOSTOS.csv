@@ -1,6 +1,0 @@
-COMANDO;OUTPUT_FOLDER;EXPORT_CSV;CREATE_DATE_SUBFOLDER;VARS;ALIAS
-imposto_federal_final.sql;impostos;True;false;VAR_REF_INICIAL=202501,VAR_REF_FINAL=202512;impostos_2025
-imposto_federal_final.sql;impostos;True;false;VAR_REF_INICIAL=202401,VAR_REF_FINAL=202412;impostos_2024
-imposto_federal_final.sql;impostos;True;false;VAR_REF_INICIAL=202301,VAR_REF_FINAL=202312;impostos_2023
-imposto_federal_final.sql;impostos;True;false;VAR_REF_INICIAL=202201,VAR_REF_FINAL=202212;impostos_2022
-imposto_federal_final.sql;impostos;True;false;VAR_REF_INICIAL=202101,VAR_REF_FINAL=202112;impostos_2021

@@ -1,5 +1,0 @@
-COMANDO;OUTPUT_FOLDER;EXPORT_CSV;CREATE_DATE_SUBFOLDER;VARS
-metas_arrecadacao.sql;metas_dc;True;false;VAR_REFERENCIA=THIS,VAR_UNIDADE=2/,3/,4/,5/,6/,7/,8/,9/,10/,11/,12/,13/,14/,15,/20,/21,VAR_ARRECADACAO=202501
-metas_debito.sql;metas_dc;True;false;
-metas_faturamento.sql;metas_dc;True;false;
-metas_autofaturamento.sql;metas_dc;True;false;

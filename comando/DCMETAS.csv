@@ -1,7 +1,0 @@
-COMANDO;OUTPUT_FOLDER;EXPORT_CSV;CREATE_DATE_SUBFOLDER;VARS;ALIAS
-fArrecadacao.sql;dcmetas;True;false;;fArrecadacao
-fCortes.sql;dcmetas;True;false;;fcorte
-fFaturamento.sql;dcmetas;True;false;;fFaturamento_2026
-fPagamentos.sql;dcmetas;True;false;;fPagamento_2026
-ordensdeservico.sql;dcmetas;True;false;;fordemservico
-dMatricula.sql;dcmetas;True;false;;dMatricula

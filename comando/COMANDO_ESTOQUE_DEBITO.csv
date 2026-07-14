@@ -1,7 +1,0 @@
-COMANDO;OUTPUT_FOLDER;EXPORT_CSV;CREATE_DATE_SUBFOLDER
-estoque_arrecadacao.sql;estoque_debito;True;false
-estoque_debito.sql;estoque_debito;True;false
-estoque_dMatricula.sql;estoque_debito;True;false
-estoque_faturamento.sql;estoque_debito;True;false
-estoque_faturamento_contas.sql;estoque_debito;True;false
-estoque_pagamento.sql;estoque_debito;True;false

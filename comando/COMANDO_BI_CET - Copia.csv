@@ -1,9 +1,0 @@
-COMANDO;OUTPUT_FOLDER;EXPORT_CSV;CREATE_DATE_SUBFOLDER;VARS;ALIAS
-estoque_arrecadacao.sql;estoque_debito;True;false;VAR_REFERENCIA=THIS,VAR_UNIDADE=2/,3/,4/,5/,6/,7/,8/,9/,10/,11/,12/,13/,14/,15,/20,/21,VAR_ARRECADACAO=202501;estoque_arrecadacao
-estoque_debito.sql;estoque_debito;True;false;;estoque_debito
-estoque_dMatricula.sql;estoque_debito;True;false;;estoque_dMatricula
-estoque_faturamento.sql;estoque_debito;True;false;;estoque_faturamento
-estoque_faturamento_contas.sql;estoque_debito;True;false;;estoque_faturamento_contas
-estoque_pagamento.sql;estoque_debito;True;false;;estoque_pagamento
-campanha_negociacao_2025.sql;estudos;True;false;;campanha_negociacao_2025
-faturamento_cat_comercial.sql;estudos;True;false;VAR_REFERENCIA=ANT;faturamento_cat_comercial

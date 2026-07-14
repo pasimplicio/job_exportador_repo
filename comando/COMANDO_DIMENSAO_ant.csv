@@ -1,8 +1,0 @@
-COMANDO;MAIL_TO;MAIL_CC;VARS;MAIL_TITLE;MAIL_BODY;EXPORT_CSV;EXPORT_EXCEL;MAIL_CSV;MAIL_EXCEL;ZIP_CSV;ZIP_EXCEL;MAIL_ZIP_CSV;MAIL_ZIP_XLSX;MAINTAIN_FILES_IN_STORE;SEND_FTP;INTERESSADO;ALIAS;CREATE_DATE_SUBFOLDER
-dMatricula.sql;;;VAR_REFERENCIA=AUTO;Planilha de Cadastro de Matriculas;Ola, /n Envio em anexo da planilha de cadastro;true;false;false;false;false;false;false;false;.csv,.md5;.csv,.md5;BI;dMatricula;false
-dCliente.sql;;;VAR_REFERENCIA=AUTO;Planilha de Cadastro de Clientes;Ola, /n Envio em anexo da planilha de clientes;true;false;false;false;false;false;false;false;.csv,.md5;.csv,.md5;BI;dCliente;false
-PDD_por_cliente.sql;;;VAR_REFERENCIA=AUTO;relatorio;Ola, /n Envio em anexo relatorio;true;false;false;false;false;false;false;false;.csv,.md5;.csv,.md5;BI;pdd_por_cliente;false
-dDevedores.sql;;;VAR_REFERENCIA=AUTO;relatorio;Ola, /n Envio em anexo relatorio;true;false;false;false;false;false;false;false;.csv,.md5;.csv,.md5;BI;dDevedores;false
-litoranea.sql;;;VAR_REFERENCIA=AUTO;relatorio;Ola, /n Envio em anexo relatorio;true;false;false;false;false;false;false;false;.csv,.md5;.csv,.md5;BI;litoranea;false
-medicao_consistencia.sql;;;VAR_REFERENCIA=AUTO;relatorio;Ola, /n Envio em anexo relatorio;true;false;false;false;false;false;false;false;.csv,.md5;.csv,.md5;BI;medicao_consistencia;false
-DEBITOS_BI_2023.sql;;;VAR_FATURAMENTO=AUTO,VAR_UNIDADE=2/,3/,4/,5/,6/,7/,8/,9/,10/,20/,21/,11/,12/,13/,14/,15/,20/,21,VAR_ARRECADACAO=AUTO,VAR_TIMESPAN=6;Planilha de Debitos;Ola, /n Envio em anexo planilha de débitos até a data de hoje.;true;false;false;false;false;false;false;false;.csv,.md5;.csv,.md5;BI;Debitos;false
