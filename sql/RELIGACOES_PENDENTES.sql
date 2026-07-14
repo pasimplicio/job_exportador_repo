@@ -54,6 +54,6 @@ FROM
   LEFT JOIN cadastro.unidade_organizacional uno_atual ON uno_atual.unid_id = ra.unid_idatual
 WHERE 
   ra.step_id IN (59,56) AND
-  usu_geracao.empr_id IN (VAR_EMPRESAS) AND
+  usu_geracao.empr_id IN (${VAR_EMPRESAS}) AND
   ra.rgat_cdsituacao = 1
 ORDER BY 7,8

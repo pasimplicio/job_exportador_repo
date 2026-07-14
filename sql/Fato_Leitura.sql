@@ -1,4 +1,4 @@
-﻿
+
 -- trocar a referencia 202311
 
 SELECT 
@@ -24,7 +24,7 @@ SELECT
 	
 FROM 
 	cadastro.imovel imo
-	LEFT JOIN micromedicao.medicao_historico mdh ON mdh.lagu_id = imo.imov_id --AND mdh.mdhi_amleitura = VAR_REFERENCIA
+	LEFT JOIN micromedicao.medicao_historico mdh ON mdh.lagu_id = imo.imov_id --AND mdh.mdhi_amleitura = ${VAR_REFERENCIA}
 	LEFT JOIN micromedicao.leitura_situacao lts ON lts.ltst_id = mdh.ltst_idleiturasituacaoatual
 	LEFT JOIN micromedicao.leitura_anormalidade lai ON lai.ltan_id = mdh.ltan_idleitanorminformada
 	LEFT JOIN micromedicao.leitura_anormalidade laf ON laf.ltan_id = mdh.ltan_idleitanormfatmt

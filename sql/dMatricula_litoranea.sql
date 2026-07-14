@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 	imo.imov_id AS "Matricula",
 	TO_CHAR(imo.imov_nncoordenadax,'990D999999999999999') AS "Latitude",
 	TO_CHAR(imo.imov_nncoordenaday,'990D999999999999999') AS "Longitude",

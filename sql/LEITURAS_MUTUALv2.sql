@@ -51,7 +51,7 @@ FROM
 	LEFT JOIN micromedicao.consumo_anormalidade csa ON csa.csan_id = con.csan_id
 	LEFT JOIN micromedicao.movimento_roteiro_empr mre ON mre.imov_id = con.imov_id AND mre.mrem_ammovimento = con.mcpf_ammovimento
 WHERE 
-	con.mcpf_ammovimento = VAR_REFERENCIA
+	con.mcpf_ammovimento = ${VAR_REFERENCIA}
 	
 ORDER BY "REFERENCIA","LOCALIDADE","SETOR COMERCIAL","ROTA","QUADRA","SEQ. ROTA","SUB LOTE";
 	

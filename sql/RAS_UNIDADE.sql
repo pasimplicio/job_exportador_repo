@@ -57,5 +57,5 @@ FROM
   LEFT JOIN atendimentopublico.atend_motivo_encmt ame ON ame.amen_id = ra.amen_id
   LEFT JOIN atendimentopublico.ordem_servico ors ON ors.rgat_id = ra.rgat_id
 WHERE 
-  ra.rgat_tmregistroatendimento >= '2020-01-01' AND une.uneg_id = VAR_UNIDADE
+  ra.rgat_tmregistroatendimento >= '2020-01-01' AND une.uneg_id = ${VAR_UNIDADE}
 ORDER BY 7,8

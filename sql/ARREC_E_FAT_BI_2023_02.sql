@@ -1,4 +1,4 @@
-﻿	SELECT
+	SELECT
 		'ARRECADACAO' AS "TIPO",
 		--arr.uneg_id AS "COD UNIDADE",
 		--arr.nome_unidade AS "UNIDADE",

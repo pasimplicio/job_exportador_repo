@@ -12,7 +12,7 @@ FROM
 			INNER JOIN faturamento.deb_a_cobrar_hist dch ON dch.dbac_id = dcg.dbac_id
 			INNER JOIN arrecadacao.pagamento_historico pgh ON pgh.cnta_id = con.cnta_id AND pgh.pgst_idatual = 0
 		WHERE
-			dch.parc_id = VAR_PARCELAMENTO
+			dch.parc_id = ${VAR_PARCELAMENTO}
 		GROUP BY 1,2
 	UNION
 		SELECT
@@ -26,7 +26,7 @@ FROM
 			INNER JOIN faturamento.debito_a_cobrar dch ON dch.dbac_id = dcg.dbac_id
 			INNER JOIN arrecadacao.pagamento_historico pgh ON pgh.cnta_id = con.cnta_id AND pgh.pgst_idatual = 0
 		WHERE
-			dch.parc_id = VAR_PARCELAMENTO
+			dch.parc_id = ${VAR_PARCELAMENTO}
 		GROUP BY 1,2
 	UNION
 		SELECT
@@ -40,7 +40,7 @@ FROM
 			INNER JOIN faturamento.debito_a_cobrar dch ON dch.dbac_id = dcg.dbac_id
 			INNER JOIN arrecadacao.pagamento pgh ON pgh.cnta_id = con.cnta_id AND pgh.pgst_idatual = 0
 		WHERE
-			dch.parc_id = VAR_PARCELAMENTO
+			dch.parc_id = ${VAR_PARCELAMENTO}
 		GROUP BY 1,2
 	UNION
 		SELECT
@@ -54,7 +54,7 @@ FROM
 			INNER JOIN faturamento.deb_a_cobrar_hist dch ON dch.dbac_id = dcg.dbac_id
 			INNER JOIN arrecadacao.pagamento pgh ON pgh.cnta_id = con.cnta_id AND pgh.pgst_idatual = 0
 		WHERE
-			dch.parc_id = VAR_PARCELAMENTO
+			dch.parc_id = ${VAR_PARCELAMENTO}
 		GROUP BY 1,2
 	UNION
 		SELECT
@@ -65,7 +65,7 @@ FROM
 			faturamento.guia_pagamento_historico gpg
 			INNER JOIN arrecadacao.pagamento_historico pag ON pag.gpag_id = gpg.gpag_id AND pag.pgst_idatual = 0
 		WHERE
-			parc_id = VAR_PARCELAMENTO
+			parc_id = ${VAR_PARCELAMENTO}
 	UNION
 		SELECT
 			'ENTRADA HISTORICO 1' AS origem,
@@ -75,7 +75,7 @@ FROM
 			faturamento.guia_pagamento gpg
 			INNER JOIN arrecadacao.pagamento_historico pag ON pag.gpag_id = gpg.gpag_id AND pag.pgst_idatual = 0
 		WHERE
-			parc_id = VAR_PARCELAMENTO
+			parc_id = ${VAR_PARCELAMENTO}
 	UNION
 		SELECT
 			'ENTRADA ATUAL 1' AS origem,
@@ -85,7 +85,7 @@ FROM
 			faturamento.guia_pagamento gpg
 			INNER JOIN arrecadacao.pagamento pag ON pag.gpag_id = gpg.gpag_id AND pag.pgst_idatual = 0
 		WHERE
-			parc_id = VAR_PARCELAMENTO
+			parc_id = ${VAR_PARCELAMENTO}
 	UNION
 		SELECT
 			'ENTRADA ATUAL 2' AS origem,
@@ -95,4 +95,4 @@ FROM
 			faturamento.guia_pagamento_historico gpg
 			INNER JOIN arrecadacao.pagamento pag ON pag.gpag_id = gpg.gpag_id AND pag.pgst_idatual = 0
 		WHERE
-			parc_id = VAR_PARCELAMENTO) AS pagos
+			parc_id = ${VAR_PARCELAMENTO}) AS pagos

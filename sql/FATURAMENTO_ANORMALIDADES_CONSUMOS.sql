@@ -1,4 +1,4 @@
---VAR_REFERENCIA: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
+--${VAR_REFERENCIA}: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
 --15: Deve ser substituida pelo id da unidade de onde se quer obter os dados
 
 SELECT 
@@ -130,79 +130,79 @@ SELECT
 	cosa_a1.csan_dsconsumoanormalidade AS "ANORM CONS AGUA",
 	cost_e1.cstp_dsconsumotipo AS "TIPO CONSUMO ESGOTO",
 	cosa_e1.csan_dsconsumoanormalidade AS "ANORM CONS ESGOTO",
-	cosh_a1.cshi_nnconsumomedio AS "CONSUMO MEDIO AGUA EM VAR_REFERENCIA",
+	cosh_a1.cshi_nnconsumomedio AS "CONSUMO MEDIO AGUA EM ${VAR_REFERENCIA}",
 	cob.cbst_dscobrancasituacao AS "SIT. COBRANCA",
 	ics.iscb_dtimplantacaocobranca AS "DATA DE ENTRADA COBRANCA",
-	con_ult_fat.sit AS "STATUS CONTA VAR_REFERENCIA",
-	con_ult_fat.impressao AS "IMPRESSAO VAR_REFERENCIA",
-	con_ult_fat.cagua AS "VOL AG VAR_REFERENCIA",
-	con_ult_fat.vl_agua AS "VL AG VAR_REFERENCIA",
-	con_ult_fat.cesg AS "VOL ES VAR_REFERENCIA",
-	con_ult_fat.vl_esgoto AS "VL ES VAR_REFERENCIA",
-	con_ult_fat.vl_debitos AS "OUTROS SERVICOS VAR_REFERENCIA",
-	con_ult_fat.vl_creditos AS "CRED VAR_REFERENCIA",
-	con_ult_fat.vl_impostos AS "IMPOSTOS VAR_REFERENCIA",
-	con_ult_fat.valor AS "VALOR VAR_REFERENCIA",
+	con_ult_fat.sit AS "STATUS CONTA ${VAR_REFERENCIA}",
+	con_ult_fat.impressao AS "IMPRESSAO ${VAR_REFERENCIA}",
+	con_ult_fat.cagua AS "VOL AG ${VAR_REFERENCIA}",
+	con_ult_fat.vl_agua AS "VL AG ${VAR_REFERENCIA}",
+	con_ult_fat.cesg AS "VOL ES ${VAR_REFERENCIA}",
+	con_ult_fat.vl_esgoto AS "VL ES ${VAR_REFERENCIA}",
+	con_ult_fat.vl_debitos AS "OUTROS SERVICOS ${VAR_REFERENCIA}",
+	con_ult_fat.vl_creditos AS "CRED ${VAR_REFERENCIA}",
+	con_ult_fat.vl_impostos AS "IMPOSTOS ${VAR_REFERENCIA}",
+	con_ult_fat.valor AS "VALOR ${VAR_REFERENCIA}",
 	(CASE
 	 WHEN con_pen_fat.cagua > 0 THEN TRIM(to_char((((con_ult_fat.cagua::FLOAT/con_pen_fat.cagua::FLOAT)-1.0)*100.0),'9G999G999G999G999G990D00')) || '%'
 	 ELSE TRIM(to_char(0.00,'9G999G999G999G999G990D00')) || '%'
-	 END) AS "VARIACAO CONS AGUA VAR_REFERENCIA",
+	 END) AS "VARIACAO CONS AGUA ${VAR_REFERENCIA}",
 	(CASE
 	 WHEN con_pen_fat.vl_agua > 0 THEN TRIM(to_char((((con_ult_fat.vl_agua::FLOAT/con_pen_fat.vl_agua::FLOAT)-1.0)*100.0),'9G999G999G999G999G990D00')) || '%'
 	 ELSE TRIM(to_char(0.00,'9G999G999G999G999G990D00')) || '%'
-	 END) AS "VARIACAO VL AGUA VAR_REFERENCIA",
+	 END) AS "VARIACAO VL AGUA ${VAR_REFERENCIA}",
 	(CASE
 	 WHEN con_pen_fat.cesg > 0 THEN TRIM(to_char((((con_ult_fat.cesg::FLOAT/con_pen_fat.cesg::FLOAT)-1.0)*100.0),'9G999G999G999G999G990D00')) || '%'
 	 ELSE TRIM(to_char(0.00,'9G999G999G999G999G990D00')) || '%'
-	 END) AS "VARIACAO CONS ESG VAR_REFERENCIA",
+	 END) AS "VARIACAO CONS ESG ${VAR_REFERENCIA}",
 	(CASE
 	 WHEN con_pen_fat.vl_esgoto > 0 THEN TRIM(to_char((((con_ult_fat.vl_esgoto::FLOAT/con_pen_fat.vl_esgoto::FLOAT)-1)*100),'9G999G999G999G999G990D00')) || '%'
 	 ELSE TRIM(to_char(0.00,'9G999G999G999G999G990D00')) || '%'
-	 END) AS "VARIACAO VL ESG VAR_REFERENCIA",
+	 END) AS "VARIACAO VL ESG ${VAR_REFERENCIA}",
 	(CASE
 	 WHEN con_pen_fat.valor > 0 THEN TRIM(to_char((((con_ult_fat.valor::FLOAT/con_pen_fat.valor::FLOAT)-1)*100),'9G999G999G999G999G990D00')) || '%'
 	 ELSE TRIM(to_char(0.00,'9G999G999G999G999G990D00')) || '%'
-	 END) AS "VARIACAO VL CONTA VAR_REFERENCIA",
-	con_pen_fat.sit AS "STATUS CONTA VAR_REFERENCIA - 1",
-	con_pen_fat.impressao AS "IMPRESSAO VAR_REFERENCIA - 1",
-	con_pen_fat.cagua AS "VOL AG VAR_REFERENCIA - 1",
-	con_pen_fat.vl_agua AS "VL AG VAR_REFERENCIA - 1",
-	con_pen_fat.cesg AS "VOL ES VAR_REFERENCIA - 1",
-	con_pen_fat.vl_esgoto AS "VL ES VAR_REFERENCIA - 1",
-	con_pen_fat.vl_debitos AS "OUTROS SERVICOS VAR_REFERENCIA - 1",
-	con_pen_fat.vl_creditos AS "CRED VAR_REFERENCIA - 1",
-	con_pen_fat.vl_impostos AS "IMPOSTOS VAR_REFERENCIA - 1",
-	con_pen_fat.valor AS "VALOR VAR_REFERENCIA - 1",
+	 END) AS "VARIACAO VL CONTA ${VAR_REFERENCIA}",
+	con_pen_fat.sit AS "STATUS CONTA ${VAR_REFERENCIA} - 1",
+	con_pen_fat.impressao AS "IMPRESSAO ${VAR_REFERENCIA} - 1",
+	con_pen_fat.cagua AS "VOL AG ${VAR_REFERENCIA} - 1",
+	con_pen_fat.vl_agua AS "VL AG ${VAR_REFERENCIA} - 1",
+	con_pen_fat.cesg AS "VOL ES ${VAR_REFERENCIA} - 1",
+	con_pen_fat.vl_esgoto AS "VL ES ${VAR_REFERENCIA} - 1",
+	con_pen_fat.vl_debitos AS "OUTROS SERVICOS ${VAR_REFERENCIA} - 1",
+	con_pen_fat.vl_creditos AS "CRED ${VAR_REFERENCIA} - 1",
+	con_pen_fat.vl_impostos AS "IMPOSTOS ${VAR_REFERENCIA} - 1",
+	con_pen_fat.valor AS "VALOR ${VAR_REFERENCIA} - 1",
 	(CASE
 	 WHEN con_ant_fat.cagua > 0 THEN TRIM(to_char((((con_pen_fat.cagua::FLOAT/con_ant_fat.cagua::FLOAT)-1)*100),'9G999G999G999G999G990D00')) || '%'
 	 ELSE TRIM(to_char(0.00,'9G999G999G999G999G990D00')) || '%'
-	 END) AS "VARIACAO CONS AGUA VAR_REFERENCIA - 1",
+	 END) AS "VARIACAO CONS AGUA ${VAR_REFERENCIA} - 1",
 	(CASE
 	 WHEN con_ant_fat.vl_agua > 0 THEN TRIM(to_char((((con_pen_fat.vl_agua::FLOAT/con_ant_fat.vl_agua::FLOAT)-1)*100),'9G999G999G999G999G990D00')) || '%'
 	 ELSE TRIM(to_char(0.00,'9G999G999G999G999G990D00')) || '%'
-	 END) AS "VARIACAO VL AGUA VAR_REFERENCIA - 1",
+	 END) AS "VARIACAO VL AGUA ${VAR_REFERENCIA} - 1",
 	(CASE
 	 WHEN con_ant_fat.cesg > 0 THEN TRIM(to_char((((con_pen_fat.cesg::FLOAT/con_ant_fat.cesg::FLOAT)-1)*100),'9G999G999G999G999G990D00')) || '%'
 	 ELSE TRIM(to_char(0.00,'9G999G999G999G999G990D00')) || '%'
-	 END) AS "VARIACAO CONS ESG VAR_REFERENCIA - 1",
+	 END) AS "VARIACAO CONS ESG ${VAR_REFERENCIA} - 1",
 	(CASE
 	 WHEN con_ant_fat.vl_esgoto > 0 THEN TRIM(to_char((((con_pen_fat.vl_esgoto::FLOAT/con_ant_fat.vl_esgoto::FLOAT)-1)*100),'9G999G999G999G999G990D00')) || '%'
 	 ELSE TRIM(to_char(0.00,'9G999G999G999G999G990D00')) || '%'
-	 END) AS "VARIACAO VL ESG VAR_REFERENCIA - 1",
+	 END) AS "VARIACAO VL ESG ${VAR_REFERENCIA} - 1",
 	(CASE
 	 WHEN con_ant_fat.valor > 0 THEN TRIM(to_char((((con_pen_fat.valor::FLOAT/con_ant_fat.valor::FLOAT)-1)*100),'9G999G999G999G999G990D00')) || '%'
 	 ELSE TRIM(to_char(0.00,'9G999G999G999G999G990D00')) || '%'
-	 END) AS "VARIACAO VL CONTA VAR_REFERENCIA - 1",
-	con_ant_fat.sit AS "STATUS CONTA VAR_REFERENCIA - 2",
-	con_ant_fat.impressao AS "IMPRESSAO VAR_REFERENCIA - 2",
-	con_ant_fat.cagua AS "VOL AG VAR_REFERENCIA - 2",
-	con_ant_fat.vl_agua AS "VL AG VAR_REFERENCIA - 2",
-	con_ant_fat.cesg AS "VOL ES VAR_REFERENCIA - 2",
-	con_ant_fat.vl_esgoto AS "VL ES VAR_REFERENCIA - 2",
-	con_ant_fat.vl_debitos AS "OUTROS SERVICOS VAR_REFERENCIA - 2",
-	con_ant_fat.vl_creditos AS "CRED VAR_REFERENCIA - 2",
-	con_ant_fat.vl_impostos AS "IMPOSTOS VAR_REFERENCIA - 2",
-	con_ant_fat.valor AS "VALOR VAR_REFERENCIA - 2",
+	 END) AS "VARIACAO VL CONTA ${VAR_REFERENCIA} - 1",
+	con_ant_fat.sit AS "STATUS CONTA ${VAR_REFERENCIA} - 2",
+	con_ant_fat.impressao AS "IMPRESSAO ${VAR_REFERENCIA} - 2",
+	con_ant_fat.cagua AS "VOL AG ${VAR_REFERENCIA} - 2",
+	con_ant_fat.vl_agua AS "VL AG ${VAR_REFERENCIA} - 2",
+	con_ant_fat.cesg AS "VOL ES ${VAR_REFERENCIA} - 2",
+	con_ant_fat.vl_esgoto AS "VL ES ${VAR_REFERENCIA} - 2",
+	con_ant_fat.vl_debitos AS "OUTROS SERVICOS ${VAR_REFERENCIA} - 2",
+	con_ant_fat.vl_creditos AS "CRED ${VAR_REFERENCIA} - 2",
+	con_ant_fat.vl_impostos AS "IMPOSTOS ${VAR_REFERENCIA} - 2",
+	con_ant_fat.valor AS "VALOR ${VAR_REFERENCIA} - 2",
 	con_vivaagua.valor AS "VALOR TOTAL VIVA AGUA",
 	con_vivaagua.qtd AS "QTD. CONTAS VIVA AGUA",
 	con_vivaagua.min AS "MENOR REFERENCIA VIVA AGUA",
@@ -265,13 +265,13 @@ FROM
 	LEFT JOIN cobranca.cobranca_situacao_hist csh ON csh.imov_id = imo.imov_id AND csh.cbsh_amcobrancaretirada IS NULL
 	LEFT JOIN cobranca.cobranca_situacao_tipo cst ON csh.cbsp_id = cst.cbsp_id
 	LEFT JOIN cobranca.cobranca_situacao_motivo csm ON csm.cbsm_id = csh.cbsm_id
-	LEFT JOIN micromedicao.consumo_historico cosh_a1 ON cosh_a1.imov_id = imo.imov_id AND cosh_a1.cshi_amfaturamento = VAR_REFERENCIA AND cosh_a1.lgti_id = 1
+	LEFT JOIN micromedicao.consumo_historico cosh_a1 ON cosh_a1.imov_id = imo.imov_id AND cosh_a1.cshi_amfaturamento = ${VAR_REFERENCIA} AND cosh_a1.lgti_id = 1
 	LEFT JOIN micromedicao.consumo_tipo cost_a1 ON cost_a1.cstp_id = cosh_a1.cstp_id
 	LEFT JOIN micromedicao.consumo_anormalidade cosa_a1 ON cosa_a1.csan_id = cosh_a1.csan_id
-	LEFT JOIN micromedicao.consumo_historico cosh_e1 ON cosh_e1.imov_id = imo.imov_id AND cosh_e1.cshi_amfaturamento = VAR_REFERENCIA AND cosh_e1.lgti_id = 2
+	LEFT JOIN micromedicao.consumo_historico cosh_e1 ON cosh_e1.imov_id = imo.imov_id AND cosh_e1.cshi_amfaturamento = ${VAR_REFERENCIA} AND cosh_e1.lgti_id = 2
 	LEFT JOIN micromedicao.consumo_tipo cost_e1 ON cost_e1.cstp_id = cosh_e1.cstp_id
 	LEFT JOIN micromedicao.consumo_anormalidade cosa_e1 ON cosa_e1.csan_id = cosh_e1.csan_id
-	LEFT JOIN micromedicao.medicao_historico mdh ON mdh.lagu_id = imo.imov_id AND mdh.mdhi_amleitura = VAR_REFERENCIA
+	LEFT JOIN micromedicao.medicao_historico mdh ON mdh.lagu_id = imo.imov_id AND mdh.mdhi_amleitura = ${VAR_REFERENCIA}
 	LEFT JOIN micromedicao.leitura_situacao lts ON lts.ltst_id = mdh.ltst_idleiturasituacaoatual
 	LEFT JOIN micromedicao.leitura_anormalidade lai ON lai.ltan_id = mdh.ltan_idleitanorminformada
 	LEFT JOIN micromedicao.leitura_anormalidade laf ON laf.ltan_id = mdh.ltan_idleitanormfatmt
@@ -346,7 +346,7 @@ FROM
 				LEFT JOIN faturamento.debito_credito_situacao dcs ON dcs.dcst_id = con4.dcst_idatual
 				LEFT JOIN faturamento.mov_conta_prefaturada cni2 ON cni2.mcpf_ammovimento = con4.cnta_amreferenciaconta AND cni2.imov_id = con4.imov_id
 			WHERE
-				con4.cnta_amreferenciaconta = VAR_REFERENCIA AND NOT EXISTS (SELECT cni3.cnta_id FROM faturamento.mov_conta_prefaturada cni3 WHERE cni3.cnta_id = con4.cnta_id)
+				con4.cnta_amreferenciaconta = ${VAR_REFERENCIA} AND NOT EXISTS (SELECT cni3.cnta_id FROM faturamento.mov_conta_prefaturada cni3 WHERE cni3.cnta_id = con4.cnta_id)
 			UNION
 			SELECT 
 				(CASE
@@ -368,7 +368,7 @@ FROM
 				LEFT JOIN faturamento.debito_credito_situacao dcs ON dcs.dcst_id = con4.dcst_idatual
 				LEFT JOIN faturamento.mov_conta_prefaturada cni2 ON cni2.mcpf_ammovimento = con4.cnhi_amreferenciaconta AND cni2.imov_id = con4.imov_id
 			WHERE
-				con4.cnhi_amreferenciaconta = VAR_REFERENCIA AND NOT EXISTS (SELECT cni3.cnta_id FROM faturamento.mov_conta_prefaturada cni3 WHERE cni3.cnta_id = con4.cnta_id)
+				con4.cnhi_amreferenciaconta = ${VAR_REFERENCIA} AND NOT EXISTS (SELECT cni3.cnta_id FROM faturamento.mov_conta_prefaturada cni3 WHERE cni3.cnta_id = con4.cnta_id)
 			UNION
 			SELECT 
 				(CASE
@@ -390,7 +390,7 @@ FROM
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 				LEFT JOIN faturamento.debito_credito_situacao dcs ON dcs.dcst_id = con4.dcst_idatual
 			WHERE
-				con4.cnta_amreferenciaconta = VAR_REFERENCIA
+				con4.cnta_amreferenciaconta = ${VAR_REFERENCIA}
 			UNION
 			SELECT 
 				(CASE
@@ -412,7 +412,7 @@ FROM
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 				LEFT JOIN faturamento.debito_credito_situacao dcs ON dcs.dcst_id = con4.dcst_idatual
 			WHERE
-				con4.cnhi_amreferenciaconta = VAR_REFERENCIA
+				con4.cnhi_amreferenciaconta = ${VAR_REFERENCIA}
 			) AS con_ult_fat ON con_ult_fat.mat1 = imo.imov_id
 	LEFT JOIN (	SELECT 
 				(CASE
@@ -436,9 +436,9 @@ FROM
 			WHERE
 				con4.cnta_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-1 AS TEXT)
 						END
 				) AND NOT EXISTS (SELECT cni3.cnta_id FROM faturamento.mov_conta_prefaturada cni3 WHERE cni3.cnta_id = con4.cnta_id)
 			UNION
@@ -464,9 +464,9 @@ FROM
 			WHERE
 				con4.cnhi_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-1 AS TEXT)
 						END
 				) AND NOT EXISTS (SELECT cni3.cnta_id FROM faturamento.mov_conta_prefaturada cni3 WHERE cni3.cnta_id = con4.cnta_id)
 			UNION
@@ -492,9 +492,9 @@ FROM
 			WHERE
 				con4.cnta_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-1 AS TEXT)
 						END
 				)
 			UNION
@@ -520,9 +520,9 @@ FROM
 			WHERE
 				con4.cnhi_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-1 AS TEXT)
 						END
 				)
 			) AS con_pen_fat ON con_pen_fat.mat1 = imo.imov_id
@@ -548,10 +548,10 @@ FROM
 			WHERE
 				con4.cnta_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
-							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-2 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
+							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-2 AS TEXT)
 						END
 				) AND NOT EXISTS (SELECT cni3.cnta_id FROM faturamento.mov_conta_prefaturada cni3 WHERE cni3.cnta_id = con4.cnta_id)
 			UNION
@@ -577,10 +577,10 @@ FROM
 			WHERE
 				con4.cnhi_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
-							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-2 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
+							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-2 AS TEXT)
 						END
 				) AND NOT EXISTS (SELECT cni3.cnta_id FROM faturamento.mov_conta_prefaturada cni3 WHERE cni3.cnta_id = con4.cnta_id)
 			UNION
@@ -606,10 +606,10 @@ FROM
 			WHERE
 				con4.cnta_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
-							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-2 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
+							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-2 AS TEXT)
 						END
 				)
 			UNION
@@ -635,10 +635,10 @@ FROM
 			WHERE
 				con4.cnhi_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
-							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-2 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
+							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-2 AS TEXT)
 						END
 				)
 			) AS con_ant_fat ON con_ant_fat.mat1 = imo.imov_id

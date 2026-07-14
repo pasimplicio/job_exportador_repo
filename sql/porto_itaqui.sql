@@ -23,7 +23,7 @@ from
 	inner join micromedicao.rota rota on rota.rota_id = qdra.rota_id
 	inner join faturamento.faturamento_grupo ftgr on ftgr.ftgr_id = rota.ftgr_id 
 	left join micromedicao.hidrometro_inst_hist hidi on hidi.lagu_id = imov.imov_id and hidi.hidi_dtretiradahidrometro is null
-	left join faturamento.mov_conta_prefaturada mcpf on mcpf.imov_id = imov.imov_id and mcpf.medt_id = 1 and mcpf.mcpf_ammovimento = VAR_REFERENCIA
+	left join faturamento.mov_conta_prefaturada mcpf on mcpf.imov_id = imov.imov_id and mcpf.medt_id = 1 and mcpf.mcpf_ammovimento = ${VAR_REFERENCIA}
 	left join micromedicao.leitura_anormalidade ltan on ltan.ltan_id = mcpf.ltan_id
 	left join micromedicao.consumo_tipo cstp on cstp.cstp_id = mcpf.cstp_id
 	left join micromedicao.consumo_anormalidade csan on csan.csan_id = mcpf.csan_id
@@ -39,7 +39,7 @@ from
 			inner join faturamento.debito_credito_situacao dcst on dcst.dcst_id = cnta.dcst_idatual
 		where
 			dcst.dcst_id in (0, 1, 2)
-			and cnta.cnta_amreferenciaconta = VAR_REFERENCIA
+			and cnta.cnta_amreferenciaconta = ${VAR_REFERENCIA}
         group by imov_id, referencia, vencimento, tipoConta
 		union
 		select
@@ -53,7 +53,7 @@ from
 			inner join faturamento.debito_credito_situacao dcst on dcst.dcst_id = cnhi.dcst_idatual
 		where
 			dcst.dcst_id in (0, 1, 2)
-			and cnhi.cnhi_amreferenciaconta = VAR_REFERENCIA
+			and cnhi.cnhi_amreferenciaconta = ${VAR_REFERENCIA}
         group by imov_id, referencia, vencimento, tipoConta
 	) as conta on conta.imov_id = imov.imov_id
 	left join (
@@ -65,7 +65,7 @@ from
   		from	
 			arrecadacao.pagamento pgmt
 		where
-			pgmt.pgmt_amreferenciapagamento = VAR_REFERENCIA
+			pgmt.pgmt_amreferenciapagamento = ${VAR_REFERENCIA}
                         and pgmt.pgst_idatual <> 1
 		union
 		select
@@ -76,7 +76,7 @@ from
   		from	
 			arrecadacao.pagamento_historico pghi
 		where
-			pghi.pghi_amreferenciapagamento = VAR_REFERENCIA
+			pghi.pghi_amreferenciapagamento = ${VAR_REFERENCIA}
                         and pghi.pgst_idatual <> 1
 	) as pagto on pagto.imov_id = imov.imov_id
 where

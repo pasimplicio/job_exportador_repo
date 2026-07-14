@@ -1,4 +1,4 @@
-﻿WITH params AS (
+WITH params AS (
   SELECT 
     DATE '2026-02-01' AS snap,
     202601 AS amref_faturando

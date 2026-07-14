@@ -11,7 +11,7 @@ FROM
 	WHERE 
 		con4.dcst_idatual IN (0,1,2) 
 		AND NOT EXISTS ( SELECT pag.cnta_id FROM arrecadacao.pagamento pag WHERE pag.cnta_id = con4.cnta_id)
-		AND dac.parc_id = VAR_PARCELAMENTO
+		AND dac.parc_id = ${VAR_PARCELAMENTO}
 	GROUP BY 1
 UNION
 	SELECT 
@@ -24,5 +24,5 @@ UNION
 	WHERE 
 		con4.dcst_idatual IN (0,1,2) 
 		AND NOT EXISTS ( SELECT pag.cnta_id FROM arrecadacao.pagamento pag WHERE pag.cnta_id = con4.cnta_id)
-		AND dac.parc_id = VAR_PARCELAMENTO
+		AND dac.parc_id = ${VAR_PARCELAMENTO}
 	GROUP BY 1) AS faturado

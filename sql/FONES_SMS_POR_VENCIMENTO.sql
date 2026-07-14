@@ -81,6 +81,6 @@ WHERE
 		LIMIT 1
 	)
 	--AND NOT imo.imov_id IN ()
-	AND une.uneg_id IN (VAR_UNIDADE)
+	AND une.uneg_id IN (${VAR_UNIDADE})
 
 ORDER BY "VALOR" DESC

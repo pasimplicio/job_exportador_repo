@@ -1,4 +1,4 @@
---VAR_REFERENCIA: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
+--${VAR_REFERENCIA}: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
 --2,3,4,5,6,7,8,9,10,11,12,13,14,15,20,21: Deve ser substituida pelo id da unidade de onde se quer obter os dados
 
 SELECT 
@@ -55,10 +55,10 @@ FROM
 	LEFT JOIN cobranca.cobranca_situacao_hist csh ON csh.imov_id = imo.imov_id AND csh.cbsh_amcobrancaretirada IS NULL
 	LEFT JOIN cobranca.cobranca_situacao_tipo cst ON csh.cbsp_id = cst.cbsp_id
 	LEFT JOIN cobranca.cobranca_situacao_motivo csm ON csm.cbsm_id = csh.cbsm_id
-	LEFT JOIN micromedicao.consumo_historico cosh_a1 ON cosh_a1.imov_id = imo.imov_id AND cosh_a1.cshi_amfaturamento = VAR_REFERENCIA AND cosh_a1.lgti_id = 1
+	LEFT JOIN micromedicao.consumo_historico cosh_a1 ON cosh_a1.imov_id = imo.imov_id AND cosh_a1.cshi_amfaturamento = ${VAR_REFERENCIA} AND cosh_a1.lgti_id = 1
 	LEFT JOIN micromedicao.consumo_tipo cost_a1 ON cost_a1.cstp_id = cosh_a1.cstp_id
 	LEFT JOIN micromedicao.consumo_anormalidade cosa_a1 ON cosa_a1.csan_id = cosh_a1.csan_id
-	LEFT JOIN micromedicao.medicao_historico mdh ON mdh.hidi_id = his.hidi_id AND mdh.mdhi_amleitura = VAR_REFERENCIA
+	LEFT JOIN micromedicao.medicao_historico mdh ON mdh.hidi_id = his.hidi_id AND mdh.mdhi_amleitura = ${VAR_REFERENCIA}
 	LEFT JOIN micromedicao.leitura_situacao lts ON lts.ltst_id = mdh.ltst_idleiturasituacaoatual
 	LEFT JOIN micromedicao.leitura_anormalidade lai ON lai.ltan_id = mdh.ltan_idleitanorminformada
 	LEFT JOIN micromedicao.leitura_anormalidade laf ON laf.ltan_id = mdh.ltan_idleitanormfatmt
@@ -156,7 +156,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = VAR_REFERENCIA
+				con4.cnta_amreferenciaconta = ${VAR_REFERENCIA}
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -171,7 +171,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = VAR_REFERENCIA
+				con4.cnhi_amreferenciaconta = ${VAR_REFERENCIA}
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -186,7 +186,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = VAR_REFERENCIA
+				con4.cnta_amreferenciaconta = ${VAR_REFERENCIA}
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -201,7 +201,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = VAR_REFERENCIA
+				con4.cnhi_amreferenciaconta = ${VAR_REFERENCIA}
 			) AS con_ult_fat ON con_ult_fat.mat1 = imo.imov_id
 	LEFT JOIN (	SELECT 
 				con4.imov_id AS mat1,
@@ -218,9 +218,9 @@ FROM
 			WHERE
 				con4.cnta_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-1 AS TEXT)
 						END
 				)
 			UNION
@@ -239,9 +239,9 @@ FROM
 			WHERE
 				con4.cnhi_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-1 AS TEXT)
 						END
 				)
 			UNION
@@ -260,9 +260,9 @@ FROM
 			WHERE
 				con4.cnta_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-1 AS TEXT)
 						END
 				)
 			UNION
@@ -281,9 +281,9 @@ FROM
 			WHERE
 				con4.cnhi_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-1 AS TEXT)
 						END
 				)
 			) AS con_pen_fat ON con_pen_fat.mat1 = imo.imov_id
@@ -302,10 +302,10 @@ FROM
 			WHERE
 				con4.cnta_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
-							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-2 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
+							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-2 AS TEXT)
 						END
 				)
 			UNION
@@ -324,10 +324,10 @@ FROM
 			WHERE
 				con4.cnhi_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
-							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-2 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
+							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-2 AS TEXT)
 						END
 				)
 			UNION
@@ -346,10 +346,10 @@ FROM
 			WHERE
 				con4.cnta_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
-							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-2 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
+							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-2 AS TEXT)
 						END
 				)
 			UNION
@@ -368,10 +368,10 @@ FROM
 			WHERE
 				con4.cnhi_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
-							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-2 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
+							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-2 AS TEXT)
 						END
 				)
 			) AS con_ant_fat ON con_ant_fat.mat1 = imo.imov_id
@@ -390,7 +390,7 @@ FROM
 						INNER JOIN cadastro.localidade loc ON loc.loca_id = pag.loca_id AND loc.uneg_id IN (2,3,4,5,6,7,8,9,10,11,12,13,14,15,20,21)
 					WHERE
 						pag.pgst_idatual IN (0,1)
-						AND pag.pgmt_amreferenciaarrecadacao = VAR_REFERENCIA
+						AND pag.pgmt_amreferenciaarrecadacao = ${VAR_REFERENCIA}
 					GROUP BY 1
 				UNION
 					SELECT 
@@ -402,7 +402,7 @@ FROM
 						INNER JOIN cadastro.localidade loc ON loc.loca_id = pag.loca_id AND loc.uneg_id IN (2,3,4,5,6,7,8,9,10,11,12,13,14,15,20,21)
 					WHERE
 						pag.pgst_idatual IN (0,1)
-						AND pag.pghi_amreferenciaarrecadacao = VAR_REFERENCIA
+						AND pag.pghi_amreferenciaarrecadacao = ${VAR_REFERENCIA}
 					GROUP BY 1) pags
 			GROUP BY 1
 		) AS pags_ult ON pags_ult.imov_id = imo.imov_id
@@ -423,9 +423,9 @@ FROM
 						pag.pgst_idatual IN (0,1)
 						AND pag.pgmt_amreferenciaarrecadacao = (
 								SELECT 
-									CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-										WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-										ELSE CAST(VAR_REFERENCIA-1 AS TEXT)
+									CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+										WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+										ELSE CAST(${VAR_REFERENCIA}-1 AS TEXT)
 									END
 							)
 					GROUP BY 1
@@ -441,9 +441,9 @@ FROM
 						pag.pgst_idatual IN (0,1)
 						AND pag.pghi_amreferenciaarrecadacao = (
 								SELECT 
-									CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-										WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-										ELSE CAST(VAR_REFERENCIA-1 AS TEXT)
+									CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+										WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+										ELSE CAST(${VAR_REFERENCIA}-1 AS TEXT)
 									END
 							)
 					GROUP BY 1) pags
@@ -466,10 +466,10 @@ FROM
 						pag.pgst_idatual IN (0,1)
 						AND pag.pgmt_amreferenciaarrecadacao = (
 								SELECT 
-									CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-										WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
-										WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-										ELSE CAST(VAR_REFERENCIA-2 AS TEXT)
+									CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+										WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
+										WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+										ELSE CAST(${VAR_REFERENCIA}-2 AS TEXT)
 									END
 							)
 					GROUP BY 1
@@ -485,10 +485,10 @@ FROM
 						pag.pgst_idatual IN (0,1)
 						AND pag.pghi_amreferenciaarrecadacao = (
 								SELECT 
-									CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-										WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
-										WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-										ELSE CAST(VAR_REFERENCIA-2 AS TEXT)
+									CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+										WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
+										WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+										ELSE CAST(${VAR_REFERENCIA}-2 AS TEXT)
 									END
 							)
 					GROUP BY 1) pags
@@ -518,9 +518,9 @@ FROM
 				WHERE
 					con4.cnta_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-1 AS TEXT)
 						END
 					)
 				GROUP BY 1,2
@@ -541,9 +541,9 @@ FROM
 				WHERE
 					con4.cnhi_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-1 AS TEXT)
 						END
 					)
 				GROUP BY 1,2
@@ -564,9 +564,9 @@ FROM
 				WHERE
 					con4.cnta_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-1 AS TEXT)
 						END
 					)
 				GROUP BY 1,2
@@ -587,9 +587,9 @@ FROM
 				WHERE
 					con4.cnhi_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-1 AS TEXT)
 						END
 					)
 				GROUP BY 1,2) AS sum_fat
@@ -632,7 +632,7 @@ LEFT JOIN (
 				INNER JOIN cadastro.imovel_perfil ipe ON ipe.iper_id = con.iper_id
 				
 			WHERE
-				con.cnhi_amreferenciaconta = VAR_REFERENCIA
+				con.cnhi_amreferenciaconta = ${VAR_REFERENCIA}
 		UNION
 			SELECT
 				con.imov_id AS "MATRICULA",
@@ -670,7 +670,7 @@ LEFT JOIN (
 				INNER JOIN faturamento.conta_historico con ON con.cnta_id = pag.cnta_id
 				INNER JOIN cadastro.imovel_perfil ipe ON ipe.iper_id = con.iper_id
 			WHERE
-				con.cnhi_amreferenciaconta = VAR_REFERENCIA
+				con.cnhi_amreferenciaconta = ${VAR_REFERENCIA}
 		UNION
 			SELECT
 				con.imov_id AS "MATRICULA",
@@ -708,7 +708,7 @@ LEFT JOIN (
 				INNER JOIN faturamento.conta con ON con.cnta_id = pag.cnta_id
 				INNER JOIN cadastro.imovel_perfil ipe ON ipe.iper_id = con.iper_id
 			WHERE
-				con.cnta_amreferenciaconta = VAR_REFERENCIA
+				con.cnta_amreferenciaconta = ${VAR_REFERENCIA}
 		UNION
 			SELECT
 				con.imov_id AS "MATRICULA",
@@ -747,7 +747,7 @@ LEFT JOIN (
 				INNER JOIN faturamento.conta con ON con.cnta_id = pag.cnta_id
 				INNER JOIN cadastro.imovel_perfil ipe ON ipe.iper_id = con.iper_id
 			WHERE
-				con.cnta_amreferenciaconta = VAR_REFERENCIA
+				con.cnta_amreferenciaconta = ${VAR_REFERENCIA}
 		UNION
 			SELECT
 				con.imov_id AS "MATRICULA",
@@ -785,7 +785,7 @@ LEFT JOIN (
 				INNER JOIN cadastro.imovel imo ON con.imov_id = imo.imov_id
 				INNER JOIN cadastro.imovel_perfil ipe ON ipe.iper_id = con.iper_id
 			WHERE
-				con.cnta_amreferenciaconta = VAR_REFERENCIA AND 
+				con.cnta_amreferenciaconta = ${VAR_REFERENCIA} AND 
 				con.dcst_idatual IN (0,1,2) AND NOT EXISTS ( SELECT pag.cnta_id FROM arrecadacao.pagamento pag WHERE pag.cnta_id = con.cnta_id) AND con.cnta_dtrevisao IS NULL
 		UNION
 			SELECT
@@ -824,7 +824,7 @@ LEFT JOIN (
 				INNER JOIN cadastro.imovel imo ON con.imov_id = imo.imov_id
 				INNER JOIN cadastro.imovel_perfil ipe ON ipe.iper_id = con.iper_id
 			WHERE
-				con.cnta_amreferenciaconta = VAR_REFERENCIA AND 
+				con.cnta_amreferenciaconta = ${VAR_REFERENCIA} AND 
 				NOT con.cnta_dtrevisao IS NULL
 		UNION
 			SELECT
@@ -864,7 +864,7 @@ LEFT JOIN (
 				LEFT JOIN cobranca.parcelamento_item pci ON pci.cnta_id = con.cnta_id
 				LEFT JOIN cobranca.parcelamento par ON par.parc_id = pci.parc_id
 			WHERE
-				con.cnhi_amreferenciaconta = VAR_REFERENCIA AND 
+				con.cnhi_amreferenciaconta = ${VAR_REFERENCIA} AND 
 				con.dcst_idatual = 5
 		) AS pag_referencia ON pag_referencia."MATRICULA" = imo.imov_id
 WHERE

@@ -1,4 +1,4 @@
---VAR_ARRECADACAO: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
+--${VAR_ARRECADACAO}: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
 --11,12,13,14,15: Deve ser substituida pelo id da unidade de onde se quer obter os dados
 
 SELECT 
@@ -166,12 +166,12 @@ SELECT
 	),'DD/MM/YYYY') AS "ULTIMA ALTERACAO CADASTRO",
 	TO_CHAR(COALESCE(pags_ano_passado.valor,0), '999G999G990D00') AS "VALOR PAGO 202001",
 	COALESCE(pags_ano_passado.qtd,0) AS "QTD DOC PAGOS 202001",
-	TO_CHAR(COALESCE(pags_ult.valor,0), '999G999G990D00') AS "VALOR PAGO VAR_ARRECADACAO",
-	COALESCE(pags_ult.qtd, 0) AS "QTD DOC PAGOS VAR_ARRECADACAO",
-	TO_CHAR(COALESCE(pags_pen.valor,0), '999G999G990D00') AS "VALOR PAGO VAR_ARRECADACAO - 1",
-	COALESCE(pags_pen.qtd,0) AS "QTD DOC PAGOS VAR_ARRECADACAO - 1",
-	TO_CHAR(COALESCE(pags_ant.valor,0), '999G999G990D00') AS "VALOR PAGO VAR_ARRECADACAO - 2",
-	COALESCE(pags_ant.qtd,0) AS "QTD DOC PAGOS VAR_ARRECADACAO - 2"
+	TO_CHAR(COALESCE(pags_ult.valor,0), '999G999G990D00') AS "VALOR PAGO ${VAR_ARRECADACAO}",
+	COALESCE(pags_ult.qtd, 0) AS "QTD DOC PAGOS ${VAR_ARRECADACAO}",
+	TO_CHAR(COALESCE(pags_pen.valor,0), '999G999G990D00') AS "VALOR PAGO ${VAR_ARRECADACAO} - 1",
+	COALESCE(pags_pen.qtd,0) AS "QTD DOC PAGOS ${VAR_ARRECADACAO} - 1",
+	TO_CHAR(COALESCE(pags_ant.valor,0), '999G999G990D00') AS "VALOR PAGO ${VAR_ARRECADACAO} - 2",
+	COALESCE(pags_ant.qtd,0) AS "QTD DOC PAGOS ${VAR_ARRECADACAO} - 2"
 FROM 
 	cadastro.imovel imo
 	INNER JOIN cadastro.cliente_imovel cim ON cim.imov_id = imo.imov_id AND cim.clim_dtrelacaofim IS NULL AND cim.clim_icnomeconta = 1
@@ -229,7 +229,7 @@ FROM
 						INNER JOIN cadastro.localidade loc ON loc.loca_id = pag.loca_id AND loc.uneg_id IN (11,12,13,14,15)
 					WHERE
 						pag.pgst_idatual IN (0,1)
-						AND pag.pgmt_amreferenciaarrecadacao = VAR_ARRECADACAO - 100
+						AND pag.pgmt_amreferenciaarrecadacao = ${VAR_ARRECADACAO} - 100
 					GROUP BY 1
 				UNION
 					SELECT 
@@ -241,7 +241,7 @@ FROM
 						INNER JOIN cadastro.localidade loc ON loc.loca_id = pag.loca_id AND loc.uneg_id IN (11,12,13,14,15)
 					WHERE
 						pag.pgst_idatual IN (0,1)
-						AND pag.pghi_amreferenciaarrecadacao = VAR_ARRECADACAO - 100
+						AND pag.pghi_amreferenciaarrecadacao = ${VAR_ARRECADACAO} - 100
 					GROUP BY 1) pags
 			GROUP BY 1
 		) AS pags_ano_passado ON pags_ano_passado.imov_id = imo.imov_id
@@ -260,7 +260,7 @@ FROM
 						INNER JOIN cadastro.localidade loc ON loc.loca_id = pag.loca_id AND loc.uneg_id IN (11,12,13,14,15)
 					WHERE
 						pag.pgst_idatual IN (0,1)
-						AND pag.pgmt_amreferenciaarrecadacao = VAR_ARRECADACAO
+						AND pag.pgmt_amreferenciaarrecadacao = ${VAR_ARRECADACAO}
 					GROUP BY 1
 				UNION
 					SELECT 
@@ -272,7 +272,7 @@ FROM
 						INNER JOIN cadastro.localidade loc ON loc.loca_id = pag.loca_id AND loc.uneg_id IN (11,12,13,14,15)
 					WHERE
 						pag.pgst_idatual IN (0,1)
-						AND pag.pghi_amreferenciaarrecadacao = VAR_ARRECADACAO
+						AND pag.pghi_amreferenciaarrecadacao = ${VAR_ARRECADACAO}
 					GROUP BY 1) pags
 			GROUP BY 1
 		) AS pags_ult ON pags_ult.imov_id = imo.imov_id
@@ -293,9 +293,9 @@ FROM
 						pag.pgst_idatual IN (0,1)
 						AND pag.pgmt_amreferenciaarrecadacao = (
 								SELECT 
-									CASE (CAST(SUBSTRING(CAST(VAR_ARRECADACAO AS TEXT) FROM 5 FOR 6) AS INT))
-										WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_ARRECADACAO AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-										ELSE CAST(VAR_ARRECADACAO-1 AS TEXT)
+									CASE (CAST(SUBSTRING(CAST(${VAR_ARRECADACAO} AS TEXT) FROM 5 FOR 6) AS INT))
+										WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_ARRECADACAO} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+										ELSE CAST(${VAR_ARRECADACAO}-1 AS TEXT)
 									END
 							)
 					GROUP BY 1
@@ -311,9 +311,9 @@ FROM
 						pag.pgst_idatual IN (0,1)
 						AND pag.pghi_amreferenciaarrecadacao = (
 								SELECT 
-									CASE (CAST(SUBSTRING(CAST(VAR_ARRECADACAO AS TEXT) FROM 5 FOR 6) AS INT))
-										WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_ARRECADACAO AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-										ELSE CAST(VAR_ARRECADACAO-1 AS TEXT)
+									CASE (CAST(SUBSTRING(CAST(${VAR_ARRECADACAO} AS TEXT) FROM 5 FOR 6) AS INT))
+										WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_ARRECADACAO} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+										ELSE CAST(${VAR_ARRECADACAO}-1 AS TEXT)
 									END
 							)
 					GROUP BY 1) pags
@@ -336,10 +336,10 @@ FROM
 						pag.pgst_idatual IN (0,1)
 						AND pag.pgmt_amreferenciaarrecadacao = (
 								SELECT 
-									CASE (CAST(SUBSTRING(CAST(VAR_ARRECADACAO AS TEXT) FROM 5 FOR 6) AS INT))
-										WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_ARRECADACAO AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
-										WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(VAR_ARRECADACAO AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-										ELSE CAST(VAR_ARRECADACAO-2 AS TEXT)
+									CASE (CAST(SUBSTRING(CAST(${VAR_ARRECADACAO} AS TEXT) FROM 5 FOR 6) AS INT))
+										WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_ARRECADACAO} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
+										WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(${VAR_ARRECADACAO} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+										ELSE CAST(${VAR_ARRECADACAO}-2 AS TEXT)
 									END
 							)
 					GROUP BY 1
@@ -355,10 +355,10 @@ FROM
 						pag.pgst_idatual IN (0,1)
 						AND pag.pghi_amreferenciaarrecadacao = (
 								SELECT 
-									CASE (CAST(SUBSTRING(CAST(VAR_ARRECADACAO AS TEXT) FROM 5 FOR 6) AS INT))
-										WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_ARRECADACAO AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
-										WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(VAR_ARRECADACAO AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-										ELSE CAST(VAR_ARRECADACAO-2 AS TEXT)
+									CASE (CAST(SUBSTRING(CAST(${VAR_ARRECADACAO} AS TEXT) FROM 5 FOR 6) AS INT))
+										WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_ARRECADACAO} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
+										WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(${VAR_ARRECADACAO} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+										ELSE CAST(${VAR_ARRECADACAO}-2 AS TEXT)
 									END
 							)
 					GROUP BY 1) pags

@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 imov.imov_id AS "Matricula",
 auif.auif_dtemissao AS "Data Notificação",
 fzst.fzst_dsfiscalizacaosituacao AS "Tipo Irregularidade",

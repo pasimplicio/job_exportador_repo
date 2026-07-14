@@ -307,7 +307,7 @@ WHERE
 	imo.imov_icexclusao = 2 
 	--AND imo.imov_id IN (38539)
 	AND imo.iper_id <> 6
-	AND loc.uneg_id IN ('${VAR_UNIDADE}')
+	AND loc.uneg_id IN (${VAR_UNIDADE})
 	AND imo.imov_idcategoriaprincipal <> 4
 	AND con_atraso.valor > 30
 	--AND con_atraso.intervalo_corte = 'CORTE'

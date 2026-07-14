@@ -1,5 +1,5 @@
---VAR_ARRECADACAO: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
---VAR_UNIDADE: Deve ser substituida pelo id da unidade de onde se quer obter os dados
+--${VAR_ARRECADACAO}: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
+--${VAR_UNIDADE}: Deve ser substituida pelo id da unidade de onde se quer obter os dados
 
 SELECT 
 	 TO_CHAR(COALESCE(((CASE cli.clie_iccpfcnpjvalidado
@@ -248,14 +248,14 @@ SELECT
 	TO_CHAR(fat_tot_6_meses.vl_impostos, '999G999G990D00') AS "TOTAL IMPOSTOS 6M",
 	TO_CHAR(fat_tot_6_meses.valor, '999G999G990D00') AS "TOTAL  VALOR 6M",
 
-	TO_CHAR(fat_tot_6_meses.cagua/VAR_TIMESPAN,'999G999G990D00') AS "MEDIA VOL AG 6M",
-	TO_CHAR(fat_tot_6_meses.vl_agua/VAR_TIMESPAN, '999G999G990D00') AS "MEDIA VL AG 6M",
-	TO_CHAR(fat_tot_6_meses.cesg/VAR_TIMESPAN,'999G999G990D00') AS "MEDIA VOL ES 6M",
-	TO_CHAR(fat_tot_6_meses.vl_esgoto/VAR_TIMESPAN, '999G999G990D00') AS "MEDIA VL ES 6M",
-	TO_CHAR(fat_tot_6_meses.vl_debitos/VAR_TIMESPAN, '999G999G990D00') AS "MEDIA OUTROS SERVICOS 6M",
-	TO_CHAR(fat_tot_6_meses.vl_creditos/VAR_TIMESPAN, '999G999G990D00') AS "MEDIA CRED 6M",
-	TO_CHAR(fat_tot_6_meses.vl_impostos/VAR_TIMESPAN, '999G999G990D00') AS "MEDIA IMPOSTOS 6M",
-	TO_CHAR(fat_tot_6_meses.valor/VAR_TIMESPAN, '999G999G990D00') AS "MEDIA  VALOR 6M",
+	TO_CHAR(fat_tot_6_meses.cagua/${VAR_TIMESPAN},'999G999G990D00') AS "MEDIA VOL AG 6M",
+	TO_CHAR(fat_tot_6_meses.vl_agua/${VAR_TIMESPAN}, '999G999G990D00') AS "MEDIA VL AG 6M",
+	TO_CHAR(fat_tot_6_meses.cesg/${VAR_TIMESPAN},'999G999G990D00') AS "MEDIA VOL ES 6M",
+	TO_CHAR(fat_tot_6_meses.vl_esgoto/${VAR_TIMESPAN}, '999G999G990D00') AS "MEDIA VL ES 6M",
+	TO_CHAR(fat_tot_6_meses.vl_debitos/${VAR_TIMESPAN}, '999G999G990D00') AS "MEDIA OUTROS SERVICOS 6M",
+	TO_CHAR(fat_tot_6_meses.vl_creditos/${VAR_TIMESPAN}, '999G999G990D00') AS "MEDIA CRED 6M",
+	TO_CHAR(fat_tot_6_meses.vl_impostos/${VAR_TIMESPAN}, '999G999G990D00') AS "MEDIA IMPOSTOS 6M",
+	TO_CHAR(fat_tot_6_meses.valor/${VAR_TIMESPAN}, '999G999G990D00') AS "MEDIA  VALOR 6M",
 
 	TO_CHAR(con_vivaagua.valor, '999G999G990D00') AS "VALOR TOTAL VIVA AGUA",
 	con_vivaagua.qtd AS "QTD. CONTAS VIVA AGUA",
@@ -319,8 +319,8 @@ SELECT
 
 	TO_CHAR(pags_tot_6_meses.valor, '999G999G990D00') AS "TOTAL  VALOR PAGO 6M",
 	pags_tot_6_meses.qtd AS "TOTAL QTD DOC PAGOS 6M",
-	TO_CHAR(pags_tot_6_meses.valor/VAR_TIMESPAN, '999G999G990D00') AS "MEDIA  VALOR PAGO 6M",
-	TO_CHAR(pags_tot_6_meses.qtd/VAR_TIMESPAN,'999G999G990D00') AS "MEDIA QTD DOC PAGOS 6M",
+	TO_CHAR(pags_tot_6_meses.valor/${VAR_TIMESPAN}, '999G999G990D00') AS "MEDIA  VALOR PAGO 6M",
+	TO_CHAR(pags_tot_6_meses.qtd/${VAR_TIMESPAN},'999G999G990D00') AS "MEDIA QTD DOC PAGOS 6M",
 
 	pag_referencia."ATRASO" AS "ATRASO FAT M-1",
 	pag_referencia."DATA PAGAMENTO" AS "DATA PAGAMENTO FAT M-1",
@@ -381,10 +381,10 @@ FROM
 	LEFT JOIN cobranca.cobranca_situacao_hist csh ON csh.imov_id = imo.imov_id AND csh.cbsh_amcobrancaretirada IS NULL
 	LEFT JOIN cobranca.cobranca_situacao_tipo cst ON csh.cbsp_id = cst.cbsp_id
 	LEFT JOIN cobranca.cobranca_situacao_motivo csm ON csm.cbsm_id = csh.cbsm_id
-	LEFT JOIN micromedicao.consumo_historico cosh_a1 ON cosh_a1.imov_id = imo.imov_id AND cosh_a1.cshi_amfaturamento = VAR_FATURAMENTO AND cosh_a1.lgti_id = 1
+	LEFT JOIN micromedicao.consumo_historico cosh_a1 ON cosh_a1.imov_id = imo.imov_id AND cosh_a1.cshi_amfaturamento = ${VAR_FATURAMENTO} AND cosh_a1.lgti_id = 1
 	LEFT JOIN micromedicao.consumo_tipo cost_a1 ON cost_a1.cstp_id = cosh_a1.cstp_id
 	LEFT JOIN micromedicao.consumo_anormalidade cosa_a1 ON cosa_a1.csan_id = cosh_a1.csan_id
-	LEFT JOIN micromedicao.medicao_historico mdh ON mdh.hidi_id = his.hidi_id AND mdh.mdhi_amleitura = VAR_FATURAMENTO
+	LEFT JOIN micromedicao.medicao_historico mdh ON mdh.hidi_id = his.hidi_id AND mdh.mdhi_amleitura = ${VAR_FATURAMENTO}
 	LEFT JOIN micromedicao.leitura_situacao lts ON lts.ltst_id = mdh.ltst_idleiturasituacaoatual
 	LEFT JOIN micromedicao.leitura_anormalidade lai ON lai.ltan_id = mdh.ltan_idleitanorminformada
 	LEFT JOIN micromedicao.leitura_anormalidade laf ON laf.ltan_id = mdh.ltan_idleitanormfatmt
@@ -495,8 +495,8 @@ FROM
 				FROM faturamento.conta con4 
 					INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 				WHERE
-					con4.cnta_amreferenciaconta >= TO_CHAR(TO_DATE(VAR_FATURAMENTO,'YYYYMM') - INTERVAL 'VAR_TIMESPANmonths','YYYYMM')::INT
-					AND con4.cnta_amreferenciaconta <= VAR_FATURAMENTO
+					con4.cnta_amreferenciaconta >= TO_CHAR(TO_DATE(${VAR_FATURAMENTO},'YYYYMM') - INTERVAL '${VAR_TIMESPAN}months','YYYYMM')::INT
+					AND con4.cnta_amreferenciaconta <= ${VAR_FATURAMENTO}
 				GROUP BY 1
 				UNION
 				SELECT 
@@ -512,8 +512,8 @@ FROM
 				FROM faturamento.conta_historico con4 
 					INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 				WHERE
-					con4.cnhi_amreferenciaconta >= TO_CHAR(TO_DATE(VAR_FATURAMENTO,'YYYYMM') - INTERVAL 'VAR_TIMESPANmonths','YYYYMM')::INT
-					AND con4.cnhi_amreferenciaconta <= VAR_FATURAMENTO
+					con4.cnhi_amreferenciaconta >= TO_CHAR(TO_DATE(${VAR_FATURAMENTO},'YYYYMM') - INTERVAL '${VAR_TIMESPAN}months','YYYYMM')::INT
+					AND con4.cnhi_amreferenciaconta <= ${VAR_FATURAMENTO}
 				GROUP BY 1
 				UNION
 				SELECT 
@@ -529,8 +529,8 @@ FROM
 				FROM faturamento.conta con4 
 					INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 				WHERE
-					con4.cnta_amreferenciaconta >= TO_CHAR(TO_DATE(VAR_FATURAMENTO,'YYYYMM') - INTERVAL 'VAR_TIMESPANmonths','YYYYMM')::INT
-					AND con4.cnta_amreferenciaconta <= VAR_FATURAMENTO
+					con4.cnta_amreferenciaconta >= TO_CHAR(TO_DATE(${VAR_FATURAMENTO},'YYYYMM') - INTERVAL '${VAR_TIMESPAN}months','YYYYMM')::INT
+					AND con4.cnta_amreferenciaconta <= ${VAR_FATURAMENTO}
 				GROUP BY 1
 				UNION
 				SELECT 
@@ -546,8 +546,8 @@ FROM
 				FROM faturamento.conta_historico con4 
 					INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 				WHERE
-					con4.cnhi_amreferenciaconta >= TO_CHAR(TO_DATE(VAR_FATURAMENTO,'YYYYMM') - INTERVAL 'VAR_TIMESPANmonths','YYYYMM')::INT
-					AND con4.cnhi_amreferenciaconta <= VAR_FATURAMENTO
+					con4.cnhi_amreferenciaconta >= TO_CHAR(TO_DATE(${VAR_FATURAMENTO},'YYYYMM') - INTERVAL '${VAR_TIMESPAN}months','YYYYMM')::INT
+					AND con4.cnhi_amreferenciaconta <= ${VAR_FATURAMENTO}
 				GROUP BY 1
 				) AS fats
 			GROUP BY 1
@@ -564,11 +564,11 @@ FROM
 						SUM(pag.pgmt_vlpagamento) AS valor
 					FROM
 						arrecadacao.pagamento pag
-						INNER JOIN cadastro.localidade loc ON loc.loca_id = pag.loca_id AND loc.uneg_id IN (VAR_UNIDADE)
+						INNER JOIN cadastro.localidade loc ON loc.loca_id = pag.loca_id AND loc.uneg_id IN (${VAR_UNIDADE})
 					WHERE
 						pag.pgst_idatual IN (0,1)
-						AND pag.pgmt_amreferenciaarrecadacao >= TO_CHAR(TO_DATE(VAR_ARRECADACAO,'YYYYMM') - INTERVAL 'VAR_TIMESPANmonths','YYYYMM')::INT
-						AND pag.pgmt_amreferenciaarrecadacao <= VAR_ARRECADACAO
+						AND pag.pgmt_amreferenciaarrecadacao >= TO_CHAR(TO_DATE(${VAR_ARRECADACAO},'YYYYMM') - INTERVAL '${VAR_TIMESPAN}months','YYYYMM')::INT
+						AND pag.pgmt_amreferenciaarrecadacao <= ${VAR_ARRECADACAO}
 					GROUP BY 1
 				UNION
 					SELECT 
@@ -577,11 +577,11 @@ FROM
 						SUM(pag.pghi_vlpagamento) AS valor
 					FROM
 						arrecadacao.pagamento_historico pag
-						INNER JOIN cadastro.localidade loc ON loc.loca_id = pag.loca_id AND loc.uneg_id IN (VAR_UNIDADE)
+						INNER JOIN cadastro.localidade loc ON loc.loca_id = pag.loca_id AND loc.uneg_id IN (${VAR_UNIDADE})
 					WHERE
 						pag.pgst_idatual IN (0,1)
-						AND pag.pghi_amreferenciaarrecadacao >= TO_CHAR(TO_DATE(VAR_ARRECADACAO,'YYYYMM') - INTERVAL 'VAR_TIMESPANmonths','YYYYMM')::INT
-						AND pag.pghi_amreferenciaarrecadacao <= VAR_ARRECADACAO
+						AND pag.pghi_amreferenciaarrecadacao >= TO_CHAR(TO_DATE(${VAR_ARRECADACAO},'YYYYMM') - INTERVAL '${VAR_TIMESPAN}months','YYYYMM')::INT
+						AND pag.pghi_amreferenciaarrecadacao <= ${VAR_ARRECADACAO}
 					GROUP BY 1) pags
 			GROUP BY 1
 		) AS pags_tot_6_meses ON pags_tot_6_meses.imov_id = imo.imov_id
@@ -622,9 +622,9 @@ LEFT JOIN (
 			WHERE
 				con.cnhi_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_FATURAMENTO AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_FATURAMENTO AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_FATURAMENTO-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_FATURAMENTO} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_FATURAMENTO} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_FATURAMENTO}-1 AS TEXT)
 						END
 					)
 		UNION
@@ -664,9 +664,9 @@ LEFT JOIN (
 			WHERE
 				con.cnhi_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_FATURAMENTO AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_FATURAMENTO AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_FATURAMENTO-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_FATURAMENTO} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_FATURAMENTO} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_FATURAMENTO}-1 AS TEXT)
 						END
 					)
 		UNION
@@ -706,9 +706,9 @@ LEFT JOIN (
 			WHERE
 				con.cnta_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_FATURAMENTO AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_FATURAMENTO AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_FATURAMENTO-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_FATURAMENTO} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_FATURAMENTO} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_FATURAMENTO}-1 AS TEXT)
 						END
 					)
 		UNION
@@ -749,9 +749,9 @@ LEFT JOIN (
 			WHERE
 				con.cnta_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_FATURAMENTO AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_FATURAMENTO AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_FATURAMENTO-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_FATURAMENTO} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_FATURAMENTO} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_FATURAMENTO}-1 AS TEXT)
 						END
 					)
 		UNION
@@ -791,9 +791,9 @@ LEFT JOIN (
 			WHERE
 				con.cnta_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_FATURAMENTO AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_FATURAMENTO AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_FATURAMENTO-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_FATURAMENTO} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_FATURAMENTO} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_FATURAMENTO}-1 AS TEXT)
 						END
 					) AND 
 				con.dcst_idatual IN (0,1,2) AND NOT EXISTS ( SELECT pag.cnta_id FROM arrecadacao.pagamento pag WHERE pag.cnta_id = con.cnta_id) AND con.cnta_dtrevisao IS NULL
@@ -834,9 +834,9 @@ LEFT JOIN (
 			WHERE
 				con.cnta_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_FATURAMENTO AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_FATURAMENTO AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_FATURAMENTO-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_FATURAMENTO} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_FATURAMENTO} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_FATURAMENTO}-1 AS TEXT)
 						END
 					) AND 
 				NOT con.cnta_dtrevisao IS NULL
@@ -878,9 +878,9 @@ LEFT JOIN (
 			WHERE
 				con.cnhi_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_FATURAMENTO AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_FATURAMENTO AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_FATURAMENTO-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_FATURAMENTO} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_FATURAMENTO} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_FATURAMENTO}-1 AS TEXT)
 						END
 					) AND 
 				con.dcst_idatual = 5
@@ -888,6 +888,6 @@ LEFT JOIN (
 WHERE
 	imo.imov_icexclusao = 2
 	--loc.uneg_id >= 11 AND loc.uneg_id <= 15
-	AND une.uneg_id IN (VAR_UNIDADE)
+	AND une.uneg_id IN (${VAR_UNIDADE})
 	AND con_atraso.valor > 0
 ORDER BY "LOCALIDADE","SETOR COMERCIAL","ROTA","QUADRA","SEQUENCIA","SUB LOTE"

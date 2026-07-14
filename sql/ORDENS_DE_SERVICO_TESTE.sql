@@ -1,4 +1,4 @@
-﻿SELECT 
+SELECT 
 	os.orse_id AS "NR OS",
 	ra.rgat_id AS "NR RA",
 	svt.svtp_dsservicotipo AS "TIPO SERVICO", 

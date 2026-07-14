@@ -111,34 +111,34 @@ SELECT
 	cosa_a1.csan_dsconsumoanormalidade AS "ANORM CONS AGUA",
 	cost_e1.cstp_dsconsumotipo AS "TIPO CONSUMO ESGOTO",
 	cosa_e1.csan_dsconsumoanormalidade AS "ANORM CONS ESGOTO",
-	cosh_a1.cshi_nnconsumomedio AS "CONSUMO MEDIO AGUA EM VAR_REFERENCIA",
+	cosh_a1.cshi_nnconsumomedio AS "CONSUMO MEDIO AGUA EM ${VAR_REFERENCIA}",
 	cob.cbst_dscobrancasituacao AS "SIT. COBRANCA",
 	cob.cbst_dscobrancasituacao AS "SIT. COBRANCA",
 	ics.iscb_dtimplantacaocobranca AS "DATA DE ENTRADA COBRANCA",
-	TO_CHAR(con_ult_fat.cagua, '999G999G990D00') AS "VOL AG VAR_REFERENCIA",
-	TO_CHAR(con_ult_fat.vl_agua, '999G999G990D00') AS "VL AG VAR_REFERENCIA",
-	con_ult_fat.cesg AS "VOL ES VAR_REFERENCIA",
-	con_ult_fat.vl_esgoto AS "VL ES VAR_REFERENCIA",
-	TO_CHAR(con_ult_fat.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS VAR_REFERENCIA",
-	TO_CHAR(con_ult_fat.vl_creditos, '999G999G990D00') AS "CRED VAR_REFERENCIA",
-	TO_CHAR(con_ult_fat.vl_impostos, '999G999G990D00') AS "IMPOSTOS VAR_REFERENCIA",
-	TO_CHAR(con_ult_fat.valor, '999G999G990D00') AS "VALOR VAR_REFERENCIA",
-	TO_CHAR(con_pen_fat.cagua, '999G999G990D00') AS "VOL AG VAR_REFERENCIA - 1",
-	TO_CHAR(con_pen_fat.vl_agua, '999G999G990D00') AS "VL AG VAR_REFERENCIA - 1",
-	TO_CHAR(con_pen_fat.cesg, '999G999G990D00') AS "VOL ES VAR_REFERENCIA - 1",
-	TO_CHAR(con_pen_fat.vl_esgoto, '999G999G990D00') AS "VL ES VAR_REFERENCIA - 1",
-	TO_CHAR(con_pen_fat.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS VAR_REFERENCIA - 1",
-	TO_CHAR(con_pen_fat.vl_creditos, '999G999G990D00') AS "CRED VAR_REFERENCIA - 1",
-	TO_CHAR(con_pen_fat.vl_impostos, '999G999G990D00') AS "IMPOSTOS VAR_REFERENCIA - 1",
-	TO_CHAR(con_pen_fat.valor, '999G999G990D00') AS "VALOR VAR_REFERENCIA - 1",
-	TO_CHAR(con_ant_fat.cagua, '999G999G990D00') AS "VOL AG VAR_REFERENCIA - 2",
-	TO_CHAR(con_ant_fat.vl_agua, '999G999G990D00') AS "VL AG VAR_REFERENCIA - 2",
-	TO_CHAR(con_ant_fat.cesg, '999G999G990D00') AS "VOL ES VAR_REFERENCIA - 2",
-	TO_CHAR(con_ant_fat.vl_esgoto, '999G999G990D00') AS "VL ES VAR_REFERENCIA - 2",
-	TO_CHAR(con_ant_fat.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS VAR_REFERENCIA - 2",
-	TO_CHAR(con_ant_fat.vl_creditos, '999G999G990D00') AS "CRED VAR_REFERENCIA - 2",
-	TO_CHAR(con_ant_fat.vl_impostos, '999G999G990D00') AS "IMPOSTOS VAR_REFERENCIA - 2",
-	TO_CHAR(con_ant_fat.valor, '999G999G990D00') AS "VALOR VAR_REFERENCIA - 2",
+	TO_CHAR(con_ult_fat.cagua, '999G999G990D00') AS "VOL AG ${VAR_REFERENCIA}",
+	TO_CHAR(con_ult_fat.vl_agua, '999G999G990D00') AS "VL AG ${VAR_REFERENCIA}",
+	con_ult_fat.cesg AS "VOL ES ${VAR_REFERENCIA}",
+	con_ult_fat.vl_esgoto AS "VL ES ${VAR_REFERENCIA}",
+	TO_CHAR(con_ult_fat.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS ${VAR_REFERENCIA}",
+	TO_CHAR(con_ult_fat.vl_creditos, '999G999G990D00') AS "CRED ${VAR_REFERENCIA}",
+	TO_CHAR(con_ult_fat.vl_impostos, '999G999G990D00') AS "IMPOSTOS ${VAR_REFERENCIA}",
+	TO_CHAR(con_ult_fat.valor, '999G999G990D00') AS "VALOR ${VAR_REFERENCIA}",
+	TO_CHAR(con_pen_fat.cagua, '999G999G990D00') AS "VOL AG ${VAR_REFERENCIA} - 1",
+	TO_CHAR(con_pen_fat.vl_agua, '999G999G990D00') AS "VL AG ${VAR_REFERENCIA} - 1",
+	TO_CHAR(con_pen_fat.cesg, '999G999G990D00') AS "VOL ES ${VAR_REFERENCIA} - 1",
+	TO_CHAR(con_pen_fat.vl_esgoto, '999G999G990D00') AS "VL ES ${VAR_REFERENCIA} - 1",
+	TO_CHAR(con_pen_fat.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS ${VAR_REFERENCIA} - 1",
+	TO_CHAR(con_pen_fat.vl_creditos, '999G999G990D00') AS "CRED ${VAR_REFERENCIA} - 1",
+	TO_CHAR(con_pen_fat.vl_impostos, '999G999G990D00') AS "IMPOSTOS ${VAR_REFERENCIA} - 1",
+	TO_CHAR(con_pen_fat.valor, '999G999G990D00') AS "VALOR ${VAR_REFERENCIA} - 1",
+	TO_CHAR(con_ant_fat.cagua, '999G999G990D00') AS "VOL AG ${VAR_REFERENCIA} - 2",
+	TO_CHAR(con_ant_fat.vl_agua, '999G999G990D00') AS "VL AG ${VAR_REFERENCIA} - 2",
+	TO_CHAR(con_ant_fat.cesg, '999G999G990D00') AS "VOL ES ${VAR_REFERENCIA} - 2",
+	TO_CHAR(con_ant_fat.vl_esgoto, '999G999G990D00') AS "VL ES ${VAR_REFERENCIA} - 2",
+	TO_CHAR(con_ant_fat.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS ${VAR_REFERENCIA} - 2",
+	TO_CHAR(con_ant_fat.vl_creditos, '999G999G990D00') AS "CRED ${VAR_REFERENCIA} - 2",
+	TO_CHAR(con_ant_fat.vl_impostos, '999G999G990D00') AS "IMPOSTOS ${VAR_REFERENCIA} - 2",
+	TO_CHAR(con_ant_fat.valor, '999G999G990D00') AS "VALOR ${VAR_REFERENCIA} - 2",
 	TO_CHAR(con_vivaagua.valor, '999G999G990D00') AS "VALOR TOTAL VIVA AGUA",
 	con_vivaagua.qtd AS "QTD. CONTAS VIVA AGUA",
 	TO_CHAR(con_vivaagua.min, '999G999G990D00') AS "MENOR REFERENCIA VIVA AGUA",
@@ -208,13 +208,13 @@ FROM
 	LEFT JOIN micromedicao.hidrometro_capacidade hic ON hic.hicp_id = hid.hicp_id
 	LEFT JOIN micromedicao.hidrometro_diametro hdi ON hdi.hidm_id = hid.hidm_id
 	LEFT JOIN micromedicao.hidrometro_marca hma ON hma.himc_id = hid.himc_id
-	LEFT JOIN micromedicao.consumo_historico cosh_a1 ON cosh_a1.imov_id = imo.imov_id AND cosh_a1.cshi_amfaturamento = VAR_REFERENCIA AND cosh_a1.lgti_id = 1
+	LEFT JOIN micromedicao.consumo_historico cosh_a1 ON cosh_a1.imov_id = imo.imov_id AND cosh_a1.cshi_amfaturamento = ${VAR_REFERENCIA} AND cosh_a1.lgti_id = 1
 	LEFT JOIN micromedicao.consumo_tipo cost_a1 ON cost_a1.cstp_id = cosh_a1.cstp_id
 	LEFT JOIN micromedicao.consumo_anormalidade cosa_a1 ON cosa_a1.csan_id = cosh_a1.csan_id
-	LEFT JOIN micromedicao.consumo_historico cosh_e1 ON cosh_e1.imov_id = imo.imov_id AND cosh_e1.cshi_amfaturamento = VAR_REFERENCIA AND cosh_e1.lgti_id = 2
+	LEFT JOIN micromedicao.consumo_historico cosh_e1 ON cosh_e1.imov_id = imo.imov_id AND cosh_e1.cshi_amfaturamento = ${VAR_REFERENCIA} AND cosh_e1.lgti_id = 2
 	LEFT JOIN micromedicao.consumo_tipo cost_e1 ON cost_e1.cstp_id = cosh_e1.cstp_id
 	LEFT JOIN micromedicao.consumo_anormalidade cosa_e1 ON cosa_e1.csan_id = cosh_e1.csan_id	
-        LEFT JOIN micromedicao.medicao_historico mdh ON mdh.hidi_id = his.hidi_id AND mdh.mdhi_amleitura = VAR_REFERENCIA	
+        LEFT JOIN micromedicao.medicao_historico mdh ON mdh.hidi_id = his.hidi_id AND mdh.mdhi_amleitura = ${VAR_REFERENCIA}	
 	LEFT JOIN cadastro.imovel_cobranca_situacao ics ON ics.imov_id = imo.imov_id AND ics.iscb_dtretiradacobranca IS NULL AND ics.cbst_id IN (12,14,17)
 	LEFT JOIN cobranca.cobranca_situacao cob ON cob.cbst_id = ics.cbst_id 
 	LEFT JOIN cobranca.cobranca_situacao_hist csh ON csh.imov_id = imo.imov_id AND csh.cbsh_amcobrancaretirada IS NULL
@@ -286,7 +286,7 @@ FROM
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 				INNER JOIN cadastro.localidade loc4 ON loc4.loca_id = con4.loca_id AND loc4.greg_id IN (1,2)
 			WHERE
-				con4.cnta_amreferenciaconta = VAR_REFERENCIA
+				con4.cnta_amreferenciaconta = ${VAR_REFERENCIA}
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -302,7 +302,7 @@ FROM
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 				INNER JOIN cadastro.localidade loc4 ON loc4.loca_id = con4.loca_id AND loc4.greg_id IN (1,2)
 			WHERE
-				con4.cnhi_amreferenciaconta = VAR_REFERENCIA
+				con4.cnhi_amreferenciaconta = ${VAR_REFERENCIA}
 			) AS con_ult_fat ON con_ult_fat.mat1 = imo.imov_id
 	LEFT JOIN (	SELECT 
 				con4.imov_id AS mat1,
@@ -320,9 +320,9 @@ FROM
 			WHERE
 				con4.cnta_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-1 AS TEXT)
 						END
 				)
 			UNION
@@ -342,9 +342,9 @@ FROM
 			WHERE
 				con4.cnhi_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-1 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-1 AS TEXT)
 						END
 				)
 			) AS con_pen_fat ON con_pen_fat.mat1 = imo.imov_id
@@ -364,10 +364,10 @@ FROM
 			WHERE
 				con4.cnta_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
-							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-2 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
+							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-2 AS TEXT)
 						END
 				)
 			UNION
@@ -387,10 +387,10 @@ FROM
 			WHERE
 				con4.cnhi_amreferenciaconta = (
 					SELECT 
-						CASE (CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 5 FOR 6) AS INT))
-							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
-							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(VAR_REFERENCIA AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
-							ELSE CAST(VAR_REFERENCIA-2 AS TEXT)
+						CASE (CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 5 FOR 6) AS INT))
+							WHEN 1 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'11'
+							WHEN 2 THEN CAST((CAST(SUBSTRING(CAST(${VAR_REFERENCIA} AS TEXT) FROM 0 FOR 5) AS INT))-1 AS TEXT)||'12'
+							ELSE CAST(${VAR_REFERENCIA}-2 AS TEXT)
 						END
 				)
 			) AS con_ant_fat ON con_ant_fat.mat1 = imo.imov_id

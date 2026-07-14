@@ -2,7 +2,9 @@
 setlocal
 
 REM === CONFIGURACOES ===
-set "ROOT_DIR=C:\Users\Public\Documents\job_exportador"
+REM Raiz do projeto: a pasta onde este .bat esta, sem a barra final.
+set "ROOT_DIR=%~dp0"
+if "%ROOT_DIR:~-1%"=="\" set "ROOT_DIR=%ROOT_DIR:~0,-1%"
 set "ENGINE_JAR=%ROOT_DIR%\engine\target\exportador-csv-1.0.0-jar-with-dependencies.jar"
 
 set "COMANDO_FILE=%ROOT_DIR%\comando\COMANDO_BI_2026_OS.csv"
@@ -12,7 +14,12 @@ REM Credenciais: veja engine/credenciais.bat (nao versionado).
 call "%ROOT_DIR%\engine\credenciais.bat"
 
 REM === JAVA ===
-set "JAVA_EXE=%JAVA_HOME%\bin\java.exe"
+REM Usa o JAVA_HOME quando existir; senao cai no java do PATH.
+if defined JAVA_HOME (
+    set "JAVA_EXE=%JAVA_HOME%\bin\java.exe"
+) else (
+    set "JAVA_EXE=java.exe"
+)
 
 echo ROOT_DIR.....: %ROOT_DIR%
 echo ENGINE_JAR...: %ENGINE_JAR%

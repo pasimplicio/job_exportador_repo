@@ -186,113 +186,113 @@ SELECT
 	TO_CHAR(con_atraso.multa, '999G999G990D00') AS "MULTAS DEVIDO CONTAS",
 	TO_CHAR(con_atraso.juros, '999G999G990D00') AS "JUROS DEVIDO CONTAS",
 	TO_CHAR((con_atraso.multa+con_atraso.juros+con_atraso.valor), '999G999G990D00') AS "VALOR TOTAL COM JUROS CONTAS",
-	con_fat_1.cagua AS "VOL AG VAR_REFERENCIA - 1",
-	TO_CHAR(con_fat_1.vl_agua, '999G999G990D00') AS "VL AG VAR_REFERENCIA - 1",
-	con_fat_1.cesg AS "VOL ES VAR_REFERENCIA - 1",
-	TO_CHAR(con_fat_1.vl_esgoto, '999G999G990D00') AS "VL ES VAR_REFERENCIA - 1",
-	TO_CHAR(con_fat_1.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS VAR_REFERENCIA - 1",
-	TO_CHAR(con_fat_1.vl_creditos, '999G999G990D00') AS "CRED VAR_REFERENCIA - 1",
-	TO_CHAR(con_fat_1.vl_impostos, '999G999G990D00') AS "IMPOSTOS VAR_REFERENCIA - 1",
-	TO_CHAR(con_fat_1.valor, '999G999G990D00') AS "VALOR VAR_REFERENCIA - 1",
+	con_fat_1.cagua AS "VOL AG ${VAR_REFERENCIA} - 1",
+	TO_CHAR(con_fat_1.vl_agua, '999G999G990D00') AS "VL AG ${VAR_REFERENCIA} - 1",
+	con_fat_1.cesg AS "VOL ES ${VAR_REFERENCIA} - 1",
+	TO_CHAR(con_fat_1.vl_esgoto, '999G999G990D00') AS "VL ES ${VAR_REFERENCIA} - 1",
+	TO_CHAR(con_fat_1.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS ${VAR_REFERENCIA} - 1",
+	TO_CHAR(con_fat_1.vl_creditos, '999G999G990D00') AS "CRED ${VAR_REFERENCIA} - 1",
+	TO_CHAR(con_fat_1.vl_impostos, '999G999G990D00') AS "IMPOSTOS ${VAR_REFERENCIA} - 1",
+	TO_CHAR(con_fat_1.valor, '999G999G990D00') AS "VALOR ${VAR_REFERENCIA} - 1",
 
-	con_fat_2.cagua AS "VOL AG VAR_REFERENCIA - 2",
-	TO_CHAR(con_fat_2.vl_agua, '999G999G990D00') AS "VL AG VAR_REFERENCIA - 2",
-	con_fat_2.cesg AS "VOL ES VAR_REFERENCIA - 2",
-	TO_CHAR(con_fat_2.vl_esgoto, '999G999G990D00') AS "VL ES VAR_REFERENCIA - 2",
-	TO_CHAR(con_fat_2.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS VAR_REFERENCIA - 2",
-	TO_CHAR(con_fat_2.vl_creditos, '999G999G990D00') AS "CRED VAR_REFERENCIA - 2",
-	TO_CHAR(con_fat_2.vl_impostos, '999G999G990D00') AS "IMPOSTOS VAR_REFERENCIA - 2",
-	TO_CHAR(con_fat_2.valor, '999G999G990D00') AS "VALOR VAR_REFERENCIA - 2",
+	con_fat_2.cagua AS "VOL AG ${VAR_REFERENCIA} - 2",
+	TO_CHAR(con_fat_2.vl_agua, '999G999G990D00') AS "VL AG ${VAR_REFERENCIA} - 2",
+	con_fat_2.cesg AS "VOL ES ${VAR_REFERENCIA} - 2",
+	TO_CHAR(con_fat_2.vl_esgoto, '999G999G990D00') AS "VL ES ${VAR_REFERENCIA} - 2",
+	TO_CHAR(con_fat_2.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS ${VAR_REFERENCIA} - 2",
+	TO_CHAR(con_fat_2.vl_creditos, '999G999G990D00') AS "CRED ${VAR_REFERENCIA} - 2",
+	TO_CHAR(con_fat_2.vl_impostos, '999G999G990D00') AS "IMPOSTOS ${VAR_REFERENCIA} - 2",
+	TO_CHAR(con_fat_2.valor, '999G999G990D00') AS "VALOR ${VAR_REFERENCIA} - 2",
 
-	con_fat_3.cagua AS "VOL AG VAR_REFERENCIA - 3",
-	TO_CHAR(con_fat_3.vl_agua, '999G999G990D00') AS "VL AG VAR_REFERENCIA - 3",
-	con_fat_3.cesg AS "VOL ES VAR_REFERENCIA - 3",
-	TO_CHAR(con_fat_3.vl_esgoto, '999G999G990D00') AS "VL ES VAR_REFERENCIA - 3",
-	TO_CHAR(con_fat_3.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS VAR_REFERENCIA - 3",
-	TO_CHAR(con_fat_3.vl_creditos, '999G999G990D00') AS "CRED VAR_REFERENCIA - 3",
-	TO_CHAR(con_fat_3.vl_impostos, '999G999G990D00') AS "IMPOSTOS VAR_REFERENCIA - 3",
-	TO_CHAR(con_fat_3.valor, '999G999G990D00') AS "VALOR VAR_REFERENCIA - 3",
+	con_fat_3.cagua AS "VOL AG ${VAR_REFERENCIA} - 3",
+	TO_CHAR(con_fat_3.vl_agua, '999G999G990D00') AS "VL AG ${VAR_REFERENCIA} - 3",
+	con_fat_3.cesg AS "VOL ES ${VAR_REFERENCIA} - 3",
+	TO_CHAR(con_fat_3.vl_esgoto, '999G999G990D00') AS "VL ES ${VAR_REFERENCIA} - 3",
+	TO_CHAR(con_fat_3.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS ${VAR_REFERENCIA} - 3",
+	TO_CHAR(con_fat_3.vl_creditos, '999G999G990D00') AS "CRED ${VAR_REFERENCIA} - 3",
+	TO_CHAR(con_fat_3.vl_impostos, '999G999G990D00') AS "IMPOSTOS ${VAR_REFERENCIA} - 3",
+	TO_CHAR(con_fat_3.valor, '999G999G990D00') AS "VALOR ${VAR_REFERENCIA} - 3",
 
-	con_fat_4.cagua AS "VOL AG VAR_REFERENCIA - 4",
-	TO_CHAR(con_fat_4.vl_agua, '999G999G990D00') AS "VL AG VAR_REFERENCIA - 4",
-	con_fat_4.cesg AS "VOL ES VAR_REFERENCIA - 4",
-	TO_CHAR(con_fat_4.vl_esgoto, '999G999G990D00') AS "VL ES VAR_REFERENCIA - 4",
-	TO_CHAR(con_fat_4.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS VAR_REFERENCIA - 4",
-	TO_CHAR(con_fat_4.vl_creditos, '999G999G990D00') AS "CRED VAR_REFERENCIA - 4",
-	TO_CHAR(con_fat_4.vl_impostos, '999G999G990D00') AS "IMPOSTOS VAR_REFERENCIA - 4",
-	TO_CHAR(con_fat_4.valor, '999G999G990D00') AS "VALOR VAR_REFERENCIA - 4",
+	con_fat_4.cagua AS "VOL AG ${VAR_REFERENCIA} - 4",
+	TO_CHAR(con_fat_4.vl_agua, '999G999G990D00') AS "VL AG ${VAR_REFERENCIA} - 4",
+	con_fat_4.cesg AS "VOL ES ${VAR_REFERENCIA} - 4",
+	TO_CHAR(con_fat_4.vl_esgoto, '999G999G990D00') AS "VL ES ${VAR_REFERENCIA} - 4",
+	TO_CHAR(con_fat_4.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS ${VAR_REFERENCIA} - 4",
+	TO_CHAR(con_fat_4.vl_creditos, '999G999G990D00') AS "CRED ${VAR_REFERENCIA} - 4",
+	TO_CHAR(con_fat_4.vl_impostos, '999G999G990D00') AS "IMPOSTOS ${VAR_REFERENCIA} - 4",
+	TO_CHAR(con_fat_4.valor, '999G999G990D00') AS "VALOR ${VAR_REFERENCIA} - 4",
 
-	con_fat_5.cagua AS "VOL AG VAR_REFERENCIA - 5",
-	TO_CHAR(con_fat_5.vl_agua, '999G999G990D00') AS "VL AG VAR_REFERENCIA - 5",
-	con_fat_5.cesg AS "VOL ES VAR_REFERENCIA - 5",
-	TO_CHAR(con_fat_5.vl_esgoto, '999G999G990D00') AS "VL ES VAR_REFERENCIA - 5",
-	TO_CHAR(con_fat_5.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS VAR_REFERENCIA - 5",
-	TO_CHAR(con_fat_5.vl_creditos, '999G999G990D00') AS "CRED VAR_REFERENCIA - 5",
-	TO_CHAR(con_fat_5.vl_impostos, '999G999G990D00') AS "IMPOSTOS VAR_REFERENCIA - 5",
-	TO_CHAR(con_fat_5.valor, '999G999G990D00') AS "VALOR VAR_REFERENCIA - 5",
+	con_fat_5.cagua AS "VOL AG ${VAR_REFERENCIA} - 5",
+	TO_CHAR(con_fat_5.vl_agua, '999G999G990D00') AS "VL AG ${VAR_REFERENCIA} - 5",
+	con_fat_5.cesg AS "VOL ES ${VAR_REFERENCIA} - 5",
+	TO_CHAR(con_fat_5.vl_esgoto, '999G999G990D00') AS "VL ES ${VAR_REFERENCIA} - 5",
+	TO_CHAR(con_fat_5.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS ${VAR_REFERENCIA} - 5",
+	TO_CHAR(con_fat_5.vl_creditos, '999G999G990D00') AS "CRED ${VAR_REFERENCIA} - 5",
+	TO_CHAR(con_fat_5.vl_impostos, '999G999G990D00') AS "IMPOSTOS ${VAR_REFERENCIA} - 5",
+	TO_CHAR(con_fat_5.valor, '999G999G990D00') AS "VALOR ${VAR_REFERENCIA} - 5",
 
-	con_fat_6.cagua AS "VOL AG VAR_REFERENCIA - 6",
-	TO_CHAR(con_fat_6.vl_agua, '999G999G990D00') AS "VL AG VAR_REFERENCIA - 6",
-	con_fat_6.cesg AS "VOL ES VAR_REFERENCIA - 6",
-	TO_CHAR(con_fat_6.vl_esgoto, '999G999G990D00') AS "VL ES VAR_REFERENCIA - 6",
-	TO_CHAR(con_fat_6.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS VAR_REFERENCIA - 6",
-	TO_CHAR(con_fat_6.vl_creditos, '999G999G990D00') AS "CRED VAR_REFERENCIA - 6",
-	TO_CHAR(con_fat_6.vl_impostos, '999G999G990D00') AS "IMPOSTOS VAR_REFERENCIA - 6",
-	TO_CHAR(con_fat_6.valor, '999G999G990D00') AS "VALOR VAR_REFERENCIA - 6",
+	con_fat_6.cagua AS "VOL AG ${VAR_REFERENCIA} - 6",
+	TO_CHAR(con_fat_6.vl_agua, '999G999G990D00') AS "VL AG ${VAR_REFERENCIA} - 6",
+	con_fat_6.cesg AS "VOL ES ${VAR_REFERENCIA} - 6",
+	TO_CHAR(con_fat_6.vl_esgoto, '999G999G990D00') AS "VL ES ${VAR_REFERENCIA} - 6",
+	TO_CHAR(con_fat_6.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS ${VAR_REFERENCIA} - 6",
+	TO_CHAR(con_fat_6.vl_creditos, '999G999G990D00') AS "CRED ${VAR_REFERENCIA} - 6",
+	TO_CHAR(con_fat_6.vl_impostos, '999G999G990D00') AS "IMPOSTOS ${VAR_REFERENCIA} - 6",
+	TO_CHAR(con_fat_6.valor, '999G999G990D00') AS "VALOR ${VAR_REFERENCIA} - 6",
 
-	con_fat_7.cagua AS "VOL AG VAR_REFERENCIA - 7",
-	TO_CHAR(con_fat_7.vl_agua, '999G999G990D00') AS "VL AG VAR_REFERENCIA - 7",
-	con_fat_7.cesg AS "VOL ES VAR_REFERENCIA - 7",
-	TO_CHAR(con_fat_7.vl_esgoto, '999G999G990D00') AS "VL ES VAR_REFERENCIA - 7",
-	TO_CHAR(con_fat_7.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS VAR_REFERENCIA - 7",
-	TO_CHAR(con_fat_7.vl_creditos, '999G999G990D00') AS "CRED VAR_REFERENCIA - 7",
-	TO_CHAR(con_fat_7.vl_impostos, '999G999G990D00') AS "IMPOSTOS VAR_REFERENCIA - 7",
-	TO_CHAR(con_fat_7.valor, '999G999G990D00') AS "VALOR VAR_REFERENCIA - 7",
+	con_fat_7.cagua AS "VOL AG ${VAR_REFERENCIA} - 7",
+	TO_CHAR(con_fat_7.vl_agua, '999G999G990D00') AS "VL AG ${VAR_REFERENCIA} - 7",
+	con_fat_7.cesg AS "VOL ES ${VAR_REFERENCIA} - 7",
+	TO_CHAR(con_fat_7.vl_esgoto, '999G999G990D00') AS "VL ES ${VAR_REFERENCIA} - 7",
+	TO_CHAR(con_fat_7.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS ${VAR_REFERENCIA} - 7",
+	TO_CHAR(con_fat_7.vl_creditos, '999G999G990D00') AS "CRED ${VAR_REFERENCIA} - 7",
+	TO_CHAR(con_fat_7.vl_impostos, '999G999G990D00') AS "IMPOSTOS ${VAR_REFERENCIA} - 7",
+	TO_CHAR(con_fat_7.valor, '999G999G990D00') AS "VALOR ${VAR_REFERENCIA} - 7",
 
-	con_fat_8.cagua AS "VOL AG VAR_REFERENCIA - 8",
-	TO_CHAR(con_fat_8.vl_agua, '999G999G990D00') AS "VL AG VAR_REFERENCIA - 8",
-	con_fat_8.cesg AS "VOL ES VAR_REFERENCIA - 8",
-	TO_CHAR(con_fat_8.vl_esgoto, '999G999G990D00') AS "VL ES VAR_REFERENCIA - 8",
-	TO_CHAR(con_fat_8.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS VAR_REFERENCIA - 8",
-	TO_CHAR(con_fat_8.vl_creditos, '999G999G990D00') AS "CRED VAR_REFERENCIA - 8",
-	TO_CHAR(con_fat_8.vl_impostos, '999G999G990D00') AS "IMPOSTOS VAR_REFERENCIA - 8",
-	TO_CHAR(con_fat_8.valor, '999G999G990D00') AS "VALOR VAR_REFERENCIA - 8",
+	con_fat_8.cagua AS "VOL AG ${VAR_REFERENCIA} - 8",
+	TO_CHAR(con_fat_8.vl_agua, '999G999G990D00') AS "VL AG ${VAR_REFERENCIA} - 8",
+	con_fat_8.cesg AS "VOL ES ${VAR_REFERENCIA} - 8",
+	TO_CHAR(con_fat_8.vl_esgoto, '999G999G990D00') AS "VL ES ${VAR_REFERENCIA} - 8",
+	TO_CHAR(con_fat_8.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS ${VAR_REFERENCIA} - 8",
+	TO_CHAR(con_fat_8.vl_creditos, '999G999G990D00') AS "CRED ${VAR_REFERENCIA} - 8",
+	TO_CHAR(con_fat_8.vl_impostos, '999G999G990D00') AS "IMPOSTOS ${VAR_REFERENCIA} - 8",
+	TO_CHAR(con_fat_8.valor, '999G999G990D00') AS "VALOR ${VAR_REFERENCIA} - 8",
 
-	con_fat_9.cagua AS "VOL AG VAR_REFERENCIA - 9",
-	TO_CHAR(con_fat_9.vl_agua, '999G999G990D00') AS "VL AG VAR_REFERENCIA - 9",
-	con_fat_9.cesg AS "VOL ES VAR_REFERENCIA - 9",
-	TO_CHAR(con_fat_9.vl_esgoto, '999G999G990D00') AS "VL ES VAR_REFERENCIA - 9",
-	TO_CHAR(con_fat_9.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS VAR_REFERENCIA - 9",
-	TO_CHAR(con_fat_9.vl_creditos, '999G999G990D00') AS "CRED VAR_REFERENCIA - 9",
-	TO_CHAR(con_fat_9.vl_impostos, '999G999G990D00') AS "IMPOSTOS VAR_REFERENCIA - 9",
-	TO_CHAR(con_fat_9.valor, '999G999G990D00') AS "VALOR VAR_REFERENCIA - 9",
+	con_fat_9.cagua AS "VOL AG ${VAR_REFERENCIA} - 9",
+	TO_CHAR(con_fat_9.vl_agua, '999G999G990D00') AS "VL AG ${VAR_REFERENCIA} - 9",
+	con_fat_9.cesg AS "VOL ES ${VAR_REFERENCIA} - 9",
+	TO_CHAR(con_fat_9.vl_esgoto, '999G999G990D00') AS "VL ES ${VAR_REFERENCIA} - 9",
+	TO_CHAR(con_fat_9.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS ${VAR_REFERENCIA} - 9",
+	TO_CHAR(con_fat_9.vl_creditos, '999G999G990D00') AS "CRED ${VAR_REFERENCIA} - 9",
+	TO_CHAR(con_fat_9.vl_impostos, '999G999G990D00') AS "IMPOSTOS ${VAR_REFERENCIA} - 9",
+	TO_CHAR(con_fat_9.valor, '999G999G990D00') AS "VALOR ${VAR_REFERENCIA} - 9",
 
-	con_fat_10.cagua AS "VOL AG VAR_REFERENCIA - 10",
-	TO_CHAR(con_fat_10.vl_agua, '999G999G990D00') AS "VL AG VAR_REFERENCIA - 10",
-	con_fat_10.cesg AS "VOL ES VAR_REFERENCIA - 10",
-	TO_CHAR(con_fat_10.vl_esgoto, '999G999G990D00') AS "VL ES VAR_REFERENCIA - 10",
-	TO_CHAR(con_fat_10.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS VAR_REFERENCIA - 10",
-	TO_CHAR(con_fat_10.vl_creditos, '999G999G990D00') AS "CRED VAR_REFERENCIA - 10",
-	TO_CHAR(con_fat_10.vl_impostos, '999G999G990D00') AS "IMPOSTOS VAR_REFERENCIA - 10",
-	TO_CHAR(con_fat_10.valor, '999G999G990D00') AS "VALOR VAR_REFERENCIA - 10",
+	con_fat_10.cagua AS "VOL AG ${VAR_REFERENCIA} - 10",
+	TO_CHAR(con_fat_10.vl_agua, '999G999G990D00') AS "VL AG ${VAR_REFERENCIA} - 10",
+	con_fat_10.cesg AS "VOL ES ${VAR_REFERENCIA} - 10",
+	TO_CHAR(con_fat_10.vl_esgoto, '999G999G990D00') AS "VL ES ${VAR_REFERENCIA} - 10",
+	TO_CHAR(con_fat_10.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS ${VAR_REFERENCIA} - 10",
+	TO_CHAR(con_fat_10.vl_creditos, '999G999G990D00') AS "CRED ${VAR_REFERENCIA} - 10",
+	TO_CHAR(con_fat_10.vl_impostos, '999G999G990D00') AS "IMPOSTOS ${VAR_REFERENCIA} - 10",
+	TO_CHAR(con_fat_10.valor, '999G999G990D00') AS "VALOR ${VAR_REFERENCIA} - 10",
 
-	con_fat_11.cagua AS "VOL AG VAR_REFERENCIA - 11",
-	TO_CHAR(con_fat_11.vl_agua, '999G999G990D00') AS "VL AG VAR_REFERENCIA - 11",
-	con_fat_11.cesg AS "VOL ES VAR_REFERENCIA - 11",
-	TO_CHAR(con_fat_11.vl_esgoto, '999G999G990D00') AS "VL ES VAR_REFERENCIA - 11",
-	TO_CHAR(con_fat_11.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS VAR_REFERENCIA - 11",
-	TO_CHAR(con_fat_11.vl_creditos, '999G999G990D00') AS "CRED VAR_REFERENCIA - 11",
-	TO_CHAR(con_fat_11.vl_impostos, '999G999G990D00') AS "IMPOSTOS VAR_REFERENCIA - 11",
-	TO_CHAR(con_fat_11.valor, '999G999G990D00') AS "VALOR VAR_REFERENCIA - 11",
+	con_fat_11.cagua AS "VOL AG ${VAR_REFERENCIA} - 11",
+	TO_CHAR(con_fat_11.vl_agua, '999G999G990D00') AS "VL AG ${VAR_REFERENCIA} - 11",
+	con_fat_11.cesg AS "VOL ES ${VAR_REFERENCIA} - 11",
+	TO_CHAR(con_fat_11.vl_esgoto, '999G999G990D00') AS "VL ES ${VAR_REFERENCIA} - 11",
+	TO_CHAR(con_fat_11.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS ${VAR_REFERENCIA} - 11",
+	TO_CHAR(con_fat_11.vl_creditos, '999G999G990D00') AS "CRED ${VAR_REFERENCIA} - 11",
+	TO_CHAR(con_fat_11.vl_impostos, '999G999G990D00') AS "IMPOSTOS ${VAR_REFERENCIA} - 11",
+	TO_CHAR(con_fat_11.valor, '999G999G990D00') AS "VALOR ${VAR_REFERENCIA} - 11",
 
-	con_fat_12.cagua AS "VOL AG VAR_REFERENCIA - 12",
-	TO_CHAR(con_fat_12.vl_agua, '999G999G990D00') AS "VL AG VAR_REFERENCIA - 12",
-	con_fat_12.cesg AS "VOL ES VAR_REFERENCIA - 12",
-	TO_CHAR(con_fat_12.vl_esgoto, '999G999G990D00') AS "VL ES VAR_REFERENCIA - 12",
-	TO_CHAR(con_fat_12.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS VAR_REFERENCIA - 12",
-	TO_CHAR(con_fat_12.vl_creditos, '999G999G990D00') AS "CRED VAR_REFERENCIA - 12",
-	TO_CHAR(con_fat_12.vl_impostos, '999G999G990D00') AS "IMPOSTOS VAR_REFERENCIA - 12",
-	TO_CHAR(con_fat_12.valor, '999G999G990D00') AS "VALOR VAR_REFERENCIA - 12"
+	con_fat_12.cagua AS "VOL AG ${VAR_REFERENCIA} - 12",
+	TO_CHAR(con_fat_12.vl_agua, '999G999G990D00') AS "VL AG ${VAR_REFERENCIA} - 12",
+	con_fat_12.cesg AS "VOL ES ${VAR_REFERENCIA} - 12",
+	TO_CHAR(con_fat_12.vl_esgoto, '999G999G990D00') AS "VL ES ${VAR_REFERENCIA} - 12",
+	TO_CHAR(con_fat_12.vl_debitos, '999G999G990D00') AS "OUTROS SERVICOS ${VAR_REFERENCIA} - 12",
+	TO_CHAR(con_fat_12.vl_creditos, '999G999G990D00') AS "CRED ${VAR_REFERENCIA} - 12",
+	TO_CHAR(con_fat_12.vl_impostos, '999G999G990D00') AS "IMPOSTOS ${VAR_REFERENCIA} - 12",
+	TO_CHAR(con_fat_12.valor, '999G999G990D00') AS "VALOR ${VAR_REFERENCIA} - 12"
 FROM
 	arvore arv
 	LEFT JOIN cadastro.cliente_imovel cim_vinc ON cim_vinc.clie_id = arv.id AND cim_vinc.clim_dtrelacaofim IS NULL
@@ -370,7 +370,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = VAR_REFERENCIA
+				con4.cnta_amreferenciaconta = ${VAR_REFERENCIA}
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -385,7 +385,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = VAR_REFERENCIA
+				con4.cnhi_amreferenciaconta = ${VAR_REFERENCIA}
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -400,7 +400,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = VAR_REFERENCIA
+				con4.cnta_amreferenciaconta = ${VAR_REFERENCIA}
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -415,7 +415,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = VAR_REFERENCIA
+				con4.cnhi_amreferenciaconta = ${VAR_REFERENCIA}
 			) AS con_fat_0 ON con_fat_0.mat1 = imo.imov_id
 	LEFT JOIN (	SELECT 
 				con4.imov_id AS mat1,
@@ -430,7 +430,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '1months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '1months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -445,7 +445,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '1months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '1months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -460,7 +460,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '1months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '1months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -475,7 +475,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '1months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '1months','YYYYMM')::INT
 			) AS con_fat_1 ON con_fat_1.mat1 = imo.imov_id
 		LEFT JOIN (	SELECT 
 				con4.imov_id AS mat1,
@@ -490,7 +490,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '2months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '2months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -505,7 +505,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '2months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '2months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -520,7 +520,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '2months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '2months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -535,7 +535,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '2months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '2months','YYYYMM')::INT
 			) AS con_fat_2 ON con_fat_2.mat1 = imo.imov_id
 		LEFT JOIN (	SELECT 
 				con4.imov_id AS mat1,
@@ -550,7 +550,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '3months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '3months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -565,7 +565,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '3months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '3months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -580,7 +580,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '3months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '3months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -595,7 +595,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '3months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '3months','YYYYMM')::INT
 			) AS con_fat_3 ON con_fat_3.mat1 = imo.imov_id
 		LEFT JOIN (	SELECT 
 				con4.imov_id AS mat1,
@@ -610,7 +610,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '4months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '4months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -625,7 +625,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '4months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '4months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -640,7 +640,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '4months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '4months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -655,7 +655,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '4months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '4months','YYYYMM')::INT
 			) AS con_fat_4 ON con_fat_4.mat1 = imo.imov_id
 		LEFT JOIN (	SELECT 
 				con4.imov_id AS mat1,
@@ -670,7 +670,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '5months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '5months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -685,7 +685,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '5months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '5months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -700,7 +700,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '5months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '5months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -715,7 +715,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '5months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '5months','YYYYMM')::INT
 			) AS con_fat_5 ON con_fat_5.mat1 = imo.imov_id
 		LEFT JOIN (	SELECT 
 				con4.imov_id AS mat1,
@@ -730,7 +730,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '6months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '6months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -745,7 +745,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '6months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '6months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -760,7 +760,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '6months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '6months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -775,7 +775,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '6months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '6months','YYYYMM')::INT
 			) AS con_fat_6 ON con_fat_6.mat1 = imo.imov_id
 		LEFT JOIN (	SELECT 
 				con4.imov_id AS mat1,
@@ -790,7 +790,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '7months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '7months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -805,7 +805,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '7months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '7months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -820,7 +820,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '7months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '7months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -835,7 +835,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '7months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '7months','YYYYMM')::INT
 			) AS con_fat_7 ON con_fat_7.mat1 = imo.imov_id
 		LEFT JOIN (	SELECT 
 				con4.imov_id AS mat1,
@@ -850,7 +850,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '8months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '8months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -865,7 +865,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '8months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '8months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -880,7 +880,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '8months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '8months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -895,7 +895,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '8months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '8months','YYYYMM')::INT
 			) AS con_fat_8 ON con_fat_8.mat1 = imo.imov_id
 		LEFT JOIN (	SELECT 
 				con4.imov_id AS mat1,
@@ -910,7 +910,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '9months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '9months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -925,7 +925,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '9months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '9months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -940,7 +940,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '9months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '9months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -955,7 +955,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '9months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '9months','YYYYMM')::INT
 			) AS con_fat_9 ON con_fat_9.mat1 = imo.imov_id
 		LEFT JOIN (	SELECT 
 				con4.imov_id AS mat1,
@@ -970,7 +970,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '10months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '10months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -985,7 +985,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '10months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '10months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -1000,7 +1000,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '10months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '10months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -1015,7 +1015,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '10months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '10months','YYYYMM')::INT
 			) AS con_fat_10 ON con_fat_10.mat1 = imo.imov_id
 		LEFT JOIN (	SELECT 
 				con4.imov_id AS mat1,
@@ -1030,7 +1030,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '11months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '11months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -1045,7 +1045,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '11months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '11months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -1060,7 +1060,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '11months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '11months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -1075,7 +1075,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '11months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '11months','YYYYMM')::INT
 			) AS con_fat_11 ON con_fat_11.mat1 = imo.imov_id
 		LEFT JOIN (	SELECT 
 				con4.imov_id AS mat1,
@@ -1090,7 +1090,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '12months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '12months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -1105,7 +1105,7 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '12months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '12months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -1120,7 +1120,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '12months','YYYYMM')::INT
+				con4.cnta_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '12months','YYYYMM')::INT
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -1135,5 +1135,5 @@ FROM
 			FROM faturamento.conta_historico con4 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 			WHERE
-				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(VAR_REFERENCIA,'YYYYMM') - INTERVAL '12months','YYYYMM')::INT
+				con4.cnhi_amreferenciaconta = TO_CHAR(TO_DATE(${VAR_REFERENCIA},'YYYYMM') - INTERVAL '12months','YYYYMM')::INT
 			) AS con_fat_12 ON con_fat_12.mat1 = imo.imov_id

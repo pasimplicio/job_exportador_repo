@@ -1,4 +1,4 @@
-﻿--202310: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
+--202310: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
 --15: Deve ser substituida pelo id da unidade de onde se quer obter os dados
 
 SELECT 

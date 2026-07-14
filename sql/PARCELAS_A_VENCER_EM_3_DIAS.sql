@@ -50,7 +50,7 @@ WHERE
 							cobranca.parcelamento_item pit
 							INNER JOIN cobranca.empresa_cobranca_conta ecc ON ecc.cnta_id = pit.cnta_id
 						WHERE
-							pit.parc_id = par.parc_id AND ecc.empr_id = VAR_EMPRESA
+							pit.parc_id = par.parc_id AND ecc.empr_id = ${VAR_EMPRESA}
 						LIMIT 1
 							)
 			)

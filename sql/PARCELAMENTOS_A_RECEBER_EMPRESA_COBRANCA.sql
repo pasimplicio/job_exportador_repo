@@ -82,7 +82,7 @@ FROM
 					INNER JOIN cadastro.empresa emp ON emp.empr_id = ecc.empr_id
 				WHERE
 					par.parc_tmparcelamento >= '2019-04-20'
-					AND emp.empr_id IN (VAR_EMPRESAS)
+					AND emp.empr_id IN (${VAR_EMPRESAS})
 			UNION
 				SELECT
 					pci.parc_id as parc_id,
@@ -99,7 +99,7 @@ FROM
 					INNER JOIN cadastro.empresa emp ON emp.empr_id = ecc.empr_id
 				WHERE
 					par.parc_tmparcelamento >= '2019-04-20'
-					AND emp.empr_id IN (VAR_EMPRESAS)
+					AND emp.empr_id IN (${VAR_EMPRESAS})
 					) AS cnts
 			GROUP BY 1,2,3,4) AS contas_emp ON contas_emp.parc_id = par.parc_id AND (contas_emp.dtretirada IS NULL OR (par.parc_tmparcelamento>=contas_emp.dtenvio AND par.parc_tmparcelamento <= contas_emp.dtretirada))
 WHERE

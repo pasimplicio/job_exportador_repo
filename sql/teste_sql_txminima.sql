@@ -1,4 +1,4 @@
-﻿WITH fat AS (
+WITH fat AS (
     SELECT
         uniao.imov_id,
         SUM(uniao.valor) AS valor

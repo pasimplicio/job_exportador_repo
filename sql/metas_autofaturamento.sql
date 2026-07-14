@@ -1,4 +1,4 @@
-﻿WITH ultimo_pagamento AS (
+WITH ultimo_pagamento AS (
     SELECT DISTINCT ON (pag.imov_id)
         pag.imov_id,
         pag.pgmt_amreferenciapagamento AS referencia,

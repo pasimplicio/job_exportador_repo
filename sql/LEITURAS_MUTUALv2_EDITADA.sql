@@ -1,4 +1,4 @@
-﻿SELECT 
+SELECT 
 	con.mcpf_ammovimento AS "REFERENCIA",
 	ltr.nome_leiturista_caema AS "LEITURISTA",
 	--(TRIM(TO_CHAR(imo.loca_id,'000')) || '-' || TRIM(TO_CHAR(sec.stcm_cdsetorcomercial,'000')) || '-' || TRIM(TO_CHAR(qdr.qdra_nnquadra,'000'))|| '-' || TRIM(TO_CHAR(imo.imov_nnlote,'0000'))|| '-' || TRIM(TO_CHAR(imo.imov_nnsublote,'000'))) AS "INSCRICAO",

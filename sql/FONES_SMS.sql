@@ -27,7 +27,7 @@ FROM
 	INNER JOIN cadastro.cliente cli ON cli.clie_id = cim.clie_id
 	INNER JOIN cadastro.cliente_fone cfn ON cfn.clie_id = cli.clie_id AND LEFT(cfn.cfon_nnfone,1)='9' AND LENGTH(cfn.cfon_nnfone)=9
 WHERE
-	une.uneg_id IN (VAR_UNIDADES) AND
+	une.uneg_id IN (${VAR_UNIDADES}) AND
 	cfn.cfon_id = (
 			SELECT 
 				MAX(cfn2.cfon_id) 

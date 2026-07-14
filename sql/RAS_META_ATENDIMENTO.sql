@@ -1,4 +1,4 @@
-﻿SELECT 
+SELECT 
   ra.rgat_id AS "NR R.A.",
   sot.sotp_dssolicitacaotipo AS "TIPO SOLICITACAO",
   ste.step_dssolcttipoespec AS "TIPO ESPECIFICACAO",

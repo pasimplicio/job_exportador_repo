@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
     mat1,
     referencia,
     subcategoria,

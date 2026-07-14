@@ -31,7 +31,7 @@ SELECT
 	TO_CHAR((((arrecadacao_acm_2020."VALOR ACM"/arrecadacao_acm_2019."VALOR ACM")-1)*100),'999G999G990D00') AS "INDICE DE INCREMENTO ARRECADACAO ACUMULADO"
 	FROM
 		cadastro.unidade_negocio une
-		CROSS JOIN (SELECT  referencia AS "REFERENCIA" FROM generate_series(202001, VAR_REFERENCIA) referencia) AS refs
+		CROSS JOIN (SELECT  referencia AS "REFERENCIA" FROM generate_series(202001, ${VAR_REFERENCIA}) referencia) AS refs
 		LEFT JOIN
 			(
 				SELECT 		

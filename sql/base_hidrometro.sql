@@ -1,4 +1,4 @@
--- VAR_REFERENCIA
+-- ${VAR_REFERENCIA}
 select
 	imov.imov_id as "matricula",
 	catg.catg_dscategoria as "categoria",
@@ -26,10 +26,10 @@ from
 	left join cadastro.bairro bair on bair.bair_id = lgbr.bair_id
 	left join operacional.distrito_operacional diop on diop.diop_id = qdra.diop_id
 	inner join micromedicao.hidrometro_inst_hist hidi on hidi.lagu_id = imov.imov_id
-	left join faturamento.mov_conta_prefaturada mcpf on mcpf.imov_id = imov.imov_id and mcpf.mcpf_ammovimento = VAR_REFERENCIA and mcpf.medt_id = 1
-	left join micromedicao.consumo_historico mich on mich.imov_id = imov.imov_id and mich.cshi_amfaturamento = VAR_REFERENCIA and mich.lgti_id = 1
+	left join faturamento.mov_conta_prefaturada mcpf on mcpf.imov_id = imov.imov_id and mcpf.mcpf_ammovimento = ${VAR_REFERENCIA} and mcpf.medt_id = 1
+	left join micromedicao.consumo_historico mich on mich.imov_id = imov.imov_id and mich.cshi_amfaturamento = ${VAR_REFERENCIA} and mich.lgti_id = 1
 	left join micromedicao.consumo_anormalidade csan on csan.csan_id = mich.csan_id 
-	left join micromedicao.medicao_historico mdhi on mdhi.hidi_id = hidi.hidi_id and mdhi.mdhi_amleitura = VAR_REFERENCIA
+	left join micromedicao.medicao_historico mdhi on mdhi.hidi_id = hidi.hidi_id and mdhi.mdhi_amleitura = ${VAR_REFERENCIA}
 	left join micromedicao.leitura_anormalidade ltan on ltan.ltan_id = mdhi.ltan_idleitanorminformada
 	inner join micromedicao.hidrometro hidr on hidr.hidr_id = hidi.hidr_id
 	inner join micromedicao.hidrometro_classe_metrlg hicm on hicm.hicm_id = hidr.hicm_id
@@ -44,7 +44,7 @@ from
 			from
 				faturamento.conta cnta
 			where
-				cnta.cnta_amreferenciaconta = VAR_REFERENCIA
+				cnta.cnta_amreferenciaconta = ${VAR_REFERENCIA}
 				and cnta.dcst_idatual <> 4
 			union all
 			select
@@ -55,7 +55,7 @@ from
 			from
 				faturamento.conta_historico cnhi
 			where
-				cnhi.cnhi_amreferenciaconta = VAR_REFERENCIA
+				cnhi.cnhi_amreferenciaconta = ${VAR_REFERENCIA}
 				and cnhi.dcst_idatual <> 4
 	)as fatur on fatur.imov_id = imov.imov_id
 where

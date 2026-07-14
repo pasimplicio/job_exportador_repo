@@ -17,8 +17,10 @@
     <!-- CONFIGURAÇÃO DE JAVA     -->
     <!-- ========================= -->
     <properties>
-        <!-- ÚNICA fonte de verdade da versão Java -->
-        <maven.compiler.release>17</maven.compiler.release>
+        <!-- ÚNICA fonte de verdade da versão Java.
+             Java 8: e o runtime das maquinas que executam os jobs. Por isso o codigo
+             evita record, var, List.of e Files.readString/writeString. -->
+        <maven.compiler.release>8</maven.compiler.release>
 
         <!-- Encoding consistente -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -34,6 +36,13 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.3</version>
+        </dependency>
+
+        <!-- Cliente FTP -->
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.10.0</version>
         </dependency>
     </dependencies>
 

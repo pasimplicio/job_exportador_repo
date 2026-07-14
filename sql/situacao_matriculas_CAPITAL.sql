@@ -1,4 +1,4 @@
-﻿WITH pagamentos_unificados AS (
+WITH pagamentos_unificados AS (
     SELECT 
         pag.imov_id,
         pag.pgmt_dtpagamento AS datapagamento,

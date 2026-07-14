@@ -1,4 +1,4 @@
-﻿
+
 
 SELECT
 	imov.imov_id AS "Matricula",

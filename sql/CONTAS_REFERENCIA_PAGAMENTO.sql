@@ -81,7 +81,7 @@
 		LEFT JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
 	WHERE
 		--pag.pghi_dtpagamento >= '2023-03-01' AND pag.pghi_dtpagamento <= '2023-03-31'
-		pag.pghi_amreferenciaarrecadacao = VAR_REFERENCIA
+		pag.pghi_amreferenciaarrecadacao = ${VAR_REFERENCIA}
 UNION
 	SELECT
 		imo.imov_id AS "MATRICULA",
@@ -166,7 +166,7 @@ UNION
 		LEFT JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
 	WHERE
 		--pag.pgmt_dtpagamento >= '2023-03-01' AND pag.pgmt_dtpagamento <= '2023-03-31'
-		pag.pgmt_amreferenciaarrecadacao = VAR_REFERENCIA
+		pag.pgmt_amreferenciaarrecadacao = ${VAR_REFERENCIA}
 UNION
 	SELECT
 		imo.imov_id AS "MATRICULA",
@@ -251,7 +251,7 @@ UNION
 		LEFT JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
 	WHERE
 		--pag.pgmt_dtpagamento >= '2023-03-01' AND pag.pgmt_dtpagamento <= '2023-03-31'
-		pag.pgmt_amreferenciaarrecadacao = VAR_REFERENCIA
+		pag.pgmt_amreferenciaarrecadacao = ${VAR_REFERENCIA}
 UNION
 	SELECT
 		imo.imov_id AS "MATRICULA",
@@ -336,7 +336,7 @@ UNION
 		LEFT JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
 	WHERE
 		--pag.pghi_dtpagamento >= '2023-03-01' AND pag.pghi_dtpagamento <= '2023-03-31'
-		pag.pghi_amreferenciaarrecadacao = VAR_REFERENCIA
+		pag.pghi_amreferenciaarrecadacao = ${VAR_REFERENCIA}
 UNION
 	SELECT
 		imo.imov_id AS "MATRICULA",
@@ -408,7 +408,7 @@ UNION
 		LEFT JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
 	WHERE
 		--pag.pghi_dtpagamento >= '2023-03-01' AND pag.pghi_dtpagamento <= '2023-03-31'
-		pag.pghi_amreferenciaarrecadacao = VAR_REFERENCIA AND pag.cnta_id IS NULL
+		pag.pghi_amreferenciaarrecadacao = ${VAR_REFERENCIA} AND pag.cnta_id IS NULL
 UNION
 	SELECT
 		imo.imov_id AS "MATRICULA",
@@ -480,7 +480,7 @@ UNION
 		LEFT JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
 	WHERE
 		--pag.pghi_dtpagamento >= '2023-03-01' AND pag.pghi_dtpagamento <= '2023-03-31'
-		pag.pgmt_amreferenciaarrecadacao = VAR_REFERENCIA AND pag.cnta_id IS NULL
+		pag.pgmt_amreferenciaarrecadacao = ${VAR_REFERENCIA} AND pag.cnta_id IS NULL
 UNION
 	SELECT
 		imo.imov_id AS "MATRICULA",
@@ -552,7 +552,7 @@ UNION
 		LEFT JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
 	WHERE
 		--pag.pghi_dtpagamento >= '2023-03-01' AND pag.pghi_dtpagamento <= '2023-03-31'
-		dev.devl_amreferenciaarrecadacao = VAR_REFERENCIA
+		dev.devl_amreferenciaarrecadacao = ${VAR_REFERENCIA}
 UNION
 	SELECT
 		imo.imov_id AS "MATRICULA",
@@ -624,4 +624,4 @@ UNION
 		LEFT JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
 	WHERE
 		--pag.pghi_dtpagamento >= '2023-03-01' AND pag.pghi_dtpagamento <= '2023-03-31'
-		dev.dehi_amreferenciaarrecadacao = VAR_REFERENCIA
+		dev.dehi_amreferenciaarrecadacao = ${VAR_REFERENCIA}

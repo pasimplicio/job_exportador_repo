@@ -1,4 +1,4 @@
-﻿WITH arrec_base AS (
+WITH arrec_base AS (
     SELECT
         res.loca_id AS localidade_id,
         CASE 

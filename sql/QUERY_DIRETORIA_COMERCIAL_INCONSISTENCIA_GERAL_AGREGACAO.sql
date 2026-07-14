@@ -73,10 +73,10 @@ FROM micromedicao.medicao_historico mdh
 	LEFT JOIN cobranca.cobranca_situacao_hist csh ON csh.imov_id = imo.imov_id AND csh.cbsh_amcobrancaretirada IS NULL
 	LEFT JOIN cobranca.cobranca_situacao_tipo cst ON csh.cbsp_id = cst.cbsp_id
 	LEFT JOIN cobranca.cobranca_situacao_motivo csm ON csm.cbsm_id = csh.cbsm_id
-	LEFT JOIN micromedicao.consumo_historico cosh_a1 ON cosh_a1.imov_id = imo.imov_id AND cosh_a1.cshi_amfaturamento = VAR_REFERENCIA AND cosh_a1.lgti_id = 1
+	LEFT JOIN micromedicao.consumo_historico cosh_a1 ON cosh_a1.imov_id = imo.imov_id AND cosh_a1.cshi_amfaturamento = ${VAR_REFERENCIA} AND cosh_a1.lgti_id = 1
 	LEFT JOIN micromedicao.consumo_tipo cost_a1 ON cost_a1.cstp_id = cosh_a1.cstp_id
 	LEFT JOIN micromedicao.consumo_anormalidade cosa_a1 ON cosa_a1.csan_id = cosh_a1.csan_id
-	LEFT JOIN micromedicao.consumo_historico cosh_e1 ON cosh_e1.imov_id = imo.imov_id AND cosh_e1.cshi_amfaturamento = VAR_REFERENCIA AND cosh_e1.lgti_id = 2
+	LEFT JOIN micromedicao.consumo_historico cosh_e1 ON cosh_e1.imov_id = imo.imov_id AND cosh_e1.cshi_amfaturamento = ${VAR_REFERENCIA} AND cosh_e1.lgti_id = 2
 	LEFT JOIN micromedicao.consumo_tipo cost_e1 ON cost_e1.cstp_id = cosh_e1.cstp_id
 	LEFT JOIN micromedicao.consumo_anormalidade cosa_e1 ON cosa_e1.csan_id = cosh_e1.csan_id	
 	LEFT JOIN micromedicao.leitura_situacao lts ON lts.ltst_id = mdh.ltst_idleiturasituacaoatual
@@ -87,7 +87,7 @@ FROM micromedicao.medicao_historico mdh
 WHERE 
 	une.uneg_id IN (2,3,4,5,6,7,8,9,10,11,12,13,14,15)
 	--AND cost_a1.cstp_id > 0
-	AND mdh.mdhi_amleitura = VAR_REFERENCIA
+	AND mdh.mdhi_amleitura = ${VAR_REFERENCIA}
 	--AND hid.hidr_nnhidrometro IS NOT NULL
 UNION
 SELECT 
@@ -167,13 +167,13 @@ FROM cadastro.imovel imo
 	LEFT JOIN cobranca.cobranca_situacao_hist csh ON csh.imov_id = imo.imov_id AND csh.cbsh_amcobrancaretirada IS NULL
 	LEFT JOIN cobranca.cobranca_situacao_tipo cst ON csh.cbsp_id = cst.cbsp_id
 	LEFT JOIN cobranca.cobranca_situacao_motivo csm ON csm.cbsm_id = csh.cbsm_id
-	LEFT JOIN micromedicao.consumo_historico cosh_a1 ON cosh_a1.imov_id = imo.imov_id AND cosh_a1.cshi_amfaturamento = VAR_REFERENCIA AND cosh_a1.lgti_id = 1
+	LEFT JOIN micromedicao.consumo_historico cosh_a1 ON cosh_a1.imov_id = imo.imov_id AND cosh_a1.cshi_amfaturamento = ${VAR_REFERENCIA} AND cosh_a1.lgti_id = 1
 	LEFT JOIN micromedicao.consumo_tipo cost_a1 ON cost_a1.cstp_id = cosh_a1.cstp_id
 	LEFT JOIN micromedicao.consumo_anormalidade cosa_a1 ON cosa_a1.csan_id = cosh_a1.csan_id
-	LEFT JOIN micromedicao.consumo_historico cosh_e1 ON cosh_e1.imov_id = imo.imov_id AND cosh_e1.cshi_amfaturamento = VAR_REFERENCIA AND cosh_e1.lgti_id = 2
+	LEFT JOIN micromedicao.consumo_historico cosh_e1 ON cosh_e1.imov_id = imo.imov_id AND cosh_e1.cshi_amfaturamento = ${VAR_REFERENCIA} AND cosh_e1.lgti_id = 2
 	LEFT JOIN micromedicao.consumo_tipo cost_e1 ON cost_e1.cstp_id = cosh_e1.cstp_id
 	LEFT JOIN micromedicao.consumo_anormalidade cosa_e1 ON cosa_e1.csan_id = cosh_e1.csan_id	
-	LEFT JOIN micromedicao.medicao_historico mdh ON mdh.hidi_id = his.hidi_id AND mdh.mdhi_amleitura = VAR_REFERENCIA
+	LEFT JOIN micromedicao.medicao_historico mdh ON mdh.hidi_id = his.hidi_id AND mdh.mdhi_amleitura = ${VAR_REFERENCIA}
 	LEFT JOIN micromedicao.leitura_situacao lts ON lts.ltst_id = mdh.ltst_idleiturasituacaoatual
 	LEFT JOIN micromedicao.leitura_anormalidade lai ON lai.ltan_id = mdh.ltan_idleitanorminformada
 	LEFT JOIN micromedicao.leitura_anormalidade laf ON laf.ltan_id = mdh.ltan_idleitanormfatmt
@@ -192,7 +192,7 @@ FROM cadastro.imovel imo
 			FROM faturamento.conta con 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con.cnta_id
 			WHERE
-				con.dcst_idatual IN (0,1,2,5) AND con.cnta_amreferenciaconta = VAR_REFERENCIA
+				con.dcst_idatual IN (0,1,2,5) AND con.cnta_amreferenciaconta = ${VAR_REFERENCIA}
 			UNION
 			SELECT 
 				con.imov_id AS mat1,
@@ -208,7 +208,7 @@ FROM cadastro.imovel imo
 			FROM faturamento.conta_historico con 
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con.cnta_id
 			WHERE
-				con.dcst_idatual IN (0,1,2,5) AND con.cnhi_amreferenciaconta = VAR_REFERENCIA
+				con.dcst_idatual IN (0,1,2,5) AND con.cnhi_amreferenciaconta = ${VAR_REFERENCIA}
 			UNION
 			SELECT 
 				con.imov_id AS mat1,
@@ -224,7 +224,7 @@ FROM cadastro.imovel imo
 			FROM faturamento.conta con 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con.cnta_id
 			WHERE
-				con.dcst_idatual IN (0,1,2,5) AND con.cnta_amreferenciaconta = VAR_REFERENCIA
+				con.dcst_idatual IN (0,1,2,5) AND con.cnta_amreferenciaconta = ${VAR_REFERENCIA}
 			UNION
 			SELECT 
 				con.imov_id AS mat1,
@@ -240,7 +240,7 @@ FROM cadastro.imovel imo
 			FROM faturamento.conta_historico con 
 				INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con.cnta_id
 			WHERE
-				con.dcst_idatual IN (0,1,2,5) AND con.cnhi_amreferenciaconta = VAR_REFERENCIA
+				con.dcst_idatual IN (0,1,2,5) AND con.cnhi_amreferenciaconta = ${VAR_REFERENCIA}
 
 			) AS con_fatura ON con_fatura.mat1 = imo.imov_id
 	
@@ -249,7 +249,7 @@ WHERE
 	AND une.uneg_id IN (2,3,4,5,6,7,8,9,10,11,12,13,14,15)
 	--AND cost_a1.cstp_id > 0
 	AND cost_a1.cstp_id = 5
-	AND con_fatura.refer = VAR_REFERENCIA
+	AND con_fatura.refer = ${VAR_REFERENCIA}
 	--AND cosa_a1.csan_dsabrvconsanormalidade IS NOT NULL --IN ('FL','CA','CI','CR','BC','LP','LM','HS','MF','FF','HN','FA','VH','AL','AC','EC','EM','C.L.C')
 	--AND imo.iper_id = 1
 	--AND imo.imov_id = 90433

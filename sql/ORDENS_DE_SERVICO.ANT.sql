@@ -187,7 +187,7 @@ FROM
 			GROUP BY 1) AS gpg ON gpg.imov_id = imo.imov_id
 WHERE 
 	os.orse_tmgeracao between '2024-01-01' and current_date
-	AND une.uneg_id IN (VAR_UNIDADE)
+	AND une.uneg_id IN (${VAR_UNIDADE})
 	--and os.orse_cdsituacao = 1
 UNION
 SELECT 
@@ -336,4 +336,4 @@ WHERE
 	os.orse_tmgeracao between '2024-01-01' and current_date
 	AND os.imov_id IS NULL
 	--and os.orse_cdsituacao = 1
-	AND une.uneg_id IN (VAR_UNIDADE)
+	AND une.uneg_id IN (${VAR_UNIDADE})

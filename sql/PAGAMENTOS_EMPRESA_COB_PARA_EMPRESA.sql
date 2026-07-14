@@ -144,5 +144,5 @@ FROM
 	LEFT JOIN cobranca.cobranca_situacao_tipo cst ON csh.cbsp_id = cst.cbsp_id
 	LEFT JOIN cobranca.cobranca_situacao_motivo csm ON csm.cbsm_id = csh.cbsm_id
 WHERE 
-	ecp.eccp_ampagamento = VAR_REFERENCIA AND
-	emp.empr_id = VAR_EMPRESA
+	ecp.eccp_ampagamento = ${VAR_REFERENCIA} AND
+	emp.empr_id = ${VAR_EMPRESA}

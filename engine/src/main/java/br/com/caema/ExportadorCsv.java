@@ -11,21 +11,48 @@ import java.nio.file.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ExportadorCsv {
 
-    private record Command(
-            String sqlFile,
-            String outputFolder,
-            boolean exportCsv,
-            boolean createDateSubfolder,
-            String varsRaw,
-            String alias
-    ) {}
+    /** Uma linha do arquivo de comando. */
+    private static final class Command {
+
+        private final String sqlFile;
+        private final String outputFolder;
+        private final boolean exportCsv;
+        private final boolean createDateSubfolder;
+        private final String varsRaw;
+        private final String alias;
+        private final boolean zipCsv;
+        private final boolean sendFtp;
+
+        Command(String sqlFile, String outputFolder, boolean exportCsv, boolean createDateSubfolder,
+                String varsRaw, String alias, boolean zipCsv, boolean sendFtp) {
+            this.sqlFile = sqlFile;
+            this.outputFolder = outputFolder;
+            this.exportCsv = exportCsv;
+            this.createDateSubfolder = createDateSubfolder;
+            this.varsRaw = varsRaw;
+            this.alias = alias;
+            this.zipCsv = zipCsv;
+            this.sendFtp = sendFtp;
+        }
+
+        String sqlFile()             { return sqlFile; }
+        String outputFolder()        { return outputFolder; }
+        boolean exportCsv()          { return exportCsv; }
+        boolean createDateSubfolder(){ return createDateSubfolder; }
+        String varsRaw()             { return varsRaw; }
+        String alias()               { return alias; }
+        boolean zipCsv()             { return zipCsv; }
+        boolean sendFtp()            { return sendFtp; }
+    }
 
     public static void main(String[] args) {
 
@@ -45,6 +72,9 @@ public class ExportadorCsv {
         Path saidaDir = rootDir.resolve("saida");
         Path logDir   = rootDir.resolve("log");
 
+        // Nome do projeto (ex.: COMANDO_MADRUGADA), usado como pasta final em disco e no FTP.
+        String nomeComando = tirarExtensao(comandoCsv.getFileName().toString());
+
         log(logDir, "==== INICIO EXECUCAO ENGINE ====");
         log(logDir, "ROOT_DIR: " + rootDir.toAbsolutePath());
         log(logDir, "COMANDO: " + comandoCsv.toAbsolutePath());
@@ -58,9 +88,45 @@ public class ExportadorCsv {
             return;
         }
 
+        FtpUploader uploader = null;
+
+        boolean algumComandoUsaFtp = false;
+
+        for (Command cmd : commands) {
+            if (cmd.sendFtp()) {
+                algumComandoUsaFtp = true;
+                break;
+            }
+        }
+
+        if (algumComandoUsaFtp) {
+            try {
+                final Path logDirFinal = logDir;
+
+                FtpConfig ftpConfig = FtpConfig.carregar(
+                        rootDir.resolve("engine").resolve("configs.properties"));
+
+                if (ftpConfig == null) {
+                    log(logDir, "FTP NAO CONFIGURADO: engine/configs.properties ausente ou sem FTP_SERVER. "
+                            + "Os arquivos serao apenas gravados em disco.");
+                } else {
+                    uploader = new FtpUploader(ftpConfig, msg -> log(logDirFinal, msg));
+                    log(logDir, "FTP DESTINO: " + ftpConfig.server() + ":" + ftpConfig.port()
+                            + " (base " + ftpConfig.baseDir() + ")");
+                }
+            } catch (Exception e) {
+                logErroCompleto(logDir, e);
+            }
+        }
+
         try (Connection conn = DriverManager.getConnection(jdbcUrl, usuario, senha)) {
 
             log(logDir, "CONEXAO COM BANCO OK");
+
+            // Relatorios ordenam milhoes de linhas largas; com pouca memoria de ordenacao o banco
+            // despeja o sort em disco. WORK_MEM (engine/configs.properties) sobe o limite so nesta
+            // sessao, sem alterar a configuracao do servidor.
+            aplicarWorkMem(conn, rootDir, logDir);
 
             for (Command cmd : commands) {
 
@@ -77,7 +143,7 @@ public class ExportadorCsv {
                 }
 
                 try {
-                    executarComando(cmd, sqlPath, saidaDir, logDir, conn);
+                    executarComando(cmd, sqlPath, saidaDir, logDir, conn, uploader, nomeComando);
                 } catch (Exception e) {
                     logErroCompleto(logDir, e);
                 }
@@ -88,6 +154,39 @@ public class ExportadorCsv {
         }
 
         log(logDir, "==== FIM EXECUCAO ENGINE ====");
+    }
+
+    /** Le WORK_MEM de engine/configs.properties e aplica na sessao. Ausente = usa o padrao do servidor. */
+    private static void aplicarWorkMem(Connection conn, Path rootDir, Path logDir) {
+
+        Path props = rootDir.resolve("engine").resolve("configs.properties");
+
+        if (!Files.exists(props)) {
+            return;
+        }
+
+        try {
+            Properties p = new Properties();
+
+            try (java.io.InputStream in = Files.newInputStream(props)) {
+                p.load(new java.io.InputStreamReader(in, StandardCharsets.UTF_8));
+            }
+
+            String workMem = p.getProperty("WORK_MEM");
+
+            if (isBlank(workMem)) {
+                return;
+            }
+
+            try (java.sql.Statement st = conn.createStatement()) {
+                st.execute("SET work_mem = '" + workMem.trim() + "'");
+            }
+
+            log(logDir, "WORK_MEM       : " + workMem.trim() + " (apenas nesta sessao)");
+
+        } catch (Exception e) {
+            log(logDir, "WORK_MEM NAO APLICADO: " + e.getMessage());
+        }
     }
 
     // ================= CARREGAR CSV =================
@@ -110,7 +209,7 @@ public class ExportadorCsv {
 
             while ((line = r.readLine()) != null) {
 
-                if (line.isBlank()) continue;
+                if (isBlank(line)) continue;
 
                 String[] c = line.split(";", -1);
 
@@ -120,7 +219,9 @@ public class ExportadorCsv {
                         Boolean.parseBoolean(get(c, idx, "EXPORT_CSV")),
                         Boolean.parseBoolean(get(c, idx, "CREATE_DATE_SUBFOLDER")),
                         get(c, idx, "VARS"),
-                        emptyToNull(get(c, idx, "ALIAS"))
+                        emptyToNull(get(c, idx, "ALIAS")),
+                        Boolean.parseBoolean(get(c, idx, "ZIP_CSV")),
+                        Boolean.parseBoolean(get(c, idx, "SEND_FTP"))
                 ));
             }
         }
@@ -134,7 +235,7 @@ public class ExportadorCsv {
     }
 
     private static String emptyToNull(String s) {
-        return (s == null || s.isBlank()) ? null : s.trim();
+        return isBlank(s) ? null : s.trim();
     }
 
     // ================= EXECUCAO =================
@@ -144,13 +245,15 @@ public class ExportadorCsv {
             Path sqlPath,
             Path saidaDir,
             Path logDir,
-            Connection conn
+            Connection conn,
+            FtpUploader uploader,
+            String nomeComando
     ) throws Exception {
 
         long inicio = System.currentTimeMillis();
 
         Map<String, String> vars = resolveVars(cmd.varsRaw());
-        String sqlTemplate = Files.readString(sqlPath, StandardCharsets.UTF_8);
+        String sqlTemplate = lerArquivo(sqlPath);
         String sqlFinal = applyVars(sqlTemplate, vars);
 
         List<String> pendentes = findUnresolvedVars(sqlFinal);
@@ -158,16 +261,16 @@ public class ExportadorCsv {
             throw new IllegalStateException("VARS NAO RESOLVIDAS: " + pendentes);
         }
 
-        String nomeBase = (cmd.alias() != null)
-                ? sanitize(cmd.alias())
-                : tirarExtensao(sqlPath.getFileName().toString());
+        String nomeBase = nomeBase(cmd, sqlPath, vars);
 
+        // <OUTPUT_FOLDER>/[dd_MM_aaaa]/<COMANDO>, a mesma arvore usada no FTP.
         Path dirProjeto = saidaDir.resolve(cmd.outputFolder());
 
         if (cmd.createDateSubfolder()) {
-            dirProjeto = dirProjeto.resolve(
-                    LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE));
+            dirProjeto = dirProjeto.resolve(LocalDate.now().format(DATA_PASTA));
         }
+
+        dirProjeto = dirProjeto.resolve(nomeComando);
 
         Files.createDirectories(dirProjeto);
 
@@ -181,19 +284,88 @@ public class ExportadorCsv {
         PGConnection pgConn = conn.unwrap(PGConnection.class);
         CopyManager copyManager = pgConn.getCopyAPI();
 
-        String copySql = "COPY (" + removerPontoVirgula(sqlFinal) +
-                ") TO STDOUT WITH (FORMAT CSV, HEADER, DELIMITER ';')";
+        // As quebras de linha sao obrigatorias: varios SQLs terminam em comentario "--", e sem elas
+        // o parentese de fechamento cairia dentro do comentario, invalidando a query.
+        String copySql = "COPY (\n" + removerPontoVirgula(sqlFinal) +
+                "\n) TO STDOUT WITH (FORMAT CSV, HEADER, DELIMITER ';')";
+
+        long linhas;
 
         try (OutputStream out = Files.newOutputStream(
                 csvOut,
                 StandardOpenOption.CREATE,
                 StandardOpenOption.TRUNCATE_EXISTING)) {
 
-            copyManager.copyOut(copySql, out);
+            // copyOut devolve as linhas de dados; o cabecalho do CSV nao conta.
+            linhas = copyManager.copyOut(copySql, out);
+
+        } catch (Exception e) {
+            // Query falhou: o arquivo ja foi criado e ficaria no disco vazio ou pela metade.
+            Files.deleteIfExists(csvOut);
+            throw e;
+        }
+
+        log(logDir, "LINHAS         : " + linhas + " (" + kb(csvOut) + " KB no CSV)");
+
+        // O COPY terminou, entao o arquivo tem que existir. Se sumiu, quem apagou foi algo de fora
+        // (antivirus, sincronizacao de pasta, limpeza) - nao adianta zipar nem enviar.
+        if (!Files.exists(csvOut)) {
+            throw new IOException("CSV sumiu depois da exportacao: " + csvOut
+                    + " - suspeite de antivirus, sincronizacao de pasta (OneDrive/Documentos)"
+                    + " ou limpeza automatica. Rode o job em um diretorio local simples, fora de Documentos.");
+        }
+
+        // Com ZIP_CSV=true sobe o zip; sem ele, sobe o proprio CSV.
+        Path arquivoFinal = csvOut;
+
+        if (cmd.zipCsv()) {
+            arquivoFinal = Arquivos.zip(csvOut);
+            log(logDir, "ARQUIVO ZIP    : " + arquivoFinal.getFileName()
+                    + " (" + kb(arquivoFinal) + " KB)");
+        }
+
+        if (cmd.sendFtp()) {
+
+            if (uploader == null) {
+                log(logDir, "FTP IGNORADO   : sem configuracao de FTP para " + arquivoFinal.getFileName());
+            } else {
+                String remoteRelPath = saidaDir.relativize(dirProjeto).toString().replace('\\', '/');
+                int enviados = uploader.enviar(Collections.singletonList(arquivoFinal), remoteRelPath);
+                log(logDir, "FTP ENVIADOS   : " + enviados + "/1 arquivo(s) em " + remoteRelPath);
+            }
+        }
+
+        // Zipado e ja enviado: o CSV cru nao precisa ocupar espaco em disco.
+        if (cmd.zipCsv()) {
+            Files.deleteIfExists(csvOut);
         }
 
         long duracao = System.currentTimeMillis() - inicio;
         log(logDir, "SUCESSO (" + duracao + " ms)");
+    }
+
+    /**
+     * ALIAS vazio ou AUTO reproduz o nome do gerador antigo, que e o padrao ja existente no FTP:
+     *
+     *     <SQL sem extensao>_<valor de cada VAR>_<dd_MM_aaaa_HH_mm_ss>_result.csv
+     */
+    private static String nomeBase(Command cmd, Path sqlPath, Map<String, String> vars) {
+
+        if (cmd.alias() != null && !cmd.alias().equalsIgnoreCase("AUTO")) {
+            return sanitize(cmd.alias());
+        }
+
+        StringBuilder sb = new StringBuilder(tirarExtensao(sqlPath.getFileName().toString()));
+
+        for (String valor : vars.values()) {
+            sb.append('_').append(valor);
+        }
+
+        sb.append('_')
+          .append(LocalDateTime.now().format(CARIMBO_ARQUIVO))
+          .append("_result");
+
+        return sanitize(sb.toString());
     }
 
     // ================= VARS =================
@@ -202,7 +374,7 @@ public class ExportadorCsv {
         Map<String, List<String>> parsed = parseVars(raw);
         Map<String, String> out = new LinkedHashMap<>();
 
-        for (var e : parsed.entrySet()) {
+        for (Map.Entry<String, List<String>> e : parsed.entrySet()) {
             out.put(e.getKey(), resolveVar(e.getKey(), e.getValue()));
         }
         return out;
@@ -210,7 +382,7 @@ public class ExportadorCsv {
 
     private static Map<String, List<String>> parseVars(String raw) {
         Map<String, List<String>> map = new LinkedHashMap<>();
-        if (raw == null || raw.isBlank()) return map;
+        if (isBlank(raw)) return map;
 
         String current = null;
 
@@ -218,7 +390,9 @@ public class ExportadorCsv {
             t = t.trim();
             if (t.startsWith("VAR_") && t.contains("=")) {
                 current = t.substring(0, t.indexOf('='));
-                map.putIfAbsent(current, new ArrayList<>());
+                if (!map.containsKey(current)) {
+                    map.put(current, new ArrayList<String>());
+                }
                 map.get(current).add(t.substring(t.indexOf('=') + 1));
             } else if (current != null) {
                 map.get(current).add(t);
@@ -235,15 +409,16 @@ public class ExportadorCsv {
         for (String v : values) {
 
             if ("THIS".equalsIgnoreCase(v))
-                v = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
+                v = LocalDate.now().format(REFERENCIA);
 
-            if ("ANT".equalsIgnoreCase(v))
-                v = LocalDate.now().minusMonths(1).format(DateTimeFormatter.ofPattern("yyyyMM"));
+            // AUTO e ANT sao a referencia fechada, ou seja, o mes anterior.
+            if ("ANT".equalsIgnoreCase(v) || "AUTO".equalsIgnoreCase(v))
+                v = LocalDate.now().minusMonths(1).format(REFERENCIA);
 
             if ("VAR_UNIDADE".equalsIgnoreCase(key))
                 v = v.replace("/", "");
 
-            if (!v.isBlank())
+            if (!isBlank(v))
                 out.add(v);
         }
 
@@ -251,17 +426,32 @@ public class ExportadorCsv {
     }
 
     private static String applyVars(String sql, Map<String, String> vars) {
-        for (var e : vars.entrySet()) {
+        for (Map.Entry<String, String> e : vars.entrySet()) {
             sql = sql.replace("${" + e.getKey() + "}", e.getValue());
         }
         return sql;
     }
 
+    /** Formato das pastas de data, igual ao do gerador antigo e ao que ja existe no FTP. */
+    private static final DateTimeFormatter DATA_PASTA =
+            DateTimeFormatter.ofPattern("dd_MM_yyyy");
+
+    /** Referencia de faturamento (aaaaMM), formato usado pelas VARS THIS/ANT/AUTO. */
+    private static final DateTimeFormatter REFERENCIA =
+            DateTimeFormatter.ofPattern("yyyyMM");
+
+    /**
+     * Carimbo no nome do arquivo quando ALIAS=AUTO. O gerador antigo usava "hh" (12 horas),
+     * o que fazia 20h virar 08; aqui e "HH" para o nome nunca ficar ambiguo.
+     */
+    private static final DateTimeFormatter CARIMBO_ARQUIVO =
+            DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss");
+
     private static final Pattern VAR_PATTERN =
             Pattern.compile("\\$\\{(VAR_[A-Za-z0-9_]+)\\}");
 
     private static List<String> findUnresolvedVars(String sql) {
-        var m = VAR_PATTERN.matcher(sql);
+        Matcher m = VAR_PATTERN.matcher(sql);
         Set<String> out = new LinkedHashSet<>();
         while (m.find()) out.add(m.group(1));
         return new ArrayList<>(out);
@@ -271,34 +461,17 @@ public class ExportadorCsv {
 
     private static synchronized void log(Path logDir, String msg) {
 
-        String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        String time = LocalTime.now().format(HORA_LOG);
         String line = "[" + time + "] " + msg;
 
         System.out.println(line);
 
-        try {
-            Files.createDirectories(logDir);
-
-            Path logFile = logDir.resolve(
-                    "execucao_" + LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE) + ".log"
-            );
-
-            Files.writeString(
-                    logFile,
-                    line + System.lineSeparator(),
-                    StandardCharsets.UTF_8,
-                    StandardOpenOption.CREATE,
-                    StandardOpenOption.APPEND
-            );
-
-        } catch (IOException e) {
-            System.err.println("ERRO AO ESCREVER LOG: " + e.getMessage());
-        }
+        gravarLog(logDir, line + System.lineSeparator());
     }
 
     private static synchronized void logErroCompleto(Path logDir, Throwable e) {
 
-        String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        String time = LocalTime.now().format(HORA_LOG);
 
         StringBuilder sb = new StringBuilder();
         sb.append("[").append(time).append("] ERRO: ")
@@ -315,6 +488,10 @@ public class ExportadorCsv {
 
         System.err.println(full);
 
+        gravarLog(logDir, full);
+    }
+
+    private static void gravarLog(Path logDir, String texto) {
         try {
             Files.createDirectories(logDir);
 
@@ -322,23 +499,46 @@ public class ExportadorCsv {
                     "execucao_" + LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE) + ".log"
             );
 
-            Files.writeString(
+            Files.write(
                     logFile,
-                    full,
-                    StandardCharsets.UTF_8,
+                    texto.getBytes(StandardCharsets.UTF_8),
                     StandardOpenOption.CREATE,
                     StandardOpenOption.APPEND
             );
 
-        } catch (IOException ex) {
-            System.err.println("ERRO AO ESCREVER LOG DE ERRO: " + ex.getMessage());
+        } catch (IOException e) {
+            System.err.println("ERRO AO ESCREVER LOG: " + e.getMessage());
         }
     }
 
+    private static final DateTimeFormatter HORA_LOG =
+            DateTimeFormatter.ofPattern("HH:mm:ss");
+
     // ================= UTIL =================
+
+    /** String.isBlank() so existe do Java 11 em diante. */
+    static boolean isBlank(String s) {
+        return s == null || s.trim().isEmpty();
+    }
+
+    private static String lerArquivo(Path arquivo) throws IOException {
+        return new String(Files.readAllBytes(arquivo), StandardCharsets.UTF_8);
+    }
 
     private static String sanitize(String s) {
         return s.replaceAll("[\\\\/:*?\"<>|]", "_");
+    }
+
+    /**
+     * Tamanho do arquivo em KB para o log. Nunca lanca excecao: uma linha de log nao pode
+     * derrubar um comando que ja custou horas de banco.
+     */
+    private static String kb(Path arquivo) {
+        try {
+            return String.format("%,d", Math.round(Files.size(arquivo) / 1024.0));
+        } catch (IOException e) {
+            return "?";
+        }
     }
 
     private static String tirarExtensao(String f) {

@@ -1,5 +1,5 @@
 --201901: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
---VAR_UNIDADE: Deve ser substituida pelo id da unidade de onde se quer obter os dados
+--${VAR_UNIDADE}: Deve ser substituida pelo id da unidade de onde se quer obter os dados
 
 SELECT 
 	imo.imov_id AS "MATRICULA",
@@ -284,5 +284,5 @@ WHERE
 	imo.imov_icexclusao = 2 AND
 	EXISTS( SELECT par.parc_id FROM cobranca.parcelamento par WHERE par.imov_id = imo.imov_id) AND
 	con_parcelamento_campanha.qtd > 0
-	--con_parcelamento_campanha.id_lotacao = VAR_LOTACAO
+	--con_parcelamento_campanha.id_lotacao = ${VAR_LOTACAO}
 ORDER BY "LOCALIDADE","SETOR COMERCIAL","ROTA","QUADRA","SEQUENCIA","SUB LOTE"

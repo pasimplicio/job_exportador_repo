@@ -42,4 +42,4 @@ FROM
 	LEFT JOIN micromedicao.movimento_roteiro_empr mre ON mre.imov_id = con.imov_id AND mre.mrem_ammovimento = con.mcpf_ammovimento
 WHERE 
 	--con.imov_id IN (2269180,2269163)
-	con.mcpf_ammovimento = VAR_REFERENCIA
+	con.mcpf_ammovimento = ${VAR_REFERENCIA}

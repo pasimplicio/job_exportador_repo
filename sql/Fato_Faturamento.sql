@@ -1,4 +1,4 @@
-﻿
+
 -- trocar a referencia 202402
 
 SELECT 

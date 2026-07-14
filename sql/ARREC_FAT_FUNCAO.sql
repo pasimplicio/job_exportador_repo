@@ -1,4 +1,4 @@
-﻿SELECT 
+SELECT 
 	res.ardd_amreferenciaarrecadacao AS "REFERENCIA",
 	res.ardd_dtpagamento AS "DATA PAGAMENTO",
 	CASE 

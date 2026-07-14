@@ -27,7 +27,7 @@ SELECT
 		LEFT JOIN micromedicao.rota rot ON rot.rota_id = qdr.rota_id
 		LEFT JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
 	WHERE
-		con.cnhi_dtvencimentoconta >= 'VAR_VENCIMENTO_BEGIN' AND con.cnhi_dtvencimentoconta <= 'VAR_VENCIMENTO_END'
+		con.cnhi_dtvencimentoconta >= '${VAR_VENCIMENTO_BEGIN}' AND con.cnhi_dtvencimentoconta <= '${VAR_VENCIMENTO_END}'
 UNION
 	SELECT
 		imo.imov_id AS "MATRICULA",
@@ -55,7 +55,7 @@ UNION
 		LEFT JOIN micromedicao.rota rot ON rot.rota_id = qdr.rota_id
 		LEFT JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
 	WHERE
-		con.cnhi_dtvencimentoconta >= 'VAR_VENCIMENTO_BEGIN' AND con.cnhi_dtvencimentoconta <= 'VAR_VENCIMENTO_END'
+		con.cnhi_dtvencimentoconta >= '${VAR_VENCIMENTO_BEGIN}' AND con.cnhi_dtvencimentoconta <= '${VAR_VENCIMENTO_END}'
 UNION
 	SELECT
 		imo.imov_id AS "MATRICULA",
@@ -83,7 +83,7 @@ UNION
 		LEFT JOIN micromedicao.rota rot ON rot.rota_id = qdr.rota_id
 		LEFT JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
 	WHERE
-		con.cnta_dtvencimentoconta >= 'VAR_VENCIMENTO_BEGIN' AND con.cnta_dtvencimentoconta <= 'VAR_VENCIMENTO_END'
+		con.cnta_dtvencimentoconta >= '${VAR_VENCIMENTO_BEGIN}' AND con.cnta_dtvencimentoconta <= '${VAR_VENCIMENTO_END}'
 UNION
 	SELECT
 		imo.imov_id AS "MATRICULA",
@@ -112,7 +112,7 @@ UNION
 		LEFT JOIN micromedicao.rota rot ON rot.rota_id = qdr.rota_id
 		LEFT JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
 	WHERE
-		con.cnta_dtvencimentoconta >= 'VAR_VENCIMENTO_BEGIN' AND con.cnta_dtvencimentoconta <= 'VAR_VENCIMENTO_END'
+		con.cnta_dtvencimentoconta >= '${VAR_VENCIMENTO_BEGIN}' AND con.cnta_dtvencimentoconta <= '${VAR_VENCIMENTO_END}'
 UNION
 	SELECT
 		imo.imov_id AS "MATRICULA",
@@ -139,7 +139,7 @@ UNION
 		LEFT JOIN micromedicao.rota rot ON rot.rota_id = qdr.rota_id
 		LEFT JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
 	WHERE
-		con.cnta_dtvencimentoconta >= 'VAR_VENCIMENTO_BEGIN' AND con.cnta_dtvencimentoconta <= 'VAR_VENCIMENTO_END' AND 
+		con.cnta_dtvencimentoconta >= '${VAR_VENCIMENTO_BEGIN}' AND con.cnta_dtvencimentoconta <= '${VAR_VENCIMENTO_END}' AND 
 		con.dcst_idatual IN (0,1,2) AND NOT EXISTS ( SELECT pag.cnta_id FROM arrecadacao.pagamento pag WHERE pag.cnta_id = con.cnta_id) AND con.cnta_dtrevisao IS NULL
 UNION
 	SELECT
@@ -167,7 +167,7 @@ UNION
 		LEFT JOIN micromedicao.rota rot ON rot.rota_id = qdr.rota_id
 		LEFT JOIN faturamento.faturamento_grupo ftg ON rot.ftgr_id = ftg.ftgr_id
 	WHERE
-		con.cnta_dtvencimentoconta >= 'VAR_VENCIMENTO_BEGIN' AND con.cnta_dtvencimentoconta <= 'VAR_VENCIMENTO_END' AND 
+		con.cnta_dtvencimentoconta >= '${VAR_VENCIMENTO_BEGIN}' AND con.cnta_dtvencimentoconta <= '${VAR_VENCIMENTO_END}' AND 
 		NOT con.cnta_dtrevisao IS NULL
 UNION
 	SELECT
@@ -197,5 +197,5 @@ UNION
 		LEFT JOIN cobranca.parcelamento_item pci ON pci.cnta_id = con.cnta_id
 		LEFT JOIN cobranca.parcelamento par ON par.parc_id = pci.parc_id
 	WHERE
-		con.cnhi_dtvencimentoconta >= 'VAR_VENCIMENTO_BEGIN' AND con.cnhi_dtvencimentoconta <= 'VAR_VENCIMENTO_END' AND 
+		con.cnhi_dtvencimentoconta >= '${VAR_VENCIMENTO_BEGIN}' AND con.cnhi_dtvencimentoconta <= '${VAR_VENCIMENTO_END}' AND 
 		con.dcst_idatual = 5

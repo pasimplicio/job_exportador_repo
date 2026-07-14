@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 lagu.lagu_id AS "Matricula",
 lagu.lagu_dtcorte AS "Data do Corte",
 lagu.lagu_nncorte AS "Numero de Cortes",

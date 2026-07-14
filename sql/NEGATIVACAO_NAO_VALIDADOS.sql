@@ -1,4 +1,4 @@
---VAR_REFERENCIA: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
+--${VAR_REFERENCIA}: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
 --15: Deve ser substituida pelo id da unidade de onde se quer obter os dados
 
 SELECT 
@@ -83,14 +83,14 @@ SELECT
 	his.hidi_dtinstalacaohidrometro AS "DATA DE INSTALACAO HD.",
 	hic.hicp_dshidrometrocapacidade AS "CAPACIDADE HD",
 	hdi.hidm_dshidrometrodiametro AS "DIAMETRO HD",
-	con_ult_fat.cagua AS "VOL AG VAR_REFERENCIA",
-	con_ult_fat.vl_agua AS "VL AG VAR_REFERENCIA",
-	con_ult_fat.cesg AS "VOL ES VAR_REFERENCIA",
-	con_ult_fat.vl_esgoto AS "VL ES VAR_REFERENCIA",
-	con_ult_fat.vl_debitos AS "OUTROS SERVICOS VAR_REFERENCIA",
-	con_ult_fat.vl_creditos AS "CRED VAR_REFERENCIA",
-	con_ult_fat.vl_impostos AS "IMPOSTOS VAR_REFERENCIA",
-	con_ult_fat.valor AS "VALOR VAR_REFERENCIA",
+	con_ult_fat.cagua AS "VOL AG ${VAR_REFERENCIA}",
+	con_ult_fat.vl_agua AS "VL AG ${VAR_REFERENCIA}",
+	con_ult_fat.cesg AS "VOL ES ${VAR_REFERENCIA}",
+	con_ult_fat.vl_esgoto AS "VL ES ${VAR_REFERENCIA}",
+	con_ult_fat.vl_debitos AS "OUTROS SERVICOS ${VAR_REFERENCIA}",
+	con_ult_fat.vl_creditos AS "CRED ${VAR_REFERENCIA}",
+	con_ult_fat.vl_impostos AS "IMPOSTOS ${VAR_REFERENCIA}",
+	con_ult_fat.valor AS "VALOR ${VAR_REFERENCIA}",
 	con_parcelamento.qtd AS "QTD PARCELAMENTO ATRASADO",
 	con_parcelamento.valor AS "VALOR PARCELAMENTO ATRASADO",
 	con_atraso.vl_agua AS "VALOR AGUA DEVIDO",
@@ -155,11 +155,11 @@ FROM
 			WHERE 
 				con4.dcst_idatual IN (0,1,2) 
 				AND NOT EXISTS ( SELECT pag.cnta_id FROM arrecadacao.pagamento pag WHERE pag.cnta_id = con4.cnta_id) 
-				AND con4.cnta_dtvencimentoconta < CURRENT_DATE - INTERVAL 'VAR_MINDIASd'
-				AND con4.cnta_dtvencimentoconta >= (CURRENT_DATE - INTERVAL 'VAR_MINANOSy')
+				AND con4.cnta_dtvencimentoconta < CURRENT_DATE - INTERVAL '${VAR_MINDIAS}d'
+				AND con4.cnta_dtvencimentoconta >= (CURRENT_DATE - INTERVAL '${VAR_MINANOS}y')
 				AND con4.cnta_dtrevisao IS NULL 
 				AND con4.iper_id <> 6 
-				AND con4.cnta_amreferenciaconta <= VAR_REFERENCIA
+				AND con4.cnta_amreferenciaconta <= ${VAR_REFERENCIA}
 			GROUP BY 1) AS con_atraso ON con_atraso.mat1 = imo.imov_id
 	LEFT JOIN (	SELECT 
 				con4.imov_id AS mat1,
@@ -184,7 +184,7 @@ FROM
 				FROM faturamento.conta con4 
 					INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 				WHERE
-					con4.cnta_amreferenciaconta = VAR_REFERENCIA
+					con4.cnta_amreferenciaconta = ${VAR_REFERENCIA}
 				UNION
 				SELECT 
 					con4.imov_id AS mat1,
@@ -199,7 +199,7 @@ FROM
 				FROM faturamento.conta_historico con4 
 					INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 				WHERE
-					con4.cnhi_amreferenciaconta = VAR_REFERENCIA
+					con4.cnhi_amreferenciaconta = ${VAR_REFERENCIA}
 				UNION
 				SELECT 
 					con4.imov_id AS mat1,
@@ -214,7 +214,7 @@ FROM
 				FROM faturamento.conta con4 
 					INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 				WHERE
-					con4.cnta_amreferenciaconta = VAR_REFERENCIA
+					con4.cnta_amreferenciaconta = ${VAR_REFERENCIA}
 				UNION
 				SELECT 
 					con4.imov_id AS mat1,
@@ -229,7 +229,7 @@ FROM
 				FROM faturamento.conta_historico con4 
 					INNER JOIN faturamento.mov_conta_prefaturada cni ON cni.cnta_id = con4.cnta_id
 				WHERE
-					con4.cnhi_amreferenciaconta = VAR_REFERENCIA
+					con4.cnhi_amreferenciaconta = ${VAR_REFERENCIA}
 				) AS con_ult_fat ON con_ult_fat.mat1 = imo.imov_id
 WHERE
 	imo.imov_icexclusao = 2 AND
@@ -239,9 +239,9 @@ WHERE
 	cli.clie_iccpfcnpjvalidado = 2 AND
 	imo.imov_idcategoriaprincipal < 4 AND
 	imo.iper_id <> 6 AND
-	con_atraso.valor > VAR_VALOR AND
-	con_atraso.min <= VAR_REFERENCIA AND
-	une.uneg_id IN (VAR_UNIDADE) AND
+	con_atraso.valor > ${VAR_VALOR} AND
+	con_atraso.min <= ${VAR_REFERENCIA} AND
+	une.uneg_id IN (${VAR_UNIDADE}) AND
 	TRIM(COALESCE(cli.clie_nncpf,'') || COALESCE(cli.clie_nncnpj,''))<>'' AND
 	NOT EXISTS( 
 	SELECT 

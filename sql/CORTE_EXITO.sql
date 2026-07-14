@@ -1,4 +1,4 @@
---VAR_REFERENCIA: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
+--${VAR_REFERENCIA}: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
 --7: Deve ser substituida pelo id da unidade de onde se quer obter os dados
 
 SELECT 
@@ -58,7 +58,7 @@ SELECT
 	WHEN 4 THEN '4 - MUNICIPAL'
 	WHEN 5 THEN '5 - ESTADUAL'
 	WHEN 6 THEN '6 - FEDERAL'
-	WHEN VAR_UNIDADE THEN '7 - RES. POPULAR'
+	WHEN ${VAR_UNIDADE} THEN '7 - RES. POPULAR'
 	WHEN 8 THEN '8 - PEQ. NEGOCIOS'
 	WHEN 9 THEN '9 - ENT. FILANTROPICAS'
 	WHEN 10 THEN '10 - SIST. OPERADO POR PREFEITURA'
@@ -122,14 +122,14 @@ SELECT
 	mdh.mdhi_nnconsumomedidomes AS "CONSUMO MEDIDO",
 	mdh.mdhi_nnconsumoinformado AS "CONSUMO INFORMADO",
 	mdh.mdhi_nnconsumomediohidrometro AS "CONSUMO MEDIO HD",
-	con_ult_fat.cagua AS "VOL AG VAR_REFERENCIA",
-	con_ult_fat.vl_agua AS "VL AG VAR_REFERENCIA",
-	con_ult_fat.cesg AS "VOL ES VAR_REFERENCIA",
-	con_ult_fat.vl_esgoto AS "VL ES VAR_REFERENCIA",
-	con_ult_fat.vl_debitos AS "OUTROS SERVICOS VAR_REFERENCIA",
-	con_ult_fat.vl_creditos AS "CRED VAR_REFERENCIA",
-	con_ult_fat.vl_impostos AS "IMPOSTOS VAR_REFERENCIA",
-	con_ult_fat.valor AS "VALOR VAR_REFERENCIA",
+	con_ult_fat.cagua AS "VOL AG ${VAR_REFERENCIA}",
+	con_ult_fat.vl_agua AS "VL AG ${VAR_REFERENCIA}",
+	con_ult_fat.cesg AS "VOL ES ${VAR_REFERENCIA}",
+	con_ult_fat.vl_esgoto AS "VL ES ${VAR_REFERENCIA}",
+	con_ult_fat.vl_debitos AS "OUTROS SERVICOS ${VAR_REFERENCIA}",
+	con_ult_fat.vl_creditos AS "CRED ${VAR_REFERENCIA}",
+	con_ult_fat.vl_impostos AS "IMPOSTOS ${VAR_REFERENCIA}",
+	con_ult_fat.valor AS "VALOR ${VAR_REFERENCIA}",
 	con_atraso.vl_agua AS "VALOR AGUA DEVIDO",
 	con_atraso.vl_esgoto AS "VALOR ESGOTO DEVIDO",
 	con_atraso.vl_debitos AS "VALOR DEBITOS DEVIDO",
@@ -174,7 +174,7 @@ FROM
 			FROM faturamento.conta con4 
 				INNER JOIN cadastro.localidade loc ON loc.loca_id = con4.loca_id
 			WHERE
-				loc.uneg_id = VAR_UNIDADE AND
+				loc.uneg_id = ${VAR_UNIDADE} AND
 				con4.dcst_idatual IN (0,1,2) AND NOT EXISTS ( SELECT pag.cnta_id FROM arrecadacao.pagamento pag WHERE pag.cnta_id = con4.cnta_id) AND con4.cnta_dtvencimentoconta < CURRENT_DATE AND con4.cnta_dtrevisao IS NULL AND con4.iper_id <> 6
 			GROUP BY 1) AS con_atraso ON con_atraso.mat1 = imo.imov_id
 	LEFT JOIN operacional.distrito_operacional dis ON dis.diop_id = qdr.diop_id
@@ -201,10 +201,10 @@ FROM
 	LEFT JOIN cobranca.cobranca_situacao_hist csh ON csh.imov_id = imo.imov_id AND csh.cbsh_amcobrancaretirada IS NULL
 	LEFT JOIN cobranca.cobranca_situacao_tipo cst ON csh.cbsp_id = cst.cbsp_id
 	LEFT JOIN cobranca.cobranca_situacao_motivo csm ON csm.cbsm_id = csh.cbsm_id
-	LEFT JOIN micromedicao.consumo_historico cosh_a1 ON cosh_a1.imov_id = imo.imov_id AND cosh_a1.cshi_amfaturamento = VAR_REFERENCIA AND cosh_a1.lgti_id = 1
+	LEFT JOIN micromedicao.consumo_historico cosh_a1 ON cosh_a1.imov_id = imo.imov_id AND cosh_a1.cshi_amfaturamento = ${VAR_REFERENCIA} AND cosh_a1.lgti_id = 1
 	LEFT JOIN micromedicao.consumo_tipo cost_a1 ON cost_a1.cstp_id = cosh_a1.cstp_id
 	LEFT JOIN micromedicao.consumo_anormalidade cosa_a1 ON cosa_a1.csan_id = cosh_a1.csan_id
-	LEFT JOIN micromedicao.medicao_historico mdh ON mdh.hidi_id = his.hidi_id AND mdh.mdhi_amleitura = VAR_REFERENCIA
+	LEFT JOIN micromedicao.medicao_historico mdh ON mdh.hidi_id = his.hidi_id AND mdh.mdhi_amleitura = ${VAR_REFERENCIA}
 	LEFT JOIN micromedicao.leitura_situacao lts ON lts.ltst_id = mdh.ltst_idleiturasituacaoatual
 	LEFT JOIN micromedicao.leitura_anormalidade lai ON lai.ltan_id = mdh.ltan_idleitanorminformada
 	LEFT JOIN micromedicao.leitura_anormalidade laf ON laf.ltan_id = mdh.ltan_idleitanormfatmt
@@ -216,7 +216,7 @@ FROM
 				INNER JOIN faturamento.debito_cobrado dco ON dco.cnta_id = con4.cnta_id AND dco.dbtp_id IN (40,43,44)
 				INNER JOIN cadastro.localidade loc ON loc.loca_id = con4.loca_id
 			WHERE
-				loc.uneg_id = VAR_UNIDADE AND
+				loc.uneg_id = ${VAR_UNIDADE} AND
 				con4.dcst_idatual IN (0,1,2) AND NOT EXISTS ( SELECT pag.cnta_id FROM arrecadacao.pagamento pag WHERE pag.cnta_id = con4.cnta_id) AND con4.cnta_dtvencimentoconta < CURRENT_DATE AND con4.cnta_dtrevisao IS NULL AND con4.iper_id <> 6
 			GROUP BY 1) AS con_parcelamento ON con_parcelamento.mat1 = imo.imov_id
 	LEFT JOIN (	SELECT 
@@ -233,8 +233,8 @@ FROM
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 				INNER JOIN cadastro.localidade loc ON loc.loca_id = con4.loca_id
 			WHERE
-				loc.uneg_id = VAR_UNIDADE AND
-				con4.cnta_amreferenciaconta = VAR_REFERENCIA
+				loc.uneg_id = ${VAR_UNIDADE} AND
+				con4.cnta_amreferenciaconta = ${VAR_REFERENCIA}
 			UNION
 			SELECT 
 				con4.imov_id AS mat1,
@@ -250,12 +250,12 @@ FROM
 				INNER JOIN faturamento.conta_impressao cni ON cni.cnta_id = con4.cnta_id
 				INNER JOIN cadastro.localidade loc ON loc.loca_id = con4.loca_id
 			WHERE
-				loc.uneg_id = VAR_UNIDADE AND
-				con4.cnhi_amreferenciaconta = VAR_REFERENCIA
+				loc.uneg_id = ${VAR_UNIDADE} AND
+				con4.cnhi_amreferenciaconta = ${VAR_REFERENCIA}
 			) AS con_ult_fat ON con_ult_fat.mat1 = imo.imov_id
 WHERE 
 	imo.imov_icexclusao = 2 AND
-	loc.uneg_id = VAR_UNIDADE AND
+	loc.uneg_id = ${VAR_UNIDADE} AND
 	con_atraso.qtd >= 1 AND
 	imo.imov_idcategoriaprincipal <> 4 AND
 	imo.iper_id <> 6 AND
@@ -269,7 +269,7 @@ WHERE
 				INNER JOIN cobranca.empresa_cobranca_conta ecc ON ecc.cnta_id = con4.cnta_id
 				INNER JOIN cadastro.localidade loc ON loc.loca_id = con4.loca_id
 			WHERE
-				loc.uneg_id = VAR_UNIDADE AND
+				loc.uneg_id = ${VAR_UNIDADE} AND
 				con4.imov_id = imo.imov_id AND
 				ecc.ecco_dtretiradaconta IS NULL AND 
 				NOT EXISTS ( SELECT pag.cnta_id FROM arrecadacao.pagamento pag WHERE pag.cnta_id = con4.cnta_id) AND

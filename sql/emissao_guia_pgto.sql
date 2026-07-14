@@ -1,4 +1,4 @@
-﻿select
+select
 	gpg.imov_id as "matricula",
 	uni.unid_dsunidade as "setor emissao",
 	gpg.gpag_dtemissao as "data emissao"

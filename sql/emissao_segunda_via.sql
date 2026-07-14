@@ -1,4 +1,4 @@
-﻿select
+select
 	ces.imov_id as "matricula",
 	uni.unid_dsunidade as "setor emissao",
 	ces.ctem_tmemissao as "data emissao"

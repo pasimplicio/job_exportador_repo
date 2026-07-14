@@ -60,5 +60,5 @@ FROM
 	LEFT JOIN cadastro.cliente_tipo clt ON clt.cltp_id = cli.cltp_id
 WHERE
 	ecc.ecco_dtretiradaconta IS NULL AND
-	ecc.empr_id = VAR_EMPRESA AND
+	ecc.empr_id = ${VAR_EMPRESA} AND
 	NOT EXISTS (SELECT * FROM cobranca.empr_cobr_conta_pagto eccp WHERE eccp.ecco_id = ecc.ecco_id)

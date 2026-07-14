@@ -1,4 +1,41 @@
-﻿SELECT 
+-- Pagamentos na semana seguinte ao encerramento da R.A.: eram duas subqueries executadas por linha
+-- (2,4 milhoes de R.A. x varredura de pagamento/pagamento_historico). Agora sao agregacoes unicas,
+-- ligadas por hash. O CASE reproduz o UNION original, que deduplica quando os dois totais coincidem.
+WITH ra_base AS (
+	SELECT
+		ra.rgat_id,
+		ra.imov_id,
+		ra.rgat_tmencerramento
+	FROM atendimentopublico.registro_atendimento ra
+	WHERE ra.rgat_tmregistroatendimento >= '2021-06-01'
+	  AND ra.rgat_cdsituacao = 2
+	  AND ra.rgat_tmencerramento IS NOT NULL
+),
+pag_semana AS (
+	SELECT
+		b.rgat_id,
+		COUNT(pag.pgmt_id) AS qtd,
+		SUM(pag.pgmt_vlpagamento) AS valor
+	FROM ra_base b
+		INNER JOIN arrecadacao.pagamento pag
+			ON pag.imov_id = b.imov_id
+			AND pag.pgst_idatual IN (0,1)
+			AND pag.pgmt_dtpagamento BETWEEN b.rgat_tmencerramento AND (b.rgat_tmencerramento+INTERVAL '7d')
+	GROUP BY 1
+),
+pag_hist_semana AS (
+	SELECT
+		b.rgat_id,
+		COUNT(pag.pghi_id) AS qtd,
+		SUM(pag.pghi_vlpagamento) AS valor
+	FROM ra_base b
+		INNER JOIN arrecadacao.pagamento_historico pag
+			ON pag.imov_id = b.imov_id
+			AND pag.pgst_idatual IN (0,1)
+			AND pag.pghi_dtpagamento BETWEEN b.rgat_tmencerramento AND (b.rgat_tmencerramento+INTERVAL '7d')
+	GROUP BY 1
+)
+SELECT 
   ra.rgat_id AS "NR R.A.",
   CASE
 	WHEN COALESCE(ra.rgat_nncoordenadanorte,0) <> 0
@@ -130,48 +167,14 @@ cli.clie_dsemail AS "EMAIL",
   hid.hidr_nnhidrometro AS "NR HID.",
   hid.hidr_nnanofabricacao AS "ANO HD",
   his.hidi_dtinstalacaohidrometro AS "DATA DE INSTALACAO HD.",
-  COALESCE((
-	SELECT
-		SUM(pags.qtd) AS qtd
-	FROM		
-		(SELECT 
-				COUNT(pag.pgmt_id) AS qtd
-			FROM
-				arrecadacao.pagamento pag
-			WHERE
-				pag.pgst_idatual IN (0,1)
-				AND pag.imov_id = ra.imov_id
-				AND pag.pgmt_dtpagamento BETWEEN ra.rgat_tmencerramento AND (ra.rgat_tmencerramento+INTERVAL '7d')
-		UNION
-			SELECT 
-				COUNT(pag.pghi_id) AS qtd
-			FROM
-				arrecadacao.pagamento_historico pag
-			WHERE
-				pag.pgst_idatual IN (0,1)
-				AND pag.imov_id = ra.imov_id
-				AND pag.pghi_dtpagamento BETWEEN ra.rgat_tmencerramento AND (ra.rgat_tmencerramento+INTERVAL '7d')) pags),0) AS "QTD DOCS PAGOS ATE 1 SEMANA APOS ENCERRAMENTO DO R.A.",
-  TO_CHAR(COALESCE((
-	SELECT
-		SUM(pags.valor) AS valor
-	FROM		
-		(SELECT 
-				SUM(pag.pgmt_vlpagamento) AS valor
-			FROM
-				arrecadacao.pagamento pag
-			WHERE
-				pag.pgst_idatual IN (0,1)
-				AND pag.imov_id = ra.imov_id
-				AND pag.pgmt_dtpagamento BETWEEN ra.rgat_tmencerramento AND (ra.rgat_tmencerramento+INTERVAL '7d')
-		UNION
-			SELECT 
-				SUM(pag.pghi_vlpagamento) AS valor
-			FROM
-				arrecadacao.pagamento_historico pag
-			WHERE
-				pag.pgst_idatual IN (0,1)
-				AND pag.imov_id = ra.imov_id
-				AND pag.pghi_dtpagamento BETWEEN ra.rgat_tmencerramento AND (ra.rgat_tmencerramento+INTERVAL '7d')) pags),0),'9G999G999G990D00') AS "VALOR TOTAL PAGO ATE 1 SEMANA APOS ENCERRAMENTO DO R.A."
+  CASE WHEN COALESCE(ps.qtd,0) = COALESCE(phs.qtd,0)
+       THEN COALESCE(ps.qtd,0)
+       ELSE COALESCE(ps.qtd,0) + COALESCE(phs.qtd,0)
+  END AS "QTD DOCS PAGOS ATE 1 SEMANA APOS ENCERRAMENTO DO R.A.",
+  TO_CHAR(CASE WHEN ps.valor IS NOT DISTINCT FROM phs.valor
+               THEN COALESCE(ps.valor,0)
+               ELSE COALESCE(ps.valor,0) + COALESCE(phs.valor,0)
+          END,'9G999G999G990D00') AS "VALOR TOTAL PAGO ATE 1 SEMANA APOS ENCERRAMENTO DO R.A."
   --TO_CHAR(SUM(COALESCE(pags_1_semana.valor,0)), '9G999G999G990D00') AS "VALOR TOTAL PAGO ATE 1 SEMANA APOS ENCERRAMENTO DO R.A."
 FROM 
   atendimentopublico.registro_atendimento ra
@@ -217,6 +220,8 @@ FROM
   LEFT JOIN atendimentopublico.ligacao_agua lagu ON lagu.lagu_id = imo.imov_id
   LEFT JOIN micromedicao.hidrometro_inst_hist his ON lagu.hidi_id = his.hidi_id AND his.hidi_dtretiradahidrometro IS NULL
   LEFT JOIN micromedicao.hidrometro hid ON his.hidr_id = hid.hidr_id
+  LEFT JOIN pag_semana ps ON ps.rgat_id = ra.rgat_id
+  LEFT JOIN pag_hist_semana phs ON phs.rgat_id = ra.rgat_id
 WHERE 
   ra.rgat_tmregistroatendimento >= '2021-06-01' AND
   ra.rgat_cdsituacao = 2 

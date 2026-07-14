@@ -1,4 +1,4 @@
-﻿WITH debitoAntAberto AS (
+WITH debitoAntAberto AS (
     SELECT 
         conta.imov_id,
         COUNT(conta.cnta_id) AS totalDevido,

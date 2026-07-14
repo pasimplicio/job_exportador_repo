@@ -1,4 +1,4 @@
-﻿SELECT 
+SELECT 
     loca.loca_id AS "LOCALIDADE",
     CASE 
         WHEN une.uneg_nmunidadenegocio IN (

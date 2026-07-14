@@ -130,7 +130,9 @@ cli.clie_dsemail AS "EMAIL",
   hid.hidr_nnhidrometro AS "NR HID.",
   hid.hidr_nnanofabricacao AS "ANO HD",
   his.hidi_dtinstalacaohidrometro AS "DATA DE INSTALACAO HD.",
-  COALESCE((
+  -- R.A. pendente nao tem encerramento: a janela de 7 dias nao existe e o total e sempre 0.
+  -- O CASE (preguicoso) evita varrer pagamento/pagamento_historico uma vez por linha so para achar zero.
+  CASE WHEN ra.rgat_tmencerramento IS NULL THEN 0 ELSE COALESCE((
 	SELECT
 		SUM(pags.qtd) AS qtd
 	FROM		
@@ -150,8 +152,8 @@ cli.clie_dsemail AS "EMAIL",
 			WHERE
 				pag.pgst_idatual IN (0,1)
 				AND pag.imov_id = ra.imov_id
-				AND pag.pghi_dtpagamento BETWEEN ra.rgat_tmencerramento AND (ra.rgat_tmencerramento+INTERVAL '7d')) pags),0) AS "QTD DOCS PAGOS ATE 1 SEMANA APOS ENCERRAMENTO DO R.A.",
-  TO_CHAR(COALESCE((
+				AND pag.pghi_dtpagamento BETWEEN ra.rgat_tmencerramento AND (ra.rgat_tmencerramento+INTERVAL '7d')) pags),0) END AS "QTD DOCS PAGOS ATE 1 SEMANA APOS ENCERRAMENTO DO R.A.",
+  TO_CHAR(CASE WHEN ra.rgat_tmencerramento IS NULL THEN 0 ELSE COALESCE((
 	SELECT
 		SUM(pags.valor) AS valor
 	FROM		
@@ -171,7 +173,7 @@ cli.clie_dsemail AS "EMAIL",
 			WHERE
 				pag.pgst_idatual IN (0,1)
 				AND pag.imov_id = ra.imov_id
-				AND pag.pghi_dtpagamento BETWEEN ra.rgat_tmencerramento AND (ra.rgat_tmencerramento+INTERVAL '7d')) pags),0),'9G999G999G990D00') AS "VALOR TOTAL PAGO ATE 1 SEMANA APOS ENCERRAMENTO DO R.A."
+				AND pag.pghi_dtpagamento BETWEEN ra.rgat_tmencerramento AND (ra.rgat_tmencerramento+INTERVAL '7d')) pags),0) END,'9G999G999G990D00') AS "VALOR TOTAL PAGO ATE 1 SEMANA APOS ENCERRAMENTO DO R.A."
   --TO_CHAR(SUM(COALESCE(pags_1_semana.valor,0)), '9G999G999G990D00') AS "VALOR TOTAL PAGO ATE 1 SEMANA APOS ENCERRAMENTO DO R.A."
 FROM 
   atendimentopublico.registro_atendimento ra

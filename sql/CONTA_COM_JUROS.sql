@@ -6,4 +6,4 @@ SELECT
 FROM
 	faturamento.conta_historico con4
 WHERE
-	cnta_id = VAR_CONTA
+	cnta_id = ${VAR_CONTA}

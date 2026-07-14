@@ -1,4 +1,4 @@
-﻿--VAR_REFERENCIA: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
+--${VAR_REFERENCIA}: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
 --15: Deve ser substituida pelo id da unidade de onde se quer obter os dados
 
 SELECT 

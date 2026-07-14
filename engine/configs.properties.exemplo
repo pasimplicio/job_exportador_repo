@@ -6,13 +6,13 @@
 #
 #     copy engine\configs.properties.exemplo engine\configs.properties
 #
-# ATENCAO: hoje o engine NAO le este arquivo. As credenciais do banco
-# chegam por argumentos de linha de comando, vindas dos .bat.
-# A leitura deste arquivo (banco + FTP) esta prevista para a proxima
-# versao do engine.
+# As credenciais do BANCO continuam chegando por argumentos de linha de
+# comando, vindas dos .bat (engine\credenciais.bat). Deste arquivo o engine
+# le APENAS a secao de FTP. Se o arquivo nao existir, ou se FTP_SERVER estiver
+# em branco, os arquivos sao somente gravados em disco e nada e enviado.
 # ===================================================================
 
-# ----- BANCO DE DADOS -----
+# ----- BANCO DE DADOS (nao lido pelo engine; mantido para referencia) -----
 DB_DRIVER_GSAN = org.postgresql.Driver
 DB_URL_GSAN    = jdbc:postgresql://SERVIDOR:5432/BANCO
 DB_USER_GSAN   = USUARIO
@@ -24,6 +24,16 @@ FTP_PORT     = 21
 FTP_USER     = USUARIO
 FTP_PASS     = SENHA
 
-# Raiz remota. Os arquivos sao enviados para:
-#   FTP_BASE_DIR / <aaaaMMdd> / <nome_do_comando> / arquivo.zip
-FTP_BASE_DIR = CAEMA
+# Raiz remota. O engine espelha a estrutura da pasta saida abaixo dela, enviando para:
+#   FTP_BASE_DIR / <OUTPUT_FOLDER> / [dd_MM_aaaa] / <NOME_DO_COMANDO> / arquivo
+#
+# No servidor da CAEMA os interessados (CAEMA, PAULO, BI, CAMPANHA...) ficam dentro
+# de /results, entao o valor correto e "results" e os arquivos caem em
+#   /results/CAEMA/13_07_2026/COMANDO_MADRUGADA/CORTE_CAEMA_..._result_csv.zip
+# O subdiretorio de data so aparece quando CREATE_DATE_SUBFOLDER=true no comando.
+FTP_BASE_DIR = results
+
+# ----- DESEMPENHO -----
+# Memoria de ordenacao por operacao, aplicada apenas na sessao do job (nao altera o servidor).
+# Deixe em branco ou remova para usar o padrao do servidor.
+WORK_MEM = 2GB

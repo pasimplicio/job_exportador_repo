@@ -1,5 +1,5 @@
 --201910: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
---VAR_UNIDADE: Deve ser substituida pelo id da unidade de onde se quer obter os dados
+--${VAR_UNIDADE}: Deve ser substituida pelo id da unidade de onde se quer obter os dados
 
 SELECT 
 	imo.imov_id AS "MATRICULA",

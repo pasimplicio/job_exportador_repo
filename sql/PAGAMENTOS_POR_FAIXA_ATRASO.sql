@@ -51,7 +51,7 @@ FROM
 		LEFT JOIN cadastro.unidade_negocio une ON une.uneg_id = loc.uneg_id
 		LEFT JOIN faturamento.debito_tipo dbt ON dbt.dbtp_id = pag.dbtp_id
 	WHERE 
-		pag.pgst_idatual = 0 AND pag.pghi_amreferenciaarrecadacao >= VAR_REFERENCIA
+		pag.pgst_idatual = 0 AND pag.pghi_amreferenciaarrecadacao >= ${VAR_REFERENCIA}
 	GROUP BY 1,2,3,4,5,6,7
 UNION
 	SELECT 
@@ -96,7 +96,7 @@ UNION
 		LEFT JOIN cadastro.unidade_negocio une ON une.uneg_id = loc.uneg_id
 		LEFT JOIN faturamento.debito_tipo dbt ON dbt.dbtp_id = pag.dbtp_id
 	WHERE 
-		pag.pgst_idatual = 0 AND pag.pgmt_amreferenciaarrecadacao >= VAR_REFERENCIA
+		pag.pgst_idatual = 0 AND pag.pgmt_amreferenciaarrecadacao >= ${VAR_REFERENCIA}
 	GROUP BY 1,2,3,4,5,6,7
 UNION
 	SELECT 
@@ -141,7 +141,7 @@ UNION
 		LEFT JOIN cadastro.unidade_negocio une ON une.uneg_id = loc.uneg_id
 		LEFT JOIN faturamento.debito_tipo dbt ON dbt.dbtp_id = pag.dbtp_id
 	WHERE 
-		pag.pgst_idatual = 0 AND pag.pghi_amreferenciaarrecadacao >= VAR_REFERENCIA
+		pag.pgst_idatual = 0 AND pag.pghi_amreferenciaarrecadacao >= ${VAR_REFERENCIA}
 	GROUP BY 1,2,3,4,5,6,7
 UNION
 	SELECT 
@@ -186,6 +186,6 @@ UNION
 		LEFT JOIN cadastro.unidade_negocio une ON une.uneg_id = loc.uneg_id
 		LEFT JOIN faturamento.debito_tipo dbt ON dbt.dbtp_id = pag.dbtp_id
 	WHERE 
-		pag.pgst_idatual = 0 AND pag.pgmt_amreferenciaarrecadacao >= VAR_REFERENCIA
+		pag.pgst_idatual = 0 AND pag.pgmt_amreferenciaarrecadacao >= ${VAR_REFERENCIA}
 	GROUP BY 1,2,3,4,5,6,7) AS pags
 GROUP BY 1,2,3,4,5,6,7
