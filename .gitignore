@@ -22,3 +22,9 @@ Arquivos BI/
 # ===== SISTEMA =====
 desktop.ini
 Thumbs.db
+
+# ===== RASCUNHOS DE COMANDO =====
+comando/* - Copia*.csv
+comando/* - Cópia*.csv
+comando/*_001.csv
+comando/COMANDO_TESTE_*.csv
