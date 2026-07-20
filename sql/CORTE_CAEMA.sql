@@ -1,4 +1,18 @@
---'${VAR_REFERENCIA}': Deve ser substituida pela referencia do faturamento que se deseja obter os dados
+-- Imoveis com R.A. de retificacao pendente (step 978, situacao 1): o cliente esta contestando
+-- a conta, entao o corte nao deve ser executado.
+-- Era uma subquery correlacionada, que varria registro_atendimento uma vez por imovel
+-- (custo 120 por linha, o mais caro da query). Agora e um passo unico, ligado por hash:
+-- existe R.A. pendente = SIM, nao existe = NAO (o COALESCE na coluna).
+WITH ret_pendente AS (
+	SELECT DISTINCT ON (ra.imov_id)
+		ra.imov_id,
+		'SIM'::TEXT AS retificacao
+	FROM atendimentopublico.registro_atendimento ra
+	WHERE ra.rgat_cdsituacao = 1
+	  AND ra.step_id = 978
+	ORDER BY ra.imov_id, ra.rgat_tmregistroatendimento DESC
+)
+--VAR_REFERENCIA: Deve ser substituida pela referencia do faturamento que se deseja obter os dados
 --15: Deve ser substituida pelo id da unidade de onde se quer obter os dados
 
 SELECT 
@@ -31,6 +45,10 @@ SELECT
 			dab.imov_id = imo.imov_id
 			
 	) AS "HISTORICO DEB AUTO",
+	
+	
+	COALESCE(ret_pend.retificacao, 'NAO') AS "RETIFICACAO PENDENTE",
+
 	
 	--TO_CHAR(dab.deba_dtexclusao, 'dd/MM/yyyy') AS "DEB AUT DATA EXCLUSAO",
 --	dab.deba_dsidentificacaoclientebco AS "IDENTIFICACAO BANCARIA",
@@ -271,7 +289,7 @@ FROM
 			FROM faturamento.conta con4 
 			WHERE 
 				con4.cnta_dtvencimentoconta BETWEEN CURRENT_DATE - INTERVAL '90 days' AND CURRENT_DATE - INTERVAL '30 days'
-				AND con4.dcst_idatual IN (0,1,2,5) AND NOT EXISTS ( SELECT pag.cnta_id FROM arrecadacao.pagamento pag WHERE pag.cnta_id = con4.cnta_id) AND con4.cnta_dtrevisao IS NULL AND con4.iper_id <> 6
+				AND con4.dcst_idatual IN (0,1,2) AND NOT EXISTS ( SELECT pag.cnta_id FROM arrecadacao.pagamento pag WHERE pag.cnta_id = con4.cnta_id) AND con4.cnta_dtrevisao IS NULL AND con4.iper_id <> 6
 				AND con4.cnta_dtrevisao IS NULL 
 				AND con4.iper_id <> 6
 				GROUP BY 1) AS con_atraso ON con_atraso.mat1 = imo.imov_id
@@ -283,7 +301,7 @@ FROM
 			FROM faturamento.conta con4 
 			WHERE 
 				con4.cnta_dtvencimentoconta <= CURRENT_DATE - INTERVAL '90 days'
-				AND con4.dcst_idatual IN (0,1,2,5) AND NOT EXISTS ( SELECT pag.cnta_id FROM arrecadacao.pagamento pag WHERE pag.cnta_id = con4.cnta_id) AND con4.cnta_dtrevisao IS NULL AND con4.iper_id <> 6
+				AND con4.dcst_idatual IN (0,1,2) AND NOT EXISTS ( SELECT pag.cnta_id FROM arrecadacao.pagamento pag WHERE pag.cnta_id = con4.cnta_id) AND con4.cnta_dtrevisao IS NULL AND con4.iper_id <> 6
 				AND con4.cnta_dtrevisao IS NULL 
 				AND con4.iper_id <> 6
 				GROUP BY 1) AS con_atraso90 ON con_atraso90.mat1 = imo.imov_id
@@ -298,11 +316,12 @@ FROM
 			FROM faturamento.conta con4 
 			WHERE 
 				con4.cnta_dtvencimentoconta <= CURRENT_DATE - INTERVAL '30 days'
-				AND con4.dcst_idatual IN (0,1,2,5) AND NOT EXISTS ( SELECT pag.cnta_id FROM arrecadacao.pagamento pag WHERE pag.cnta_id = con4.cnta_id) AND con4.cnta_dtrevisao IS NULL AND con4.iper_id <> 6
+				AND con4.dcst_idatual IN (0,1,2) AND NOT EXISTS ( SELECT pag.cnta_id FROM arrecadacao.pagamento pag WHERE pag.cnta_id = con4.cnta_id) AND con4.cnta_dtrevisao IS NULL AND con4.iper_id <> 6
 				AND con4.cnta_dtrevisao IS NULL 
 				AND con4.iper_id <> 6
 				GROUP BY 1) AS con_referencia ON con_referencia.mat1 = imo.imov_id
 
+	LEFT JOIN ret_pendente ret_pend ON ret_pend.imov_id = imo.imov_id
 WHERE
 	imo.imov_icexclusao = 2 
 	--AND imo.imov_id IN (38539)

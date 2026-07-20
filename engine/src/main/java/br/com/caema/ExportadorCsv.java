@@ -281,23 +281,19 @@ public class ExportadorCsv {
         log(logDir, "ARQUIVO SAIDA  : " + csvOut.getFileName());
         log(logDir, "VARS           : " + vars);
 
-        PGConnection pgConn = conn.unwrap(PGConnection.class);
-        CopyManager copyManager = pgConn.getCopyAPI();
-
-        // As quebras de linha sao obrigatorias: varios SQLs terminam em comentario "--", e sem elas
-        // o parentese de fechamento cairia dentro do comentario, invalidando a query.
-        String copySql = "COPY (\n" + removerPontoVirgula(sqlFinal) +
-                "\n) TO STDOUT WITH (FORMAT CSV, HEADER, DELIMITER ';')";
-
         long linhas;
 
-        try (OutputStream out = Files.newOutputStream(
-                csvOut,
-                StandardOpenOption.CREATE,
-                StandardOpenOption.TRUNCATE_EXISTING)) {
-
-            // copyOut devolve as linhas de dados; o cabecalho do CSV nao conta.
-            linhas = copyManager.copyOut(copySql, out);
+        try {
+            // O COPY e o caminho rapido, mas ele grava o que o banco devolve, sem passar por Java.
+            // Queries com codigo de barras precisam dos digitos verificadores calculados linha a
+            // linha, entao essas saem pelo ResultSet.
+            if (temColunaCodBarras(sqlFinal)) {
+                log(logDir, "POS-PROCESSO   : coluna \"" + COLUNA_COD_BARRAS
+                        + "\" detectada, gerando digitos verificadores linha a linha");
+                linhas = exportarViaResultSet(conn, sqlFinal, csvOut);
+            } else {
+                linhas = exportarViaCopy(conn, sqlFinal, csvOut);
+            }
 
         } catch (Exception e) {
             // Query falhou: o arquivo ja foi criado e ficaria no disco vazio ou pela metade.
@@ -342,6 +338,165 @@ public class ExportadorCsv {
 
         long duracao = System.currentTimeMillis() - inicio;
         log(logDir, "SUCESSO (" + duracao + " ms)");
+    }
+
+    // ================= GRAVACAO DO CSV =================
+
+    /** Rotulo da coluna que carrega o codigo de barras, o mesmo usado pelo gerador antigo. */
+    private static final String COLUNA_COD_BARRAS = "COD BARRAS";
+
+    /** Coluna com a referencia da conta, necessaria para calcular o digito de "D". */
+    private static final String COLUNA_REFERENCIA = "REFERENCIA";
+
+    private static final char CSV_DELIMITER = ';';
+
+    private static boolean temColunaCodBarras(String sql) {
+        return sql.contains("\"" + COLUNA_COD_BARRAS + "\"");
+    }
+
+    /** Caminho padrao: o banco monta o CSV e a engine so grava os bytes. */
+    private static long exportarViaCopy(Connection conn, String sqlFinal, Path csvOut) throws Exception {
+
+        PGConnection pgConn = conn.unwrap(PGConnection.class);
+        CopyManager copyManager = pgConn.getCopyAPI();
+
+        // As quebras de linha sao obrigatorias: varios SQLs terminam em comentario "--", e sem elas
+        // o parentese de fechamento cairia dentro do comentario, invalidando a query.
+        String copySql = "COPY (\n" + removerPontoVirgula(sqlFinal) +
+                "\n) TO STDOUT WITH (FORMAT CSV, HEADER, DELIMITER ';')";
+
+        try (OutputStream out = Files.newOutputStream(
+                csvOut,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING)) {
+
+            // copyOut devolve as linhas de dados; o cabecalho do CSV nao conta.
+            return copyManager.copyOut(copySql, out);
+        }
+    }
+
+    /**
+     * Caminho com pos-processamento: cada linha passa por Java para o codigo de barras receber os
+     * digitos verificadores. O CSV gerado aqui tem que ser identico ao do COPY, por isso a
+     * formatacao dos campos segue as mesmas regras (ver escreverCampo).
+     */
+    private static long exportarViaResultSet(Connection conn, String sqlFinal, Path csvOut) throws Exception {
+
+        boolean autoCommitOriginal = conn.getAutoCommit();
+
+        // O cursor so streama com autocommit desligado; sem isso o driver traz tudo para a memoria.
+        conn.setAutoCommit(false);
+
+        try (java.sql.Statement st = conn.createStatement();
+             java.io.BufferedWriter w = Files.newBufferedWriter(
+                     csvOut,
+                     StandardCharsets.UTF_8,
+                     StandardOpenOption.CREATE,
+                     StandardOpenOption.TRUNCATE_EXISTING)) {
+
+            st.setFetchSize(10_000);
+
+            try (java.sql.ResultSet rs = st.executeQuery(removerPontoVirgula(sqlFinal))) {
+
+                java.sql.ResultSetMetaData meta = rs.getMetaData();
+                int cols = meta.getColumnCount();
+
+                int codBarrasIdx = -1;
+                int referenciaIdx = -1;
+
+                StringBuilder header = new StringBuilder(1024);
+
+                for (int i = 1; i <= cols; i++) {
+
+                    String label = meta.getColumnLabel(i);
+
+                    if (COLUNA_COD_BARRAS.equals(label))  codBarrasIdx = i;
+                    if (COLUNA_REFERENCIA.equals(label))  referenciaIdx = i;
+
+                    if (i > 1) header.append(CSV_DELIMITER);
+
+                    escreverCampo(header, label);
+                }
+
+                if (codBarrasIdx > 0 && referenciaIdx < 0) {
+                    throw new IllegalStateException("CODIGO DE BARRAS SEM REFERENCIA PARA VALIDAR: a query tem"
+                            + " a coluna \"" + COLUNA_COD_BARRAS + "\" mas nao tem \"" + COLUNA_REFERENCIA
+                            + "\", que e de onde sai o digito verificador.");
+                }
+
+                header.append('\n');
+                w.write(header.toString());
+
+                long linhas = 0;
+                StringBuilder line = new StringBuilder(1024);
+
+                while (rs.next()) {
+
+                    line.setLength(0);
+
+                    for (int i = 1; i <= cols; i++) {
+
+                        if (i > 1) line.append(CSV_DELIMITER);
+
+                        // getString devolve a representacao textual do proprio servidor, que e
+                        // exatamente a que o COPY grava. Assim os dois caminhos geram o mesmo CSV.
+                        String value = rs.getString(i);
+
+                        if (i == codBarrasIdx && value != null) {
+                            value = CodigoBarras.getFullCodBarras(value, rs.getInt(referenciaIdx));
+                        }
+
+                        escreverCampo(line, value);
+                    }
+
+                    line.append('\n');
+                    w.write(line.toString());
+
+                    linhas++;
+                }
+
+                return linhas;
+            }
+
+        } finally {
+            // A query e somente leitura; o rollback so encerra a transacao aberta pelo cursor.
+            try { conn.rollback(); } catch (Exception ignored) { }
+            try { conn.setAutoCommit(autoCommitOriginal); } catch (Exception ignored) { }
+        }
+    }
+
+    /** Formata um campo como o COPY ... FORMAT CSV faz: copia literal de FrazoUtils.writeCsvField. */
+    private static void escreverCampo(StringBuilder out, String value) {
+
+        if (value == null) {
+            return;
+        }
+
+        if (value.isEmpty()) {
+            // O COPY cita a string vazia para distingui-la de NULL, que sai sem aspas.
+            out.append("\"\"");
+            return;
+        }
+
+        boolean needsQuote = value.indexOf(CSV_DELIMITER) >= 0
+                || value.indexOf('"') >= 0
+                || value.indexOf('\n') >= 0
+                || value.indexOf('\r') >= 0;
+
+        if (!needsQuote) {
+            out.append(value);
+            return;
+        }
+
+        out.append('"');
+
+        for (int i = 0; i < value.length(); i++) {
+            char c = value.charAt(i);
+            if (c == '"') out.append('"');
+            out.append(c);
+        }
+
+        out.append('"');
     }
 
     /**
